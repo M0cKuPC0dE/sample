@@ -1,9 +1,11 @@
+const webpack = require('webpack')
+
 module.exports = {
   /*
   ** Headers of the page
   */
   head: {
-    title: 'starter',
+    title: 'Mitrphol Compliant',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -11,8 +13,34 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    bodyAttrs: {
+      class: 'fix-header'
+    }
   },
+  /*
+  ** Css Loader
+  */
+  css: [
+    { src: 'animate.css/animate.css' },
+    { src: 'bootstrap/dist/css/bootstrap.css' },
+    { src: 'metismenu/dist/metisMenu.css' },
+    { src: 'font-awesome/css/font-awesome.css' },
+    { src: 'material-design-iconic-font/dist/css/material-design-iconic-font.css' },
+    { src: 'bootstrap-treeview/dist/bootstrap-treeview.min.css' },
+    { src: '~assets/less/icons/themify-icons/themify-icons.css' },
+    { src: '~assets/less/style.less', lang: 'less' },
+    { src: '~assets/less/colors/megna.less', lang: 'less' }
+  ],
+  /*
+  ** Plugins Loader
+  */
+  plugins: [
+    { src: '~plugins/bootstrap' },
+    { src: '~plugins/metismenu' },
+    { src: '~plugins/openclose' },
+    { src: '~plugins/treeview' }
+  ],
   /*
   ** Customize the progress-bar color
   */
@@ -21,10 +49,23 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    vendor: [
+      'jquery',
+      'bootstrap',
+      'metismenu/dist/metisMenu.js',
+      'bootstrap-treeview/dist/bootstrap-treeview.min.js'
+    ],
+    plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery'
+      })
+    ],
     /*
     ** Run ESLINT on save
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
           enforce: 'pre',
