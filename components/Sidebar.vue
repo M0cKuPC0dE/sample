@@ -17,34 +17,34 @@
           </nuxt-link>
         </li>
         <li>
-          <a href="widgets.html" class="waves-effect">
+          <nuxt-link to="/administrator" class="waves-effect">
             <i class="zmdi zmdi-male-alt fa-fw"></i>
             <span class="hide-menu">Administrator</span>
-          </a>
+          </nuxt-link>
         </li>
         <li>
-          <a href="widgets.html" class="waves-effect">
+          <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
             <span class="hide-menu">Coordinator</span>
-          </a>
+          </nuxt-link>
         </li>
         <li>
-          <a href="widgets.html" class="waves-effect">
+          <nuxt-link to="/owner" class="waves-effect">
             <i class="zmdi zmdi-account-circle fa-fw"></i>
             <span class="hide-menu">Owner</span>
-          </a>
+          </nuxt-link>
         </li>
         <li>
-          <a href="widgets.html" class="waves-effect">
+          <nuxt-link to="/reviewer" class="waves-effect">
             <i class="zmdi zmdi-account-box-o fa-fw"></i>
             <span class="hide-menu">Reviewer</span>
-          </a>
+          </nuxt-link>
         </li>
         <li>
-          <a href="widgets.html" class="waves-effect">
+          <nuxt-link to="/approver" class="waves-effect">
             <i class="zmdi zmdi-mood fa-fw"></i>
             <span class="hide-menu">Approver</span>
-          </a>
+          </nuxt-link>
         </li>
       </ul>
     </div>
