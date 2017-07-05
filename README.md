@@ -1,4 +1,4 @@
-# mitrphol-compliant
+# mitrphol-compliance
 
 > Nuxt.js project
 
