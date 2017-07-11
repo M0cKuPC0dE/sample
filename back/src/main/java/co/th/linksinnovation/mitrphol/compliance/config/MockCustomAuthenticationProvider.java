@@ -20,12 +20,18 @@ import org.springframework.context.annotation.Profile;
 @Profile("dev")
 @Component
 public class MockCustomAuthenticationProvider extends AbstractCustomAuthenticationProvider {
-
+    
+    private static final String ADMIN = "admin";
+    private static final String COORDINATOR = "coordinator";
+    private static final String OWNER = "owner";
+    private static final String REVIEWER = "reviewer";
+    private static final String APPROVER = "approver";
+    
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         return validateAuthen(authentication);
     }
-
+    
     @Override
     protected boolean isServiceAuthen(Authentication authentication) {
         if (mockAuthen(authentication.getCredentials().toString())) {
@@ -34,29 +40,32 @@ public class MockCustomAuthenticationProvider extends AbstractCustomAuthenticati
                 userDetails = new UserDetails();
                 userDetails.setUsername(authentication.getName().toLowerCase());
                 userDetails.setPassword(authentication.getCredentials().toString());
-
+                
                 Authority authority = new Authority();
                 authority.setAuthority("User");
                 userDetails.addAuthority(authority);
-
+                
             }
             userDetailsRepository.save(userDetails);
             return true;
         }
-
+        
         return false;
     }
 
     /**
      *
-     * @param pass
+     * @param password
      * @return
      *
      * Mock Password Remove it in production
      *
      */
-    private boolean mockAuthen(String pass) {
-        // TODO: implementing the mock users
-        return pass != null;
+    private boolean mockAuthen(String password) {
+        return ADMIN.equals(password)
+                || COORDINATOR.equals(password)
+                || OWNER.equals(password)
+                || REVIEWER.equals(password)
+                || APPROVER.equals(password);
     }
 }
