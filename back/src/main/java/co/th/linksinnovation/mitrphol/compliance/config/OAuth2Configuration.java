@@ -68,7 +68,7 @@ public class OAuth2Configuration {
                 public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
                     DefaultOAuth2AccessToken defaultOAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
                     UserDetails userDetails = userDetailsRepository.findOne(authentication.getPrincipal().toString());
-                    defaultOAuth2AccessToken.getAdditionalInformation().put("name", userDetails.getName());
+                    defaultOAuth2AccessToken.getAdditionalInformation().put("name", userDetails.getNameTh());
                     return super.enhance(defaultOAuth2AccessToken, authentication);
                 }
 
