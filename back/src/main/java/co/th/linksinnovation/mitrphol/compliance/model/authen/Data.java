@@ -22,6 +22,5 @@ public class Data {
     @JsonProperty("job_info")
     private JobInfo jobInfo;
     
-    @JsonProperty("access_token")
     private String accessToken;
 }

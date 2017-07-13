@@ -19,10 +19,7 @@ public class UserInfo {
     private String username;
     private Fullname fullname;
     private String email;
-    
-    @JsonProperty("citizen_id")
     private String citizenId;
-    
     private String nickname;
     private String photo;
     private String description;
