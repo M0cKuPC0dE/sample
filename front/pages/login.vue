@@ -1,0 +1,94 @@
+<template>
+  <section id="wrapper" class="new-login-register">
+    <div class="lg-info-panel">
+      <div class="inner-panel"></div>
+    </div>
+    <div class="new-login-box">
+      <div class="white-box">
+        <h3 class="box-title m-b-0">Sign In to Admin</h3>
+        <small>Enter your details below</small>
+        <form class="form-horizontal new-lg-form" id="loginform" action="index.html">
+          <div class="form-group  m-t-20">
+            <div class="col-xs-12">
+              <label>Email Address</label>
+              <input class="form-control" type="text" required="" placeholder="Username">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <label>Password</label>
+              <input class="form-control" type="password" required="" placeholder="Password">
+            </div>
+          </div>
+          <div class="form-group text-center m-t-20">
+            <div class="col-xs-12">
+              <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">
+                Log In
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'login',
+  data: function () {
+    return {
+      credentials: {
+        username: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    onSubmit: function () {
+      this.$store.dispatch('auth/login', this)
+    }
+  },
+  computed: mapGetters({
+    error: 'auth/error'
+  })
+}
+</script>
+
+<style>
+.new-login-register {
+  position: fixed;
+  height: 100%;
+}
+
+.new-login-register .lg-info-panel {
+  background: url(~assets/images/login-register.jpg) center center/cover no-repeat!important;
+  width: 500px;
+  height: 100%;
+  position: fixed;
+}
+
+.new-login-register .new-login-box {
+  margin-left: 50%;
+  margin-top: 10%;
+  width: 400px;
+}
+
+.white-box {
+  background: #fff;
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 1350px) {
+  .new-login-register .lg-info-panel {
+    width: 450px;
+  }
+  .new-login-register .new-login-box {
+    margin-left: 500px;
+  }
+}
+</style>
+
