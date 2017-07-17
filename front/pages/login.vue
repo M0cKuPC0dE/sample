@@ -7,17 +7,27 @@
       <div class="white-box">
         <h3 class="box-title m-b-0">Sign In to Admin</h3>
         <small>Enter your details below</small>
-        <form class="form-horizontal new-lg-form" id="loginform" action="index.html">
+        <form class="form-horizontal new-lg-form" role="form" v-on:submit.prevent="onSubmit" autocomplete="off">
+          <div class="alert alert-danger alert-light alert-dismissible" role="alert" v-if="error != ''">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <i class="zmdi zmdi-close"></i>
+            </button>
+            <strong>
+              <i class="zmdi zmdi-close-circle"></i> Error!
+            </strong>
+            {{error}}
+          </div>
+  
           <div class="form-group  m-t-20">
             <div class="col-xs-12">
               <label>Email Address</label>
-              <input class="form-control" type="text" required="" placeholder="Username">
+              <input class="form-control" type="text" required="" placeholder="Username" v-model="credentials.username">
             </div>
           </div>
           <div class="form-group">
             <div class="col-xs-12">
               <label>Password</label>
-              <input class="form-control" type="password" required="" placeholder="Password">
+              <input class="form-control" type="password" required="" placeholder="Password" v-model="credentials.password">
             </div>
           </div>
           <div class="form-group text-center m-t-20">
@@ -34,6 +44,7 @@
 </template>
 
 <script>
+/* global $ */
 import { mapGetters } from 'vuex'
 
 export default {
@@ -48,6 +59,11 @@ export default {
   },
   methods: {
     onSubmit: function () {
+      if (process.BROWSER_BUILD) {
+        $(document).ready(function () {
+          $('button[type="submit"]').prop('disabled', true)
+        })
+      }
       this.$store.dispatch('auth/login', this)
     }
   },

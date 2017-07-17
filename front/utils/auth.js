@@ -4,7 +4,7 @@ const OAUTH_TOKEN = '/oauth/token'
 const OAUTH_CHECK = '/oauth/check_token?token='
 const OAUTH_HASH = 'Y2xpZW50OnNlY3JldA=='
 // const LOGIN_URL = 'https://learning.mitrphol.com/'
-const DEV_LOGIN_URL = 'localhost:8080/'
+const DEV_LOGIN_URL = 'http://localhost:8080/'
 
 import axios from 'axios'
 

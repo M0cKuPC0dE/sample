@@ -38,8 +38,8 @@ export const mutations = {
 export const actions = {
   login: (context, vc) => {
     auth.login(vc).then((data) => {
-      Cookies.set('at', data.data.access_token, { expires: 1, secure: false })
-      Cookies.set('rt', data.data.refresh_token, { expires: 1, secure: false })
+      Cookies.set('AT', data.data.access_token, { expires: 1, secure: false })
+      Cookies.set('RT', data.data.refresh_token, { expires: 1, secure: false })
       context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities[0] })
       vc.$router.push('/')
     }, (data) => {
@@ -53,13 +53,13 @@ export const actions = {
     })
   },
   logout: (context, vc) => {
-    Cookies.remove('at', { secure: false })
-    Cookies.remove('rt', { secure: false })
+    Cookies.remove('AT', { secure: false })
+    Cookies.remove('RT', { secure: false })
     context.commit('authen', { status: false, error: '' })
     vc.$router.replace('/login')
   },
   checkAuth: (context, router) => {
-    let rt = Cookies.get('at')
+    let rt = Cookies.get('AT')
     if (rt) {
       auth.checkAuth(rt).then((data) => {
         context.commit('authen', { status: true, error: '', name: jwt(rt).name, authority: jwt(rt).authorities[0] })
