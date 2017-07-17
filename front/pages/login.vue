@@ -8,8 +8,8 @@
         <h3 class="box-title m-b-0">Sign In to Admin</h3>
         <small>Enter your details below</small>
         <form class="form-horizontal new-lg-form" role="form" v-on:submit.prevent="onSubmit" autocomplete="off">
-          <div class="alert alert-danger alert-light alert-dismissible" role="alert" v-if="error != ''">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <div id="errmsg" class="alert alert-danger alert-light alert-dismissible" role="alert" v-if="error != ''">
+            <button type="button" class="close" aria-label="Close" v-on:click="closeAlert()">
               <i class="zmdi zmdi-close"></i>
             </button>
             <strong>
@@ -57,14 +57,24 @@ export default {
       }
     }
   },
+
   methods: {
     onSubmit: function () {
       if (process.BROWSER_BUILD) {
         $(document).ready(function () {
+          $('.alert').show()
           $('button[type="submit"]').prop('disabled', true)
         })
       }
       this.$store.dispatch('auth/login', this)
+    },
+    closeAlert: function () {
+      $('.alert').hide()
+    }
+  },
+  watch: {
+    error: function () {
+      $('button[type="submit"]').prop('disabled', false)
     }
   },
   computed: mapGetters({
