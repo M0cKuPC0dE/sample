@@ -58,6 +58,9 @@ export const actions = {
     context.commit('authen', { status: false, error: '' })
     vc.$router.replace('/login')
   },
+  clearerror: (context, vc) => {
+    context.commit('authen', { status: false, error: '' })
+  },
   checkAuth: (context, router) => {
     let rt = Cookies.get('AT')
     if (rt) {

@@ -63,13 +63,16 @@ export default {
       if (process.BROWSER_BUILD) {
         $(document).ready(function () {
           $('.alert').show()
-          $('button[type="submit"]').prop('disabled', true)
+          if (!$('.alert').is(':visible')) {
+            $('button[type="submit"]').prop('disabled', true)
+          }
         })
       }
       this.$store.dispatch('auth/login', this)
     },
     closeAlert: function () {
       $('.alert').hide()
+      this.$store.dispatch('auth/clearerror', this)
     }
   },
   watch: {
