@@ -111,12 +111,20 @@ export default {
   margin-bottom: 30px;
 }
 
+
 @media (max-width: 1350px) {
   .new-login-register .lg-info-panel {
     width: 450px;
   }
   .new-login-register .new-login-box {
     margin-left: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-login-register .new-login-box {
+    margin: 10% auto 0;
+    width: 300px;
   }
 }
 </style>
