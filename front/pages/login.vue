@@ -48,7 +48,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'login',
+  layout: 'login',
   data: function () {
     return {
       credentials: {
