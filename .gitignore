@@ -12,3 +12,7 @@ front/dist
 
 # Maven
 back/target
+
+# intellij
+back/.idea/
+back/compliance.iml
