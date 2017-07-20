@@ -1,8 +1,6 @@
 <template>
   <section id="wrapper" class="new-login-register">
-    <div class="lg-info-panel">
-      <div class="inner-panel"></div>
-    </div>
+    <div class="lg-info-panel"></div>
     <div class="new-login-box">
       <div class="white-box">
         <h3 class="box-title m-b-0">Sign In to Admin</h3>
@@ -57,7 +55,6 @@ export default {
       }
     }
   },
-
   methods: {
     onSubmit: function () {
       if (process.BROWSER_BUILD) {
@@ -85,47 +82,3 @@ export default {
   })
 }
 </script>
-
-<style>
-.new-login-register {
-  position: fixed;
-  height: 100%;
-}
-
-.new-login-register .lg-info-panel {
-  background: url(~assets/images/login-register.jpg) center center/cover no-repeat!important;
-  width: 500px;
-  height: 100%;
-  position: fixed;
-}
-
-.new-login-register .new-login-box {
-  margin-left: 50%;
-  margin-top: 10%;
-  width: 400px;
-}
-
-.white-box {
-  background: #fff;
-  padding: 25px;
-  margin-bottom: 30px;
-}
-
-
-@media (max-width: 1350px) {
-  .new-login-register .lg-info-panel {
-    width: 450px;
-  }
-  .new-login-register .new-login-box {
-    margin-left: 500px;
-  }
-}
-
-@media (max-width: 480px) {
-  .new-login-register .new-login-box {
-    margin: 10% auto 0;
-    width: 300px;
-  }
-}
-</style>
-
