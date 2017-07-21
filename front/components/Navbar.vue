@@ -215,7 +215,7 @@
             </li>
             <li role="separator" class="divider"></li>
             <li>
-              <a v-on:click="logout(this)" href="#">
+              <a href="#" v-on:click="logout(this)">
                 <i class="fa fa-power-off"></i> Logout</a>
             </li>
           </ul>
