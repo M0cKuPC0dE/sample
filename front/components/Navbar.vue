@@ -215,7 +215,7 @@
             </li>
             <li role="separator" class="divider"></li>
             <li>
-              <a href="#">
+              <a v-on:click="logout(this)" href="#">
                 <i class="fa fa-power-off"></i> Logout</a>
             </li>
           </ul>
@@ -229,3 +229,20 @@
     <!-- /.navbar-static-side -->
   </nav>
 </template>
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'navbar',
+  methods: {
+    logout: function () {
+      this.$store.dispatch('auth/logout', this)
+    }
+  },
+  computed: mapGetters({
+    authenticated: 'auth/authenticated',
+    name: 'auth/name',
+    authority: 'auth/authority'
+  })
+}
+</script>
