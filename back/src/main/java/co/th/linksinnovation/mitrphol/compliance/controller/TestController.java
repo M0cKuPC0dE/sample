@@ -22,7 +22,7 @@ public class TestController {
     
     @GetMapping("/api/test")
     public String callAPI() {
-        return "Hello, Authencated User";
+        return "Hello, Authenticated User";
     }
     
 }
