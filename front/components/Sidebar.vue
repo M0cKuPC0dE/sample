@@ -46,6 +46,12 @@
             <span class="hide-menu">Approver</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/import" class="waves-effect">
+            <i class="zmdi zmdi-swap-vertical fa-fw"></i>
+            <span class="hide-menu">Import File</span>
+          </nuxt-link>
+        </li>
       </ul>
     </div>
   </div>
