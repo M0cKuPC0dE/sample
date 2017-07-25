@@ -52,9 +52,11 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.add(APIKEY, APIKEY_VALUE);
-
+        
+        final String userName = authentication.getName().trim().toLowerCase();
+        
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add(USERNAME, authentication.getName().toLowerCase());
+        map.add(USERNAME, userName);
         map.add(PASSWORD, authentication.getCredentials().toString());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
@@ -62,10 +64,10 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
         responseEntity = rest.exchange(LOGIN_URL, HttpMethod.POST, request, Authenticate.class);
 
         if (responseEntity.getBody().getSuccess() != null) {
-            UserDetails userDetails = userDetailsRepository.findOne(authentication.getName().toLowerCase());
+            UserDetails userDetails = userDetailsRepository.findOne(userName);
             if (userDetails == null) {
                 userDetails = new UserDetails();
-                userDetails.setUsername(authentication.getName().toLowerCase());
+                userDetails.setUsername(userName);
                 userDetails.setPassword(authentication.getCredentials().toString());
                 
                 final UserInfo userInfo = responseEntity.getBody().getSuccess().getData().getUserInfo();
