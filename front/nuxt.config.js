@@ -39,7 +39,8 @@ module.exports = {
     { src: '~plugins/bootstrap' },
     { src: '~plugins/metismenu' },
     { src: '~plugins/openclose' },
-    { src: '~plugins/treeview' }
+    { src: '~plugins/treeview' },
+    { src: '~plugins/i18n' }
   ],
   /*
   ** Customize the progress-bar color
@@ -53,7 +54,8 @@ module.exports = {
       'jquery',
       'bootstrap',
       'metismenu/dist/metisMenu.js',
-      'bootstrap-treeview/dist/bootstrap-treeview.min.js'
+      'bootstrap-treeview/dist/bootstrap-treeview.min.js',
+      'vue-i18n'
     ],
     plugins: [
       new webpack.ProvidePlugin({

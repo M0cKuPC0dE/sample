@@ -1,6 +1,11 @@
 import jwt from 'jwt-decode'
 import cookie from '~/utils/cookie'
 
+export const state = () => ({
+  locales: ['en', 'th'],
+  locale: 'en'
+})
+
 export const actions = {
   nuxtServerInit: (context, vc) => {
     if (vc.isServer && vc.req.headers.cookie) {

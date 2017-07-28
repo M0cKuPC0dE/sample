@@ -13,43 +13,43 @@
         <li>
           <nuxt-link to="/masterdata" class="waves-effect">
             <i class="zmdi zmdi-archive fa-fw"></i>
-            <span class="hide-menu">Master Data</span>
+            <span class="hide-menu">{{ $t('masterdatas.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/administrator" class="waves-effect">
             <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">Administrator</span>
+            <span class="hide-menu">{{ $t('administrators.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
-            <span class="hide-menu">Coordinator</span>
+            <span class="hide-menu">{{ $t('coordinators.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/owner" class="waves-effect">
             <i class="zmdi zmdi-account-circle fa-fw"></i>
-            <span class="hide-menu">Owner</span>
+            <span class="hide-menu">{{ $t('owners.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/reviewer" class="waves-effect">
             <i class="zmdi zmdi-account-box-o fa-fw"></i>
-            <span class="hide-menu">Reviewer</span>
+            <span class="hide-menu">{{ $t('reviewers.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/approver" class="waves-effect">
             <i class="zmdi zmdi-mood fa-fw"></i>
-            <span class="hide-menu">Approver</span>
+            <span class="hide-menu">{{ $t('approvers.title') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/import" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
-            <span class="hide-menu">Import File</span>
+            <span class="hide-menu">{{ $t('imports.title') }}</span>
           </nuxt-link>
         </li>
       </ul>

@@ -170,6 +170,12 @@
             </li>
           </ul>
         </li>
+        <li>
+          <a id="language" v-on:click="changeLanguage($i18n.locale)">
+            <img v-if="$i18n.locale === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
+            <img v-else src="~assets/images/th.png" width="36" class="img-circle">
+          </a>
+        </li>
       </ul>
       <ul class="nav navbar-top-links navbar-right pull-right active">
         <li class="in">
@@ -237,6 +243,13 @@ export default {
   methods: {
     logout: function () {
       this.$store.dispatch('auth/logout', this)
+    },
+    changeLanguage: function (language) {
+      if (language === 'en') {
+        this.$i18n.locale = 'th'
+      } else {
+        this.$i18n.locale = 'en'
+      }
     }
   },
   computed: mapGetters({

@@ -1,0 +1,26 @@
+{
+  "dashboards": {
+    "title": "DASHBOARD"
+  },
+  "masterdatas": {
+    "title": "Master Data"
+  },
+  "administrators": {
+    "title": "Administrator"
+  },
+  "coordinators": {
+    "title": "Coordinator"
+  },
+  "owners": {
+    "title": "Owner"
+  },
+  "reviewers": {
+    "title": "Reviewer"
+  },
+  "approvers": {
+    "title": "Approver"
+  },
+  "imports": {
+    "title": "Import File"
+  }
+}
