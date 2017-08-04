@@ -172,7 +172,7 @@
         </li>
         <li>
           <a id="language" v-on:click="changeLanguage($i18n.locale)">
-            <img v-if="$i18n.locale === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
+            <img v-if="locale === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
             <img v-else src="~assets/images/th.png" width="36" class="img-circle">
           </a>
         </li>
@@ -245,17 +245,19 @@ export default {
       this.$store.dispatch('auth/logout', this)
     },
     changeLanguage: function (language) {
+      let locale = 'en'
       if (language === 'en') {
-        this.$i18n.locale = 'th'
-      } else {
-        this.$i18n.locale = 'en'
+        locale = 'th'
       }
+      this.$i18n.locale = locale
+      this.$store.dispatch('changeLanguage', locale)
     }
   },
   computed: mapGetters({
     authenticated: 'auth/authenticated',
     name: 'auth/name',
-    authority: 'auth/authority'
+    authority: 'auth/authority',
+    locale: 'language'
   })
 }
 </script>

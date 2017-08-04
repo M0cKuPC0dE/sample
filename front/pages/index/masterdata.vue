@@ -4,12 +4,12 @@
   
       <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-          <h4 class="page-title">Master Data</h4>
+          <h4 class="page-title">{{ $t('masterdatas.title') }}</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
           <ol class="breadcrumb">
-            <li>Dashboard</li>
-            <li class="active">Master Data</li>
+            <li>{{ $t('dashboards.title') }}</li>
+            <li class="active">{{ $t('masterdatas.title') }}</li>
           </ol>
         </div>
       </div>
