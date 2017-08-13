@@ -171,10 +171,15 @@
           </ul>
         </li>
         <li>
-          <a id="language" v-on:click="changeLanguage($i18n.locale)">
-            <img v-if="locale === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
+          <a id="language">
+            <img v-if="selected === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
             <img v-else src="~assets/images/th.png" width="36" class="img-circle">
           </a>
+        </li>
+        <li>
+          <select v-model="selected">
+            <option :key="index" v-for="(loc,index) in locales">{{loc}}</option>
+          </select>
         </li>
       </ul>
       <ul class="nav navbar-top-links navbar-right pull-right active">
@@ -237,27 +242,56 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
 
 export default {
   name: 'navbar',
+  data: function () {
+    return { selected: this.$store.state.locale || 'en' }
+  },
+  mounted: function () {
+    this.init()
+  },
   methods: {
+    init: function () {
+      http
+        .get('/api/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          let locales = response.data
+          locales.forEach((locale) => {
+            this.localeMessage(locale.code)
+          })
+        })
+    },
+    localeMessage: function (locale) {
+      http
+        .get('/api/locales/' + locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          let data = response.data
+          this.$i18n.setLocaleMessage(locale, data)
+          if (this.$store.state.locale === locale) {
+            this.$i18n.locale = locale
+          }
+        })
+    },
     logout: function () {
       this.$store.dispatch('auth/logout', this)
-    },
-    changeLanguage: function (language) {
-      let locale = 'en'
-      if (language === 'en') {
-        locale = 'th'
-      }
-      this.$i18n.locale = locale
-      this.$store.dispatch('changeLanguage', locale)
+    }
+  },
+  watch: {
+    selected: function (val) {
+      this.$i18n.locale = val
+      this.$store.dispatch('changeLanguage', val)
     }
   },
   computed: mapGetters({
     authenticated: 'auth/authenticated',
     name: 'auth/name',
     authority: 'auth/authority',
-    locale: 'language'
+    locale: 'locale',
+    locales: 'locales'
   })
 }
+
 </script>

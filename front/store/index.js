@@ -3,17 +3,21 @@ import cookie from '~/utils/cookie'
 import * as Cookies from 'js-cookie'
 
 export const state = () => ({
-  locale: 'en'
+  locale: 'en',
+  locales: ['en']
 })
 
 export const getters = {
-  language: (state) => {
+  locale: (state) => {
     return state.locale
+  },
+  locales: (state) => {
+    return state.locales
   }
 }
 
 export const mutations = {
-  language: (state, payload) => {
+  locale: (state, payload) => {
     state.locale = payload.locale
   }
 }
@@ -24,7 +28,7 @@ export const actions = {
       var result = cookie(vc)
       try {
         context.commit('auth/authen', { status: true, error: '', name: jwt(result.AT).name, authority: jwt(result.AT).authorities[0] })
-        context.commit('language', { locale: result.locale })
+        context.commit('locale', { locale: result.locale })
       } catch (e) {
         console.log(e.name + ' : store/index.js')
       }
@@ -34,7 +38,7 @@ export const actions = {
   },
   changeLanguage: (context, locale) => {
     Cookies.set('locale', locale)
-    context.commit('language', { locale: locale })
+    context.commit('locale', { locale: locale })
   }
 
 }
