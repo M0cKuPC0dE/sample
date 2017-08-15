@@ -36,10 +36,8 @@ public class LocaleController {
     
     @GetMapping("/{lang}")
     public String getLocale(@PathVariable String lang) {
-        final String jsonFile = "locales/"+ lang + ".json";
-        
-        final ClassLoader classLoader = getClass().getClassLoader();
-	final File file = new File(classLoader.getResource(jsonFile).getFile());
+        final String jsonFile = "/mnt/locales/"+ lang + ".json";
+	final File file = new File(jsonFile);
 
         final StringBuilder result = new StringBuilder("");
         try (Scanner scanner = new Scanner(file)) {

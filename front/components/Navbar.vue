@@ -170,16 +170,12 @@
             </li>
           </ul>
         </li>
-        <li>
-          <a id="language">
-            <img v-if="selected === 'en'" src="~assets/images/en.png" width="36" class="img-circle">
-            <img v-else src="~assets/images/th.png" width="36" class="img-circle">
+        <li class="dropdown">
+          <a href="javascript:void(0)" class="open-close waves-effect waves-light">
+            <select v-model="selected">
+              <option :key="index" v-for="(loc,index) in locales">{{loc}}</option>
+            </select>
           </a>
-        </li>
-        <li>
-          <select v-model="selected">
-            <option :key="index" v-for="(loc,index) in locales">{{loc}}</option>
-          </select>
         </li>
       </ul>
       <ul class="nav navbar-top-links navbar-right pull-right active">
@@ -258,10 +254,13 @@ export default {
       http
         .get('/api/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
-          let locales = response.data
-          locales.forEach((locale) => {
+          let data = response.data
+          data.forEach((locale) => {
             this.localeMessage(locale.code)
+            this.$store.state.locales.push(locale.code)
           })
+        }).catch((e) => {
+          this.$router.replace('/login')
         })
     },
     localeMessage: function (locale) {
@@ -273,6 +272,8 @@ export default {
           if (this.$store.state.locale === locale) {
             this.$i18n.locale = locale
           }
+        }).catch((e) => {
+          this.$router.replace('/login')
         })
     },
     logout: function () {

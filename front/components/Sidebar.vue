@@ -52,6 +52,12 @@
             <span class="hide-menu">{{ $t('imports.title') }}</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/uploadlanguage" class="waves-effect">
+            <i class="zmdi zmdi-swap-vertical fa-fw"></i>
+            <span class="hide-menu">{{ $t('locales.title') }}</span>
+          </nuxt-link>
+        </li>
       </ul>
     </div>
   </div>

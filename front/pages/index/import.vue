@@ -10,7 +10,7 @@
   
       <div class="form-group" v-if="files.file">
         <div class="col-md-12">
-          <progressUpload :props="files.file" :url="files.url" :course="$route.params.id"></progressUpload>
+          <progressUpload :props="files.file" :url="files.url" :fileid="$route.params.id"></progressUpload>
         </div>
       </div>
     </div>

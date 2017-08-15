@@ -9,7 +9,7 @@ import cookie from '~/utils/cookie'
 
 export default {
   name: 'progressUpload',
-  props: ['props', 'url', 'course', 'index'],
+  props: ['props', 'url', 'fileid', 'index'],
   data: function () {
     return {
       chunkSize: (1024 * 100),
@@ -48,7 +48,6 @@ export default {
       chunk = this.props[this.sliceMethod](this.rangeStart, this.rangeEnd)
       self.uploadRequest.open('PUT', this.url, true)
       self.uploadRequest.overrideMimeType('application/octet-stream')
-
       self.uploadRequest.setRequestHeader('Authorization', 'bearer ' + cookie(self).AT)
       self.uploadRequest.setRequestHeader('Content-Name', encodeURIComponent(this.props.name))
       self.uploadRequest.setRequestHeader('Content-Start', self.rangeStart)

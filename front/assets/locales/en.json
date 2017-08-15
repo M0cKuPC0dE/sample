@@ -22,5 +22,8 @@
   },
   "imports": {
     "title": "Import File"
+  },
+  "locales": {
+    "title": "Upload Language"
   }
 }
