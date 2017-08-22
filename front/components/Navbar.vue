@@ -171,11 +171,20 @@
           </ul>
         </li>
         <li class="dropdown">
-          <a href="javascript:void(0)" class="open-close waves-effect waves-light">
-            <select v-model="selected">
-              <option :key="index" v-for="(loc,index) in locales">{{loc}}</option>
-            </select>
+          <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
+            <strong>{{this.selected}}</strong>
           </a>
+          <ul class="dropdown-menu dropdown animated bounceInDown">
+            <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
+              <a href="#">
+                <div>
+                  <p>
+                    <strong>{{langcode}}</strong>
+                  </p>
+                </div>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
       <ul class="nav navbar-top-links navbar-right pull-right active">
@@ -276,14 +285,13 @@ export default {
           this.$router.replace('/login')
         })
     },
-    logout: function () {
-      this.$store.dispatch('auth/logout', this)
-    }
-  },
-  watch: {
-    selected: function (val) {
+    setLanguage: function (val) {
+      this.selected = val
       this.$i18n.locale = val
       this.$store.dispatch('changeLanguage', val)
+    },
+    logout: function () {
+      this.$store.dispatch('auth/logout', this)
     }
   },
   computed: mapGetters({
