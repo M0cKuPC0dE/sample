@@ -18,80 +18,22 @@
           <div class="white-box">
   
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <h3 class="box-title">Manage Master Data</h3>
-              </div>
-              <div class="col-md-4">
-                <button class="btn btn-block btn-info btn-rounded">Add Category</button>
-              </div>
-              <div class="col-md-4">
-                <button class="btn btn-block btn-info btn-rounded">Add Compliant</button>
               </div>
             </div>
   
             <div class="row">
               <div class="col-md-4">
-                <div id="treeview" class="treeview">
-                  <ul class="list-group">
-                    <li class="list-group-item node-treeview" data-nodeid="0" style="color:undefined;background-color:undefined;">
-                      <span class="icon expand-icon glyphicon glyphicon-minus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชบัญญัติ
-                      <span class="badge">3</span>
-                    </li>
-                    <li class="list-group-item node-treeview" data-nodeid="1" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกำหนด
-                      <span class="badge">3</span>
-                    </li>
-                    <li class="list-group-item node-treeview" data-nodeid="3" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกฤษฎีกา
-                      <span class="badge">3</span>
-                    </li>
-                  </ul>
+                <div>
+                  <div id="category" class="treeview"></div>
+                  <nuxt-link to="/masterdata/add" class="btn btn-block btn-info btn-rounded">เพิ่มหมวดหมู่</nuxt-link>
+                  <button class="btn btn-block btn-info btn-rounded">นำเข้าข้อมูล</button>
                 </div>
               </div>
               <div class="col-md-8">
   
-                <div class="table-responsive">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>ข้อกฎหมาย</th>
-                        <th>วันหมดอายุ</th>
-                        <th>สถานะ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>ข้อกฎหมาย 1</td>
-                        <td>30/4/2560</td>
-                        <td>
-                          <span class="label label-danger">Expire</span>
-                        </td>
-                        <tr>
-                          <td>2</td>
-                          <td>ข้อกฎหมาย 2</td>
-                          <td>31/12/2560</td>
-                          <td>
-                            <span class="label label-success">Active</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>ข้อกฎหมาย 3</td>
-                          <td>31/12/2560</td>
-                          <td>
-                            <span class="label label-success">Active</span>
-                          </td>
-                        </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <nuxt-child :parent='7'></nuxt-child>
   
               </div>
             </div>
@@ -103,3 +45,64 @@
     </div>
   </div>
 </template>
+
+<script>
+/* global $ */
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
+
+export default {
+  asyncData: function (context) {
+    return http
+      .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .then((response) => {
+        return { categories: response.data }
+      })
+      .catch((e) => {
+        context.redirect('/login')
+      })
+  },
+  mounted: function () {
+    this.renderTreeview(this.categories)
+  },
+  watch: {
+    $route: function (val) {
+      var self = this
+      return http
+        .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
+        .then((response) => {
+          self.renderTreeview(response.data)
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    }
+  },
+  methods: {
+    renderTreeview: function (categories) {
+      var self = this
+      $('#category').treeview({
+        expandIcon: 'glyphicon glyphicon-chevron-right',
+        collapseIcon: 'glyphicon glyphicon-chevron-down',
+        showTags: true,
+        data: self.cat2node(categories)
+      })
+    },
+    cat2node: function (categories) {
+      var self = this
+      var nodes = []
+      if (!categories) return
+
+      categories.forEach(function (category) {
+        var node = {
+          text: category.name,
+          tags: ['0'],
+          nodes: self.cat2node(category.childs)
+        }
+        nodes.push(node)
+      })
+      return nodes
+    }
+  }
+}
+</script>
