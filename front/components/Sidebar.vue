@@ -58,6 +58,12 @@
             <span class="hide-menu">{{ $t('locales.title') }}</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/compliance/add" class="waves-effect">
+            <i class="zmdi zmdi-archive fa-fw"></i>
+            <span class="hide-menu">Compliance Data</span>
+          </nuxt-link>
+        </li>
       </ul>
     </div>
   </div>
