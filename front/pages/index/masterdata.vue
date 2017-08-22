@@ -33,7 +33,7 @@
               </div>
               <div class="col-md-8">
   
-                <nuxt-child :parent='7'></nuxt-child>
+                <nuxt-child :parent="parent"></nuxt-child>
   
               </div>
             </div>
@@ -62,6 +62,11 @@ export default {
         context.redirect('/login')
       })
   },
+  data: function () {
+    return {
+      parent: 'null'
+    }
+  },
   mounted: function () {
     this.renderTreeview(this.categories)
   },
@@ -85,7 +90,15 @@ export default {
         expandIcon: 'glyphicon glyphicon-chevron-right',
         collapseIcon: 'glyphicon glyphicon-chevron-down',
         showTags: true,
-        data: self.cat2node(categories)
+        data: self.cat2node(categories),
+        onNodeSelected: function (event, data) {
+          self.$nextTick(function () {
+            self.parent = data.id
+          })
+        },
+        onNodeUnselected: function (event, data) {
+          self.parent = 'null'
+        }
       })
     },
     cat2node: function (categories) {
@@ -96,7 +109,8 @@ export default {
       categories.forEach(function (category) {
         var node = {
           text: category.name,
-          tags: ['0'],
+          id: category.id,
+          tags: [category.childs.length],
           nodes: self.cat2node(category.childs)
         }
         nodes.push(node)
