@@ -23,7 +23,7 @@
               </div>
             </div>
 
-            <form class="form-horizontal">
+            <form class="form-horizontal" v-on:submit.prevent="onSave">
 
               <div class="row">
                 <div class="col-md-3 col-sm-12">
@@ -128,6 +128,8 @@
 </template>
 <script>
 import ProgressUpload from '~components/ProgressUpload'
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
 
 export default {
   components: {
@@ -155,8 +157,14 @@ export default {
       obj['url'] = url
       this.objupload = obj
     },
-    onSubmit: function () {
+    onSave: function () {
       this.$set(this, 'files', this.objupload)
+
+      var self = this
+      http.post('/api/category', { parent: { id: self.parent }, name: self.name }, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then(response => {
+          self.$router.push({ path: '/masterdata' })
+        })
     }
   }
 }
