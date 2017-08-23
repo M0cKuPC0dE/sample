@@ -18,7 +18,7 @@
           <div class="white-box">
   
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 <h3 class="box-title">Manage Master Data</h3>
               </div>
             </div>
@@ -27,8 +27,7 @@
               <div class="col-md-4">
                 <div>
                   <div id="category" class="treeview"></div>
-                  <nuxt-link to="/masterdata/add" class="btn btn-block btn-info btn-rounded">เพิ่มหมวดหมู่</nuxt-link>
-                  <button class="btn btn-block btn-info btn-rounded">นำเข้าข้อมูล</button>
+                  <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info btn-rounded">เพิ่มหมวดหมู่</nuxt-link>
                 </div>
               </div>
               <div class="col-md-8">
@@ -73,14 +72,16 @@ export default {
   watch: {
     $route: function (val) {
       var self = this
-      return http
-        .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
-        .then((response) => {
-          self.renderTreeview(response.data)
-        })
-        .catch((e) => {
-          self.$router.replace('/login')
-        })
+      if (val.path === '/masterdata') {
+        return http
+          .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
+          .then((response) => {
+            self.renderTreeview(response.data)
+          })
+          .catch((e) => {
+            self.$router.replace('/login')
+          })
+      }
     }
   },
   methods: {
@@ -95,11 +96,9 @@ export default {
           self.$nextTick(function () {
             self.parent = data.id
           })
-        },
-        onNodeUnselected: function (event, data) {
-          self.parent = 'null'
         }
       })
+      $('#category').treeview('collapseAll', { silent: true })
     },
     cat2node: function (categories) {
       var self = this

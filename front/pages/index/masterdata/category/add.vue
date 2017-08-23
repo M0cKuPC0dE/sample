@@ -1,8 +1,6 @@
 <template>
   <form v-on:submit.prevent="onSave">
     <div class="form-body">
-      <h3 class="box-title">เพิ่มหมวดหมู่</h3>
-      <hr class="m-t-0">
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">

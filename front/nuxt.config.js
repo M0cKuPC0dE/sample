@@ -15,7 +15,7 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     bodyAttrs: {
-      class: 'fix-header'
+      class: 'fix-header hide-sidebar'
     }
   },
   /*
