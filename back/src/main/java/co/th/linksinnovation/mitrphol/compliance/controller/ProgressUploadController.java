@@ -82,6 +82,9 @@ public class ProgressUploadController {
                     Row nextRow = iterator.next();
                     if(nextRow.getRowNum() == 0){
                         continue;
+                    } else if( nextRow.getCell(15).getStringCellValue() == null
+                               || nextRow.getCell(15).getStringCellValue().length() == 0){
+                        break;
                     }
                     
                     // get category
