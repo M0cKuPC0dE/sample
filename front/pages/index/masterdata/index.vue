@@ -1,7 +1,9 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-4"></div>
+      <div class="col-md-4 m-b-10">
+        <nuxt-link to="/masterdata/category/edit" class="btn btn-block btn-warning">แก้ไขหมวดหมู่</nuxt-link>
+      </div>
       <div class="col-md-4 m-b-10">
         <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info">เพิ่มหมวดหมู่</nuxt-link>
       </div>
@@ -43,18 +45,16 @@
                 <nuxt-link :to="'/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
                   <i class="ti-search"></i>
                 </nuxt-link>
-                <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                <nuxt-link :to="'/masterdata/compliance/edit/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
-                </a>
-                <a href="javascript:void(0)" class="text-inverse" title="" data-toggle="tooltip" title="ลบ">
-                  <i class="ti-trash"></i>
-                </a>
+                </nuxt-link>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+  
   </div>
 </template>
 

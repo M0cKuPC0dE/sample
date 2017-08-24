@@ -59,7 +59,7 @@ export default {
       })
   },
   data: function () {
-    return { category: { id: 'huhu' } }
+    return { category: { id: 'null' } }
   },
   mounted: function () {
     this.renderTreeview(this.categories)
@@ -90,6 +90,10 @@ export default {
         onNodeSelected: function (event, data) {
           self.$store.dispatch('category/setcategory', data.category)
           self.$set(self, 'category', data.category)
+        },
+        onNodeUnselected: function (event, data) {
+          self.$store.dispatch('category/setcategory', { id: 'null' })
+          self.$set(self, 'category', { id: 'null' })
         }
       })
       $('#category').treeview('collapseAll', { silent: true })

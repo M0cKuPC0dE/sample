@@ -9,6 +9,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class ComplianceController {
 
     @GetMapping
     public List<Compliance> get() {
-        return complianceRepository.findAll();
+        return complianceRepository.findByDeletedIsFalse();
     }
 
     @GetMapping("/{id}")
@@ -40,5 +41,12 @@ public class ComplianceController {
     @PostMapping
     public Compliance post(@RequestBody Compliance compliance) {
         return complianceRepository.save(compliance);
+    }
+    
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id){
+        Compliance findOne = complianceRepository.findOne(id);
+        findOne.setDeleted(Boolean.TRUE);
+        complianceRepository.save(findOne);
     }
 }

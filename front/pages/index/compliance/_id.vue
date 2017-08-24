@@ -23,7 +23,16 @@
               </div>
             </div>
   
-            <form class="form-horizontal" v-on:submit.prevent="onSave">
+            <form class="form-horizontal">
+  
+              <div class="form-group">
+                <label class="col-md-12">
+                  <strong>หมวดหมู่</strong>
+                </label>
+                <div class="col-md-12">
+                  {{compliance.category.name}}
+                </div>
+              </div>
   
               <div class="row">
                 <div class="col-md-3 col-sm-12">
@@ -32,7 +41,7 @@
                       <strong>สถานะ</strong>
                     </label>
                     <div class="col-md-12">
-                      <span class="label label-danger">-{{compliance.status}}</span>
+                      <span class="label label-success">ACTIVE</span>
                     </div>
                   </div>
                 </div>
@@ -47,7 +56,6 @@
                     </div>
                   </div>
                 </div>
-  
               </div>
   
               <div class="form-group">
@@ -130,6 +138,12 @@
                   <strong>Keyword Tags</strong>
                 </label>
                 <div class="col-md-12">
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <div class="col-md-12 m-b-10">
+                  <nuxt-link :to="'/masterdata/compliance/edit/'+compliance.id" class="btn btn-block btn-warning">แก้ไขข้อกฎหมาย</nuxt-link>
                 </div>
               </div>
   

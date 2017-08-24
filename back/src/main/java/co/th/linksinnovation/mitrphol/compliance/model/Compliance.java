@@ -29,9 +29,9 @@ public class Compliance {
     private Long id;
     private String legalName;
     private Integer year;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date publicDate;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date effectiveDate;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -40,6 +40,6 @@ public class Compliance {
     private String important;
     private String legalDuty;
     @ManyToOne
-    @JsonBackReference
     private Category category;
+    private Boolean deleted = false;
 }

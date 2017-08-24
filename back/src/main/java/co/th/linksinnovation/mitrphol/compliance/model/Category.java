@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 /**
  *
@@ -32,10 +33,9 @@ public class Category {
     private Category parent;
     @OneToMany(mappedBy = "parent")
     @JsonManagedReference
+    @Where(clause = "deleted = 0")
     private List<Category> childs;
-    @OneToMany(mappedBy = "category")
-    @JsonManagedReference
-    private List<Compliance> compliances;
+    private Boolean deleted = false;
     
     public void addChild(Category category){
         if(this.childs == null){
