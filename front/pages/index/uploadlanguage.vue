@@ -1,7 +1,17 @@
 <template>
   <div id="page-wrapper">
     <div class="container-fluid">
-      <h3>Upload Language File</h3>
+      <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+          <h4 class="page-title">Upload Language File</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+          <ol class="breadcrumb">
+            <li>Dashboard</li>
+            <li class="active">Upload Language Filee</li>
+          </ol>
+        </div>
+      </div>
       <form class="form-horizontal" v-on:submit.prevent="onSubmit">
         <div class="form-group" v-if="!files.file">
           <div class="col-md-6">
@@ -56,7 +66,6 @@ export default {
       this.objupload = obj
     },
     onSubmit: function () {
-      console.log(this.objupload)
       this.$set(this, 'files', this.objupload)
     }
   }
