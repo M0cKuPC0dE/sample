@@ -38,7 +38,6 @@ module.exports = {
   plugins: [
     { src: '~plugins/bootstrap' },
     { src: '~plugins/metismenu' },
-    { src: '~plugins/openclose' },
     { src: '~plugins/treeview' },
     { src: '~plugins/i18n' }
   ],

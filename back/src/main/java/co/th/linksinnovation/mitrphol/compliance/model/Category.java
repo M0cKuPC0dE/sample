@@ -33,6 +33,9 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     @JsonManagedReference
     private List<Category> childs;
+    @OneToMany(mappedBy = "category")
+    @JsonManagedReference
+    private List<Compliance> compliances;
     
     public void addChild(Category category){
         if(this.childs == null){

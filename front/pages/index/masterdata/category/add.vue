@@ -22,16 +22,19 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  props: ['parent'],
+  props: ['category'],
   data: function () {
     return {
       name: ''
     }
   },
+  mounted: function () {
+    console.log(this.$route)
+  },
   methods: {
     onSave: function () {
       var self = this
-      http.post('/api/category', { parent: { id: self.parent }, name: self.name }, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http.post('/api/category', { parent: { id: self.category.id }, name: self.name }, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/masterdata' })
         })

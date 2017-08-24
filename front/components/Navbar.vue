@@ -245,7 +245,9 @@
     <!-- /.navbar-static-side -->
   </nav>
 </template>
+
 <script>
+/* global $ */
 import { mapGetters } from 'vuex'
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
@@ -257,6 +259,10 @@ export default {
   },
   mounted: function () {
     this.init()
+    $('.open-close').on('click', function () {
+      $('body').toggleClass('show-sidebar').toggleClass('hide-sidebar')
+      $('.sidebar-head .open-close i').toggleClass('ti-menu')
+    })
   },
   methods: {
     init: function () {

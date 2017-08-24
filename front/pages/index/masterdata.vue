@@ -24,15 +24,15 @@
             </div>
   
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4 m-b-10">
                 <div>
                   <div id="category" class="treeview"></div>
                   <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info btn-rounded">เพิ่มหมวดหมู่</nuxt-link>
                 </div>
               </div>
               <div class="col-md-8">
-  
-                <nuxt-child :parent="parent"></nuxt-child>
+                {{category}}
+                <nuxt-child :category="category"></nuxt-child>
   
               </div>
             </div>
@@ -55,16 +55,11 @@ export default {
     return http
       .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
-        return { categories: response.data }
+        return { categories: response.data, category: { id: 'null' } }
       })
       .catch((e) => {
         context.redirect('/login')
       })
-  },
-  data: function () {
-    return {
-      parent: 'null'
-    }
   },
   mounted: function () {
     this.renderTreeview(this.categories)
@@ -76,6 +71,7 @@ export default {
         return http
           .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
           .then((response) => {
+            self.category = { id: 'null' }
             self.renderTreeview(response.data)
           })
           .catch((e) => {
@@ -94,7 +90,7 @@ export default {
         data: self.cat2node(categories),
         onNodeSelected: function (event, data) {
           self.$nextTick(function () {
-            self.parent = data.id
+            self.category = data.category
           })
         }
       })
@@ -108,7 +104,7 @@ export default {
       categories.forEach(function (category) {
         var node = {
           text: category.name,
-          id: category.id,
+          category: category,
           tags: [category.childs.length],
           nodes: self.cat2node(category.childs)
         }
