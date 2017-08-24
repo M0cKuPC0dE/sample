@@ -28,6 +28,7 @@ module.exports = {
     { src: 'font-awesome/css/font-awesome.css' },
     { src: 'material-design-iconic-font/dist/css/material-design-iconic-font.css' },
     { src: 'bootstrap-treeview/dist/bootstrap-treeview.min.css' },
+    { src: 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
     { src: '~assets/less/colors/megna.less', lang: 'less' }
@@ -54,6 +55,8 @@ module.exports = {
       'bootstrap',
       'metismenu/dist/metisMenu.js',
       'bootstrap-treeview/dist/bootstrap-treeview.min.js',
+      'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+      'bootstrap-datepicker/dist/locales/bootstrap-datepicker.th.min.js',
       'vue-i18n'
     ],
     plugins: [

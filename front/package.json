@@ -5,12 +5,13 @@
   "author": "Jirawong Wongdokpuang <greannetwork@gmail.com>",
   "private": true,
   "dependencies": {
+    "bootstrap-datepicker": "^1.7.1",
     "nuxt": "latest"
   },
   "scripts": {
     "dev": "HOST=0.0.0.0 nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "HOST=0.0.0.0 nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"

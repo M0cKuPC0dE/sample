@@ -36,7 +36,7 @@ public class Compliance {
     @Enumerated(EnumType.STRING)
     private Status status;
     private String department;
-    private String ministy;
+    private String ministry;
     private String important;
     private String legalDuty;
     @ManyToOne

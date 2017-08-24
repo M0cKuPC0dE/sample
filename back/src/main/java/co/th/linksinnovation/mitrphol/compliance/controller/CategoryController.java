@@ -35,7 +35,6 @@ public class CategoryController {
     public List<Category> post(@RequestBody Category category) {
         if (category.getParent().getId() != null) {
             Category child = categoryRepository.save(category);
-            System.out.println("=======> have parent" + child.getParent().getId());
             Category parent = categoryRepository.findOne(child.getParent().getId());
             parent.addChild(child);
             categoryRepository.save(parent);

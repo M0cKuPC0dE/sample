@@ -31,8 +31,8 @@
                 </div>
               </div>
               <div class="col-md-8">
-                {{category}}
-                <nuxt-child :category="category"></nuxt-child>
+  
+                <nuxt-child :selected="category" :categories="categories"></nuxt-child>
   
               </div>
             </div>
@@ -55,11 +55,14 @@ export default {
     return http
       .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
-        return { categories: response.data, category: { id: 'null' } }
+        return { categories: response.data }
       })
       .catch((e) => {
         context.redirect('/login')
       })
+  },
+  data: function () {
+    return { category: { id: 'huhu' } }
   },
   mounted: function () {
     this.renderTreeview(this.categories)
@@ -71,7 +74,6 @@ export default {
         return http
           .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
           .then((response) => {
-            self.category = { id: 'null' }
             self.renderTreeview(response.data)
           })
           .catch((e) => {
@@ -89,9 +91,8 @@ export default {
         showTags: true,
         data: self.cat2node(categories),
         onNodeSelected: function (event, data) {
-          self.$nextTick(function () {
-            self.category = data.category
-          })
+          self.$store.dispatch('category/setcategory', data.category)
+          self.$set(self, 'category', data.category)
         }
       })
       $('#category').treeview('collapseAll', { silent: true })

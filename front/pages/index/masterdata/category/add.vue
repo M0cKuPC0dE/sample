@@ -18,18 +18,28 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  props: ['category'],
+  props: ['selected', 'categories'],
   data: function () {
     return {
-      name: ''
+      name: '',
+      category: { id: 'null' }
     }
   },
+  watch: {
+    selected: function (val) {
+      this.$set(this, 'category', val)
+    }
+  },
+  computed: mapGetters({
+    initCategory: 'category/category'
+  }),
   mounted: function () {
-    console.log(this.$route)
+    this.$set(this, 'category', this.initCategory)
   },
   methods: {
     onSave: function () {

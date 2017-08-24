@@ -28,35 +28,54 @@
         <table class="table">
           <thead>
             <tr>
-              <th>ข้อกฎหมาย</th>
-              <th>วันหมดอายุ</th>
+              <th>หน้าที่ตามกฎหมาย</th>
               <th>สถานะ</th>
+              <th>จัดการ</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>ข้อกฎหมาย 1</td>
-              <td>30/4/2560</td>
+            <tr :key="index" v-for="(compliance,index) in compliances">
+              <td>{{compliance.legalDuty}}</td>
               <td>
                 <span class="label label-danger">Expire</span>
               </td>
-              <tr>
-                <td>ข้อกฎหมาย 2</td>
-                <td>31/12/2560</td>
-                <td>
-                  <span class="label label-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>ข้อกฎหมาย 3</td>
-                <td>31/12/2560</td>
-                <td>
-                  <span class="label label-success">Active</span>
-                </td>
-              </tr>
+              <td>
+                <a href="javascript:void(0)" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
+                  <i class="ti-search"></i>
+                </a>
+                <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                  <i class="ti-marker-alt"></i>
+                </a>
+                <a href="javascript:void(0)" class="text-inverse" title="" data-toggle="tooltip" title="ลบ">
+                  <i class="ti-trash"></i>
+                </a>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+/* global $ */
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
+
+export default {
+  asyncData: function (context) {
+    return http
+      .get('/api/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .then((response) => {
+        return { compliances: response.data }
+      })
+      .catch((e) => {
+        context.redirect('/login')
+      })
+  },
+  mounted: function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  }
+}
+</script>
