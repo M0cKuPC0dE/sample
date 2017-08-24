@@ -5,7 +5,7 @@
         <span class="help">หมวดหมู่</span>
       </label>
       <div class="col-md-12">
-        <input type="text" class="form-control" :value="category.name" disabled required>
+        <input type="text" class="form-control" :value="category.name" readonly required>
       </div>
     </div>
     <div class="form-group">

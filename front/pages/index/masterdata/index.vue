@@ -29,20 +29,20 @@
           <thead>
             <tr>
               <th>หน้าที่ตามกฎหมาย</th>
-              <th>สถานะ</th>
-              <th>จัดการ</th>
+              <th class="text-center">สถานะ</th>
+              <th class="text-center">จัดการ</th>
             </tr>
           </thead>
           <tbody>
             <tr :key="index" v-for="(compliance,index) in compliances">
               <td>{{compliance.legalDuty}}</td>
-              <td>
+              <td class="text-center">
                 <span class="label label-danger">Expire</span>
               </td>
-              <td>
-                <a href="javascript:void(0)" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
+              <td class="text-center">
+                <nuxt-link :to="'/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
                   <i class="ti-search"></i>
-                </a>
+                </nuxt-link>
                 <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
                 </a>

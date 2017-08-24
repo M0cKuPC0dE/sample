@@ -25,10 +25,7 @@
   
             <div class="row">
               <div class="col-md-4 m-b-10">
-                <div>
-                  <div id="category" class="treeview"></div>
-                  <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info btn-rounded">เพิ่มหมวดหมู่</nuxt-link>
-                </div>
+                <div id="category" class="treeview"></div>
               </div>
               <div class="col-md-8">
   
