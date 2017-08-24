@@ -85,7 +85,7 @@ export default {
       $('#category').treeview({
         expandIcon: 'glyphicon glyphicon-chevron-right',
         collapseIcon: 'glyphicon glyphicon-chevron-down',
-        showTags: true,
+        showTags: false,
         data: self.cat2node(categories),
         onNodeSelected: function (event, data) {
           self.$store.dispatch('category/setcategory', data.category)
