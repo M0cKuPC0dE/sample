@@ -25,11 +25,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -60,19 +60,21 @@ public class ProgressUploadController {
     @Autowired
     private CategoryRepository categoryRepository;
     
+    private final static SimpleDateFormat fd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+    
     @RequestMapping(value = "/examupload", method = RequestMethod.PUT)
     public void examUpload(@RequestBody byte[] file, HttpServletRequest request) throws 
         UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + 
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/Users/Jocobo/import/csv/" + 
                 request.getHeader("Content-Name") + "-" + filename));
         
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             try (FileInputStream inputStream = new FileInputStream(
-                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+                    new File("/Users/Jocobo/import/csv/" + request.getHeader("Content-Name") + "-" + filename))) {
                 
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
@@ -80,44 +82,43 @@ public class ProgressUploadController {
                 
                 while (iterator.hasNext()) {
                     Row nextRow = iterator.next();
+                    System.out.println("RowNum: " + nextRow.getRowNum());
                     if(nextRow.getRowNum() == 0){
                         continue;
-                    } else if( nextRow.getCell(15).getStringCellValue() == null
-                               || nextRow.getCell(15).getStringCellValue().length() == 0){
+                    } else if(getCellValue(nextRow.getCell(15)) == null
+                            || getCellValue(nextRow.getCell(15)).equals("")){
                         break;
                     }
                     
-                    // get category
-                    Category parent = null;
-                    String parentName = nextRow.getCell(0).getStringCellValue();
-                    if(parentName != null && !"".equals(parentName)) {
-                        parent = categoryRepository.findByNameAndParentIsNull(parentName);
-                        if(parent == null) {
-                            parent = new Category();
-                            parent.setName(parentName);
-                            categoryRepository.save(parent);
-                        }
+                    Category category = null;
+                    for(int i = 0; i <= 6; i++) {
+                        category = saveCategory(nextRow, i, category);
                     }
-                    Category child1 = createChildCategory(nextRow, 1, parent);
-                    Category child2 = createChildCategory(nextRow, 2, child1);
-                    Category child3 = createChildCategory(nextRow, 3, child2);
-                    Category child4 = createChildCategory(nextRow, 4, child3);
-                    Category child5 = createChildCategory(nextRow, 5, child4);
-                    Category child6 = createChildCategory(nextRow, 6, child5);
                     
+                    /*
+                    Category parent = saveCategory(nextRow, 0, null);
+                    Category child1 = saveCategory(nextRow, 1, parent);
+                    Category child2 = saveCategory(nextRow, 2, child1);
+                    Category child3 = saveCategory(nextRow, 3, child2);
+                    Category child4 = saveCategory(nextRow, 4, child3);
+                    Category child5 = saveCategory(nextRow, 5, child4);
+                    Category child6 = saveCategory(nextRow, 6, child5);
+                    */
                     // get compliance
-                    String legalname = nextRow.getCell(7).getStringCellValue();
-                    Double year = nextRow.getCell(8).getNumericCellValue();
-                  
-                    Date publicDate = nextRow.getCell(9).getDateCellValue();
-                    Date effectiveDate = nextRow.getCell(10).getDateCellValue();
-                    Status status = Status.valueOf(nextRow.getCell(11).getStringCellValue().toUpperCase());
-                    String department = nextRow.getCell(12).getStringCellValue();
-                    String ministry = nextRow.getCell(13).getStringCellValue();
-                    String important = nextRow.getCell(14).getStringCellValue();
-                    String legalDuty = nextRow.getCell(15).getStringCellValue();
+                    final String legalname = getCellValue(nextRow.getCell(7));
+                    final Double year =  Double.parseDouble(getCellValue(nextRow.getCell(8)));
                     
-                    Compliance compliance = new Compliance();
+                    final Date publicDate = fd.parse(getCellValue(nextRow.getCell(9)));
+                    final Date effectiveDate = fd.parse(getCellValue(nextRow.getCell(10)));
+                    
+                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(11)).toUpperCase());
+                    
+                    final String department = getCellValue(nextRow.getCell(12));
+                    final String ministry = getCellValue(nextRow.getCell(13));
+                    final String important = getCellValue(nextRow.getCell(14));
+                    final String legalDuty = getCellValue(nextRow.getCell(15));
+                    
+                    final Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
                     compliance.setYear(year.intValue());
                     compliance.setPublicDate(publicDate);
@@ -128,13 +129,14 @@ public class ProgressUploadController {
                     compliance.setImportant(important);
                     compliance.setLegalDuty(legalDuty);
                     
-                    compliance.setCategory(child6);
+                    compliance.setCategory(category);
                     
                     complianceRepository.save(compliance);
                     
                 }
                 workbook.close();
             }
+            
         }
     }
 
@@ -198,20 +200,50 @@ public class ProgressUploadController {
         }
     }
     
-    private Category createChildCategory(Row nextRow, int col, Category parent) {
-        Category child = null;
-        String childName = nextRow.getCell(col).getStringCellValue();
-        if (childName != null && !"".equals(childName)) {
-            child = categoryRepository.findByNameAndParent(childName, parent);
-            if (child == null) {
-                child = new Category();
-                child.setName(childName);
-                child.setParent(parent);
-                categoryRepository.save(child);
-            }
-        } else {
+    private Category saveCategory(Row nextRow, int col, Category parent) {
+        String categoryName = nextRow.getCell(col).getStringCellValue();
+        if (categoryName == null || "".equals(categoryName)) {    
             return parent;
         }
-        return child;
+        Category category = null;
+        if (parent == null) {
+            category = categoryRepository.findByNameAndParentIsNull(categoryName);
+        } else {
+            category = categoryRepository.findByNameAndParent(categoryName, parent);
+        }
+        
+        if (category != null) {
+            return category;
+        }
+        
+        category = new Category();
+        category.setName(categoryName);
+        category.setParent(parent);
+        categoryRepository.save(category);
+        return category;
+        
+    }
+    
+    private String getCellValue(Cell cell) {
+        if(cell == null) {
+            return null;
+        }
+        
+        final CellType type = cell.getCellTypeEnum();
+        switch(type) {
+            case BLANK :
+                return "";
+            case BOOLEAN :
+                return String.valueOf(cell.getBooleanCellValue());
+            case NUMERIC : 
+                if(cell.getCellStyle().getDataFormatString().equalsIgnoreCase("General")) {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+                return String.valueOf(cell.getDateCellValue());
+            default:
+                // String
+                return cell.getStringCellValue();
+        }
+       
     }
 }
