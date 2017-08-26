@@ -62,19 +62,19 @@ public class ProgressUploadController {
     
     private final static SimpleDateFormat fd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     
-    @RequestMapping(value = "/examupload", method = RequestMethod.PUT)
+    @RequestMapping(value = "/csvupload", method = RequestMethod.PUT)
     public void examUpload(@RequestBody byte[] file, HttpServletRequest request) throws 
         UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/Users/Jocobo/import/csv/" + 
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + 
                 request.getHeader("Content-Name") + "-" + filename));
         
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             try (FileInputStream inputStream = new FileInputStream(
-                    new File("/Users/Jocobo/import/csv/" + request.getHeader("Content-Name") + "-" + filename))) {
+                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
                 
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);

@@ -4,10 +4,10 @@
       <h3>Import File</h3>
       <div class="form-group" v-if="!files.file">
         <div class="col-md-12 text-center is-fileinput">
-          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('http://localhost:8080/api/examupload',$event)">
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('http://localhost:8080/api/csvupload',$event)">
         </div>
       </div>
-  
+
       <div class="form-group" v-if="files.file">
         <div class="col-md-12">
           <progressUpload :props="files.file" :url="files.url" :fileid="$route.params.id"></progressUpload>
