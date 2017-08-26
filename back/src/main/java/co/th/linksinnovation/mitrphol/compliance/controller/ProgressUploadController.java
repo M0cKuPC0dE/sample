@@ -95,15 +95,6 @@ public class ProgressUploadController {
                         category = saveCategory(nextRow, i, category);
                     }
                     
-                    /*
-                    Category parent = saveCategory(nextRow, 0, null);
-                    Category child1 = saveCategory(nextRow, 1, parent);
-                    Category child2 = saveCategory(nextRow, 2, child1);
-                    Category child3 = saveCategory(nextRow, 3, child2);
-                    Category child4 = saveCategory(nextRow, 4, child3);
-                    Category child5 = saveCategory(nextRow, 5, child4);
-                    Category child6 = saveCategory(nextRow, 6, child5);
-                    */
                     // get compliance
                     final String legalname = getCellValue(nextRow.getCell(7));
                     final Double year =  Double.parseDouble(getCellValue(nextRow.getCell(8)));
