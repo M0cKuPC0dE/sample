@@ -4,12 +4,12 @@
   
       <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-          <h4 class="page-title">เพิ่มข้อกฎหมาย</h4>
+          <h4 class="page-title">ข้อกฎหมาย</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
           <ol class="breadcrumb">
-            <li>Dashboard</li>
-            <li class="active">เพิ่มข้อกฎหมาย</li>
+            <li>หน้าหลัก</li>
+            <li class="active">ข้อกฎหมาย</li>
           </ol>
         </div>
       </div>

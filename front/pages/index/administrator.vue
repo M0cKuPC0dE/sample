@@ -38,61 +38,8 @@
             </form>
   
             <div class="row">
-              <div class="col-md-5">
-                <div id="treeview1" class="treeview">
-                  <ul class="list-group">
-                    <li class="list-group-item node-treeview2" data-nodeid="0" style="color:undefined;background-color:undefined;">
-                      <span class="icon expand-icon glyphicon glyphicon-minus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชบัญญัติ
-                      <span class="badge">3</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="1" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกำหนด
-                      <span class="badge">0</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="3" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกฤษฎีกา
-                      <span class="badge">2</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="7" style="color:undefined;background-color:undefined;">
-                      <span class="icon glyphicon"></span>
-                      <span class="icon node-icon fa fa-file-text-o"></span>ข้อกฎหมาย 1</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <button class="btn btn-block btn-info btn-rounded">Add &gt;&gt;</button>
-                <button class="btn btn-block btn-info btn-rounded">&lt;&lt; Remove </button>
-              </div>
-              <div class="col-md-5">
-                <div id="treeview2" class="treeview">
-                  <ul class="list-group">
-                    <li class="list-group-item node-treeview2" data-nodeid="0" style="color:undefined;background-color:undefined;">
-                      <span class="icon expand-icon glyphicon glyphicon-minus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชบัญญัติ
-                      <span class="badge">3</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="1" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกำหนด
-                      <span class="badge">0</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="3" style="color:undefined;background-color:undefined;">
-                      <span class="indent"></span>
-                      <span class="icon expand-icon glyphicon glyphicon-plus"></span>
-                      <span class="icon node-icon fa fa-folder"></span>พระราชกฤษฎีกา
-                      <span class="badge">2</span>
-                    </li>
-                    <li class="list-group-item node-treeview2" data-nodeid="7" style="color:undefined;background-color:undefined;">
-                      <span class="icon glyphicon"></span>
-                      <span class="icon node-icon fa fa-file-text-o"></span>ข้อกฎหมาย 1</li>
-                  </ul>
-                </div>
+              <div class="col-md-12">
+                <div id="allview" class="treeview"></div>
               </div>
             </div>
   
@@ -103,3 +50,68 @@
     </div>
   </div>
 </template>
+
+<script>
+/* global $ */
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
+
+export default {
+  asyncData: function (context) {
+    return http
+      .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .then((response) => {
+        return { categories: response.data }
+      })
+      .catch((e) => {
+        context.redirect('/login')
+      })
+  },
+  data: function () {
+    return { category: { id: 'null' } }
+  },
+  mounted: function () {
+    this.allview(this.categories)
+  },
+  methods: {
+    allview: function (categories) {
+      var self = this
+      $('#allview').treeview({
+        expandIcon: 'glyphicon glyphicon-chevron-right',
+        collapseIcon: 'glyphicon glyphicon-chevron-down',
+        showTags: false,
+        showCheckbox: true,
+        data: self.cat2node(categories),
+        onNodeChecked: function (event, data) {
+          data.nodes.forEach(function (node) {
+            $('#allview').treeview('checkNode', [node.nodeId, { silent: true }])
+          })
+        },
+        onNodeUnchecked: function (event, data) {
+          data.nodes.forEach(function (node) {
+            $('#allview').treeview('uncheckNode', [node.nodeId, { silent: true }])
+          })
+        }
+      })
+      $('#allview').treeview('collapseAll', { silent: true })
+    },
+    cat2node: function (categories) {
+      var self = this
+      var nodes = []
+      if (!categories) return
+
+      categories.forEach(function (category) {
+        var node = {
+          text: category.name,
+          category: category,
+          tags: [category.childs.length],
+          nodes: self.cat2node(category.childs)
+        }
+        nodes.push(node)
+      })
+      return nodes
+    }
+  }
+}
+</script>
+

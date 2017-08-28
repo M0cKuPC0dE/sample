@@ -5,7 +5,7 @@
         <span class="help">หมวดหมู่</span>
       </label>
       <div class="col-md-12">
-        <input type="text" class="form-control" :value="category.name" readonly required>
+        <input type="text" class="form-control readonly" :value="category.name" required>
       </div>
     </div>
     <div class="form-group">
@@ -108,6 +108,10 @@ export default {
     $('#effectivedate')
       .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
       .on('changeDate', () => { this.compliance.effectiveDate = $('#effectivedate').val() })
+
+    $('.readonly').on('keydown paste', function (e) {
+      e.preventDefault()
+    })
   },
   methods: {
     onSave: function () {

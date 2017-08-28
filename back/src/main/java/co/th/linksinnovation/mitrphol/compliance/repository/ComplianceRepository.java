@@ -19,5 +19,9 @@ public interface ComplianceRepository extends JpaRepository<Compliance, Long>{
     public List<Compliance> findByDeletedIsFalse();
 
     public List<Compliance> findByCategory(Category findOne);
+
+    public List<Compliance> findByLegalNameLikeAndLegalDutyLikeAndCategory(String get, String get0, Category findOne);
+
+    public List<Compliance> findByLegalNameLikeAndLegalDutyLike(String get, String get0);
     
 }

@@ -16,49 +16,55 @@
             <span class="hide-menu">{{ $t('masterdatas.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
-          <nuxt-link to="/administrator" class="waves-effect">
+        <li v-if="false">
+          <nuxt-link to="/group" class="waves-effect">
             <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">{{ $t('administrators.title') }}</span>
+            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
           </nuxt-link>
         </li>
         <li>
+          <nuxt-link to="/administrator" class="waves-effect">
+            <i class="zmdi zmdi-male-alt fa-fw"></i>
+            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
+          </nuxt-link>
+        </li>
+        <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
             <span class="hide-menu">{{ $t('coordinators.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/owner" class="waves-effect">
             <i class="zmdi zmdi-account-circle fa-fw"></i>
             <span class="hide-menu">{{ $t('owners.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/reviewer" class="waves-effect">
             <i class="zmdi zmdi-account-box-o fa-fw"></i>
             <span class="hide-menu">{{ $t('reviewers.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/approver" class="waves-effect">
             <i class="zmdi zmdi-mood fa-fw"></i>
             <span class="hide-menu">{{ $t('approvers.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/import" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
             <span class="hide-menu">{{ $t('imports.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/uploadlanguage" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
             <span class="hide-menu">{{ $t('locales.title') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/compliance/add" class="waves-effect">
             <i class="zmdi zmdi-archive fa-fw"></i>
             <span class="hide-menu">Compliance Data</span>

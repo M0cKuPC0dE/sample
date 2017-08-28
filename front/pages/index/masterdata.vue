@@ -2,29 +2,21 @@
   <div id="page-wrapper">
     <div class="container-fluid">
   
-      <div class="row bg-title">
-        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-          <h4 class="page-title">{{ $t('masterdatas.title') }}</h4>
-        </div>
-        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-          <ol class="breadcrumb">
-            <li>{{ $t('dashboards.title') }}</li>
-            <li class="active">{{ $t('masterdatas.title') }}</li>
-          </ol>
-        </div>
-      </div>
+      <breadcumb></breadcumb>
+  
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
   
             <div class="row">
               <div class="col-md-4">
-                <h3 class="box-title">Manage Master Data</h3>
+                <h3 class="box-title">ข้อมูลหลัก</h3>
               </div>
             </div>
   
             <div class="row">
               <div class="col-md-4 m-b-10">
+                <nuxt-link v-show="$route.path === '/masterdata'" to="/masterdata/import" class="btn btn-block btn-success m-b-10">นำเข้าข้อมูล</nuxt-link>
                 <div id="category" class="treeview"></div>
               </div>
               <div class="col-md-8">
@@ -46,8 +38,12 @@
 /* global $ */
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
+import Breadcumb from '~/components/Breadcumb'
 
 export default {
+  components: {
+    Breadcumb
+  },
   asyncData: function (context) {
     return http
       .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
@@ -90,10 +86,16 @@ export default {
         onNodeSelected: function (event, data) {
           self.$store.dispatch('category/setcategory', data.category)
           self.$set(self, 'category', data.category)
+          if (self.$route.path === '/masterdata/import') {
+            self.$router.push('/masterdata')
+          }
         },
         onNodeUnselected: function (event, data) {
           self.$store.dispatch('category/setcategory', { id: 'null' })
           self.$set(self, 'category', { id: 'null' })
+          if (self.$route.path === '/masterdata/import') {
+            // self.$router.push('/masterdata')
+          }
         }
       })
       $('#category').treeview('collapseAll', { silent: true })

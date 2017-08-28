@@ -5,9 +5,12 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
+import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,9 @@ public class ComplianceController {
     @Autowired
     private ComplianceRepository complianceRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @GetMapping
     public List<Compliance> get() {
         return complianceRepository.findByDeletedIsFalse();
@@ -38,13 +44,29 @@ public class ComplianceController {
         return complianceRepository.findOne(id);
     }
 
+    @GetMapping("/category/{id}")
+    public List<Compliance> getByCategory(@PathVariable("id") Long id) {
+        Category findOne = categoryRepository.findOne(id);
+        return complianceRepository.findByCategory(findOne);
+    }
+
     @PostMapping
     public Compliance post(@RequestBody Compliance compliance) {
         return complianceRepository.save(compliance);
     }
-    
+
+    @PostMapping("/search")
+    public List<Compliance> postSearch(@RequestBody Map<String, String> map) {
+        if (!map.get("category").equals("null")) {
+            Category findOne = categoryRepository.findOne(Long.parseLong(map.get("category")));
+            return complianceRepository.findByLegalNameLikeAndLegalDutyLikeAndCategory("%"+map.get("search")+"%","%"+ map.get("search")+"%", findOne);
+        } else {
+            return complianceRepository.findByLegalNameLikeAndLegalDutyLike("%"+map.get("search")+"%", "%"+map.get("search")+"%");
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public void delete(@PathVariable("id") Long id) {
         Compliance findOne = complianceRepository.findOne(id);
         findOne.setDeleted(Boolean.TRUE);
         complianceRepository.save(findOne);

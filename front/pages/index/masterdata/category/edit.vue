@@ -81,7 +81,7 @@ export default {
           self.$router.push('/masterdata')
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.push('/masterdata')
         })
     }
   }
