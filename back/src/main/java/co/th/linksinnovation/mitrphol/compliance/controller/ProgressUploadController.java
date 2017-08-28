@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -68,14 +69,14 @@ public class ProgressUploadController {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + 
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" +       
                 request.getHeader("Content-Name") + "-" + filename));
         
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             try (FileInputStream inputStream = new FileInputStream(
                     new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
-                
+                    
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
                 Iterator<Row> iterator = firstSheet.iterator();
@@ -226,11 +227,11 @@ public class ProgressUploadController {
                 return "";
             case BOOLEAN :
                 return String.valueOf(cell.getBooleanCellValue());
-            case NUMERIC : 
-                if(cell.getCellStyle().getDataFormatString().equalsIgnoreCase("General")) {
-                    return String.valueOf(cell.getNumericCellValue());
+            case NUMERIC :
+                if(HSSFDateUtil.isCellDateFormatted(cell)) {
+                     return String.valueOf(cell.getDateCellValue());
                 }
-                return String.valueOf(cell.getDateCellValue());
+                return String.valueOf(cell.getNumericCellValue());          
             default:
                 // String
                 return cell.getStringCellValue();
