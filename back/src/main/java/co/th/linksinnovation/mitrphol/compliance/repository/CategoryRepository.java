@@ -16,8 +16,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CategoryRepository extends JpaRepository<Category, Long>{
 
     public List<Category> findByParentIsNullAndDeletedIsFalse();
-    
-    public Category findByNameAndParent(String name, Category category);
-     
-    public Category findByNameAndParentIsNull(String name);
+       
+    public Category findByNameAndParentIsNullAndDeletedIsFalse(String name);
+
+    public Category findByNameAndParentAndDeletedIsFalse(String name, Category category);
 }

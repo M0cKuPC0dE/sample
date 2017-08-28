@@ -51,7 +51,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProgressUploadController {
 
     private static final int BUFFER_SIZE = 1024 * 100;
-
+    
+    private static final SimpleDateFormat FD = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+    
+    private static final int PARENT_CATEGORY_COLUMN = 0;
+    private static final int CHILD_CATEGORY_COLUMN = 1;
+    
     @Autowired
     private LocaleService localeService;
 
@@ -60,8 +65,6 @@ public class ProgressUploadController {
     
     @Autowired
     private CategoryRepository categoryRepository;
-    
-    private final static SimpleDateFormat fd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     
     @RequestMapping(value = "/csvupload", method = RequestMethod.PUT)
     public void examUpload(@RequestBody byte[] file, HttpServletRequest request) throws 
@@ -74,8 +77,8 @@ public class ProgressUploadController {
         
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-            try (FileInputStream inputStream = new FileInputStream(
-                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+            try (FileInputStream inputStream = new FileInputStream( new File("/mnt/data/files/" +
+                    request.getHeader("Content-Name") + "-" + filename))) {
                     
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
@@ -86,29 +89,27 @@ public class ProgressUploadController {
                     System.out.println("RowNum: " + nextRow.getRowNum());
                     if(nextRow.getRowNum() == 0){
                         continue;
-                    } else if(getCellValue(nextRow.getCell(15)) == null
-                            || getCellValue(nextRow.getCell(15)).equals("")){
+                    } else if(getCellValue(nextRow.getCell(10)) == null
+                            || getCellValue(nextRow.getCell(10)).equals("")){
                         break;
                     }
                     
-                    Category category = null;
-                    for(int i = 0; i <= 6; i++) {
-                        category = saveCategory(nextRow, i, category);
-                    }
+                    final Category parent = saveCategory(nextRow, PARENT_CATEGORY_COLUMN, null);
+                    final Category child = saveCategory(nextRow, CHILD_CATEGORY_COLUMN, parent);
                     
                     // get compliance
-                    final String legalname = getCellValue(nextRow.getCell(7));
-                    final Double year =  Double.parseDouble(getCellValue(nextRow.getCell(8)));
+                    final String legalname = getCellValue(nextRow.getCell(2));
+                    final Double year =  Double.parseDouble(getCellValue(nextRow.getCell(3)));
                     
-                    final Date publicDate = fd.parse(getCellValue(nextRow.getCell(9)));
-                    final Date effectiveDate = fd.parse(getCellValue(nextRow.getCell(10)));
+                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(4)));
+                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(5)));
                     
-                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(11)).toUpperCase());
+                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(6)).toUpperCase());
                     
-                    final String department = getCellValue(nextRow.getCell(12));
-                    final String ministry = getCellValue(nextRow.getCell(13));
-                    final String important = getCellValue(nextRow.getCell(14));
-                    final String legalDuty = getCellValue(nextRow.getCell(15));
+                    final String department = getCellValue(nextRow.getCell(7));
+                    final String ministry = getCellValue(nextRow.getCell(8));
+                    final String important = getCellValue(nextRow.getCell(9));
+                    final String legalDuty = getCellValue(nextRow.getCell(10));
                     
                     final Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
@@ -121,7 +122,7 @@ public class ProgressUploadController {
                     compliance.setImportant(important);
                     compliance.setLegalDuty(legalDuty);
                     
-                    compliance.setCategory(category);
+                    compliance.setCategory(child);
                     
                     complianceRepository.save(compliance);
                     
@@ -199,9 +200,9 @@ public class ProgressUploadController {
         }
         Category category = null;
         if (parent == null) {
-            category = categoryRepository.findByNameAndParentIsNull(categoryName);
+            category = categoryRepository.findByNameAndParentIsNullAndDeletedIsFalse(categoryName);
         } else {
-            category = categoryRepository.findByNameAndParent(categoryName, parent);
+            category = categoryRepository.findByNameAndParentAndDeletedIsFalse(categoryName, parent);
         }
         
         if (category != null) {
