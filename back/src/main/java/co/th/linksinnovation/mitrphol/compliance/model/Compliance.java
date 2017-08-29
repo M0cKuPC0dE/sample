@@ -6,6 +6,7 @@
 package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,6 +41,7 @@ public class Compliance {
     private String important;
     private String legalDuty;
     @ManyToOne
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     private Category category;
     private Boolean deleted = false;
 }

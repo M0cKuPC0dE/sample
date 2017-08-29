@@ -7,6 +7,7 @@ package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -36,6 +37,9 @@ public class Category {
     @Where(clause = "deleted = 0")
     private List<Category> childs;
     private Boolean deleted = false;
+    @OneToMany(mappedBy = "category")
+    @JsonView(JsonViewer.CategoryWithCompliance.class)
+    private List<Compliance> compliances;
     
     public void addChild(Category category){
         if(this.childs == null){

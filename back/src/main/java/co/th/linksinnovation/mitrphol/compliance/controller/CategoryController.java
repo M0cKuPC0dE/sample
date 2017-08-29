@@ -6,8 +6,10 @@
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
+import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.CategoryService;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +34,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
+    @JsonView(JsonViewer.CategoryWithCompliance.class)
     public List<Category> get() {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }

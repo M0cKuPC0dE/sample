@@ -81,17 +81,17 @@ export default {
         collapseIcon: 'glyphicon glyphicon-chevron-down',
         showTags: false,
         showCheckbox: true,
-        data: self.cat2node(categories),
-        onNodeChecked: function (event, data) {
-          data.nodes.forEach(function (node) {
-            $('#allview').treeview('checkNode', [node.nodeId, { silent: true }])
-          })
-        },
-        onNodeUnchecked: function (event, data) {
-          data.nodes.forEach(function (node) {
-            $('#allview').treeview('uncheckNode', [node.nodeId, { silent: true }])
-          })
-        }
+        data: self.cat2node(categories)
+        // onNodeChecked: function (event, data) {
+        //   data.nodes.forEach(function (node) {
+        //     $('#allview').treeview('checkNode', [node.nodeId, { silent: true }])
+        //   })
+        // },
+        // onNodeUnchecked: function (event, data) {
+        //   data.nodes.forEach(function (node) {
+        //     $('#allview').treeview('uncheckNode', [node.nodeId, { silent: true }])
+        //   })
+        // }
       })
       $('#allview').treeview('collapseAll', { silent: true })
     },
@@ -103,9 +103,26 @@ export default {
       categories.forEach(function (category) {
         var node = {
           text: category.name,
+          icon: 'fa fa-folder',
           category: category,
-          tags: [category.childs.length],
-          nodes: self.cat2node(category.childs)
+          nodes: category.childs.length === 0 ? '' : self.cat2node(category.childs)
+        }
+        var compNode = self.compliance2node(category.compliances)
+        node.nodes = Object.assign(node.nodes, compNode)
+        node.nodes = node.nodes.length === 0 ? '' : node.nodes
+        nodes.push(node)
+      })
+      return nodes
+    },
+    compliance2node: function (compliances) {
+      var nodes = []
+      if (!compliances) return
+
+      compliances.forEach(function (compliance) {
+        var node = {
+          text: compliance.legalName,
+          icon: 'fa fa-file-text-o',
+          category: compliance
         }
         nodes.push(node)
       })
