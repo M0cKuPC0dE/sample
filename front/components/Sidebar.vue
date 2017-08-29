@@ -52,10 +52,10 @@
             <span class="hide-menu">{{ $t('approvers.title') }}</span>
           </nuxt-link>
         </li>
-        <li v-if="false">
-          <nuxt-link to="/import" class="waves-effect">
+        <li>
+          <nuxt-link to="/uploaddocument" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
-            <span class="hide-menu">{{ $t('imports.title') }}</span>
+            <span class="hide-menu">นำเข้าไฟล์ข้อมูล</span>
           </nuxt-link>
         </li>
         <li v-if="false">

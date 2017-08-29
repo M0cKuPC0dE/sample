@@ -72,13 +72,13 @@ public class ProgressUploadController {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk,
+        appendFile(request.getHeader("Content-Start"), chunk, 
                 new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
 
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-            try (FileInputStream inputStream = new FileInputStream(
-                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+            try (FileInputStream inputStream = new FileInputStream( 
+                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
 
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
@@ -133,17 +133,13 @@ public class ProgressUploadController {
         }
     }
 
-    @RequestMapping(value = "/pdfupload", method = RequestMethod.PUT)
+    @RequestMapping(value = "/fileupload", method = RequestMethod.PUT)
     public void pdfUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk,
-                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
-        if (request.getHeader("Content-End") != null
-                && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-
-        }
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + 
+                request.getHeader("Content-Name") + "-" + filename));
     }
 
     @RequestMapping(value = "/localeupload/{name}", method = RequestMethod.PUT)
