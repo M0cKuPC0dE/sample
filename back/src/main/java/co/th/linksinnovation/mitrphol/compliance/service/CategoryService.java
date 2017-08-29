@@ -33,7 +33,7 @@ public class CategoryService {
             }
         }
 
-        List<Compliance> compliances = complianceRepository.findByCategory(findOne);
+        List<Compliance> compliances = complianceRepository.findByDeletedIsFalseAndCategory(findOne);
         for (Compliance compliance : compliances) {
             compliance.setDeleted(Boolean.TRUE);
         }

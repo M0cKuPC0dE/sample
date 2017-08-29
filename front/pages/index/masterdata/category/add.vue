@@ -7,7 +7,9 @@
             <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
             <span class="help-block">
-              <small>A block of help text that breaks onto a new line and may extend beyond one line.</small>
+              <small>เพิ่มหมวดหมู่
+                <strong>ภายใต้ พรบ 2555</strong>
+              </small>
             </span>
           </div>
         </div>
@@ -38,6 +40,17 @@ export default {
   },
   watch: {
     selected: function (val) {
+      if (val.id !== 'null') {
+        this.categories.forEach(function (element) {
+          var parent = element
+          return parent.childs.forEach(function (child) {
+            if (child.id === val.id) {
+              val = parent
+              return
+            }
+          })
+        })
+      }
       this.$set(this, 'category', val)
     }
   },

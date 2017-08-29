@@ -63,6 +63,9 @@
       </div>
     </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
+    <nuxt-link to="/masterdata" class="btn btn-info">
+      <i class="fa fa-chevron-left"></i> ย้อนกลับ
+    </nuxt-link>
   </form>
 </template>
 
