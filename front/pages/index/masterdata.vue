@@ -1,41 +1,42 @@
 <template>
   <div id="page-wrapper">
     <div class="container-fluid">
-  
+
       <breadcumb></breadcumb>
-  
+
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
-  
+
             <div class="row">
               <div class="col-md-4">
                 <h3 class="box-title">ข้อมูลหลัก</h3>
               </div>
             </div>
-  
+
             <div class="row">
               <div class="col-md-4 m-b-10">
                 <nuxt-link v-show="$route.path === '/masterdata'" to="/masterdata/import" class="btn btn-block btn-success m-b-10">นำเข้าข้อมูล</nuxt-link>
                 <div id="category" class="treeview"></div>
               </div>
               <div class="col-md-8">
-  
+
                 <nuxt-child :selected="category" :categories="categories"></nuxt-child>
-  
+
               </div>
             </div>
-  
+
           </div>
         </div>
       </div>
-  
+
     </div>
   </div>
 </template>
 
 <script>
 /* global $ */
+import { mapGetters } from 'vuex'
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 import Breadcumb from '~/components/Breadcumb'
@@ -57,6 +58,9 @@ export default {
   data: function () {
     return { category: { id: 'null' } }
   },
+  computed: mapGetters({
+    initCategory: 'category/category'
+  }),
   mounted: function () {
     this.renderTreeview(this.categories)
   },
@@ -81,7 +85,7 @@ export default {
       $('#category').treeview({
         expandIcon: 'glyphicon glyphicon-chevron-right',
         collapseIcon: 'glyphicon glyphicon-chevron-down',
-        showTags: false,
+        showTags: true,
         data: self.cat2node(categories),
         onNodeSelected: function (event, data) {
           self.$store.dispatch('category/setcategory', data.category)
@@ -94,7 +98,7 @@ export default {
           self.$store.dispatch('category/setcategory', { id: 'null' })
           self.$set(self, 'category', { id: 'null' })
           if (self.$route.path === '/masterdata/import') {
-            // self.$router.push('/masterdata')
+            self.$router.push('/masterdata')
           }
         }
       })
@@ -109,8 +113,11 @@ export default {
         var node = {
           text: category.name,
           category: category,
-          tags: [category.childs.length],
-          nodes: self.cat2node(category.childs)
+          state: {
+            selected: self.initCategory.id === category.id
+          },
+          tags: category.childs.length === 0 ? '' : [category.childs.length],
+          nodes: category.childs.length === 0 ? '' : self.cat2node(category.childs)
         }
         nodes.push(node)
       })

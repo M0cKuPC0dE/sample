@@ -9,6 +9,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  *
@@ -18,10 +19,12 @@ public interface ComplianceRepository extends JpaRepository<Compliance, Long>{
 
     public List<Compliance> findByDeletedIsFalse();
 
-    public List<Compliance> findByCategory(Category findOne);
+    public List<Compliance> findByDeletedIsFalseAndCategory(Category findOne);
 
-    public List<Compliance> findByLegalNameLikeAndLegalDutyLikeAndCategory(String get, String get0, Category findOne);
+    @Query(value = "SELECT c FROM Compliance c WHERE (c.legalName LIKE ?1 OR c.legalDuty LIKE ?2) AND c.category=?3 AND c.deleted = false")
+    public List<Compliance> searchWithCategory(String get, String get0, Category findOne);
 
-    public List<Compliance> findByLegalNameLikeAndLegalDutyLike(String get, String get0);
+    @Query(value = "SELECT c FROM Compliance c WHERE (c.legalName LIKE ?1 OR c.legalDuty LIKE ?2) AND c.deleted = false")
+    public List<Compliance> searchWithoutCategory(String get, String get0);
     
 }

@@ -32,13 +32,15 @@
         <table class="table">
           <thead>
             <tr>
-              <th>{{ $t('compliance.legalduty') }}</th>
-              <th class="text-center">{{ $t('compliance.status') }}</th>
-              <th class="text-center">{{ $t('compliance.management') }}</th>
+              <th>ข้อกฎหมาย</th>
+              <th>หน้าที่ตามกฎหมาย</th>
+              <th class="text-center">สถานะ</th>
+              <th class="text-center">จัดการ</th>
             </tr>
           </thead>
           <tbody>
             <tr :key="index" v-for="(compliance,index) in compliances">
+              <td>{{compliance.legalName}}</td>
               <td>{{compliance.legalDuty}}</td>
               <td class="text-center">
                 <span class="label label-success">ACTIVE</span>
@@ -50,10 +52,31 @@
                 <nuxt-link :to="'/masterdata/compliance/edit/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
                 </nuxt-link>
+                <a href="javascript:void(0)" v-on:click="onConfirmDelete(compliance)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                  <i class="ti-trash"></i>
+                </a>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div id="masterdata-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">ยืนยันการลบ</h4>
+          </div>
+          <div class="modal-body">
+            ต้องการลบใช่หรือไม่
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -80,21 +103,13 @@ export default {
   },
   data: function () {
     return {
-      search: ''
+      search: '',
+      deleteCompliance: {}
     }
   },
   watch: {
     selected: function (val) {
-      var self = this
-      var url = val.id === 'null' ? '/api/compliance' : '/api/compliance/category/' + val.id
-      return http
-        .get(url, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          this.$set(this, 'compliances', response.data)
-        })
-        .catch((e) => {
-          self.$router.replace('/login')
-        })
+      this.onLoad(val)
     }
   },
   computed: mapGetters({
@@ -115,6 +130,18 @@ export default {
       })
   },
   methods: {
+    onLoad: function (selected) {
+      var self = this
+      var url = selected.id === 'null' ? '/api/compliance' : '/api/compliance/category/' + selected.id
+      return http
+        .get(url, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          this.$set(this, 'compliances', response.data)
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    },
     onSearch: function () {
       var self = this
       return http
@@ -125,6 +152,22 @@ export default {
         .catch((e) => {
           self.$router.replace('/login')
         })
+    },
+    onDelete: function () {
+      var self = this
+      $('#masterdata-remove-modal').modal('hide')
+      return http
+        .delete('/api/compliance/' + this.deleteCompliance.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          self.onLoad(self.selected)
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    },
+    onConfirmDelete: function (compliance) {
+      $('#masterdata-remove-modal').modal('show')
+      this.$set(this, 'deleteCompliance', compliance)
     }
   }
 }

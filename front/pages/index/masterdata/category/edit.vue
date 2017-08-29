@@ -6,15 +6,21 @@
           <div class="form-group">
             <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="category.name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
+            <span class="help-block">
+              <small>A block of help text that breaks onto a new line and may extend beyond one line.</small>
+            </span>
           </div>
         </div>
       </div>
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success m-r-10">
-        <i class="fa fa-check"></i> {{ $t('buttons.save') }}</button>
-      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-category-modal">
-        <i class="fa fa-times"></i> {{ $t('buttons.category.delete') }}</button>
+        <i class="fa fa-check"></i> บันทึก</button>
+      <button type="button" class="btn btn-danger m-r-10" data-toggle="modal" data-target="#remove-category-modal">
+        <i class="fa fa-times"></i> ลบหมวดหมู่</button>
+      <nuxt-link to="/masterdata" class="btn btn-info">
+        <i class="fa fa-chevron-left"></i> ย้อนกลับ
+      </nuxt-link>
     </div>
 
     <div id="remove-category-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">

@@ -47,7 +47,7 @@ public class ComplianceController {
     @GetMapping("/category/{id}")
     public List<Compliance> getByCategory(@PathVariable("id") Long id) {
         Category findOne = categoryRepository.findOne(id);
-        return complianceRepository.findByCategory(findOne);
+        return complianceRepository.findByDeletedIsFalseAndCategory(findOne);
     }
 
     @PostMapping
@@ -59,9 +59,9 @@ public class ComplianceController {
     public List<Compliance> postSearch(@RequestBody Map<String, String> map) {
         if (!map.get("category").equals("null")) {
             Category findOne = categoryRepository.findOne(Long.parseLong(map.get("category")));
-            return complianceRepository.findByLegalNameLikeAndLegalDutyLikeAndCategory("%"+map.get("search")+"%","%"+ map.get("search")+"%", findOne);
+            return complianceRepository.searchWithCategory("%"+map.get("search")+"%","%"+ map.get("search")+"%", findOne);
         } else {
-            return complianceRepository.findByLegalNameLikeAndLegalDutyLike("%"+map.get("search")+"%", "%"+map.get("search")+"%");
+            return complianceRepository.searchWithoutCategory("%"+map.get("search")+"%", "%"+map.get("search")+"%");
         }
     }
 
