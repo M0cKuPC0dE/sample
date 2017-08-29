@@ -51,66 +51,66 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProgressUploadController {
 
     private static final int BUFFER_SIZE = 1024 * 100;
-    
+
     private static final SimpleDateFormat FD = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-    
+
     private static final int PARENT_CATEGORY_COLUMN = 0;
     private static final int CHILD_CATEGORY_COLUMN = 1;
-    
+
     @Autowired
     private LocaleService localeService;
 
     @Autowired
     private ComplianceRepository complianceRepository;
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
-    
-    @RequestMapping(value = "/csvupload", method = RequestMethod.PUT)
-    public void examUpload(@RequestBody byte[] file, HttpServletRequest request) throws 
-        UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
+
+    @RequestMapping(value = "/templateupload", method = RequestMethod.PUT)
+    public void examUpload(@RequestBody byte[] file, HttpServletRequest request)
+            throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" +       
-                request.getHeader("Content-Name") + "-" + filename));
-        
+        appendFile(request.getHeader("Content-Start"), chunk,
+                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
+
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-            try (FileInputStream inputStream = new FileInputStream( new File("/mnt/data/files/" +
-                    request.getHeader("Content-Name") + "-" + filename))) {
-                    
+            try (FileInputStream inputStream = new FileInputStream(
+                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
                 Iterator<Row> iterator = firstSheet.iterator();
-                
+
                 while (iterator.hasNext()) {
                     Row nextRow = iterator.next();
                     System.out.println("RowNum: " + nextRow.getRowNum());
-                    if(nextRow.getRowNum() == 0){
+                    if (nextRow.getRowNum() == 0) {
                         continue;
-                    } else if(getCellValue(nextRow.getCell(10)) == null
-                            || getCellValue(nextRow.getCell(10)).equals("")){
+                    } else if (getCellValue(nextRow.getCell(10)) == null
+                            || getCellValue(nextRow.getCell(10)).equals("")) {
                         break;
                     }
-                    
+
                     final Category parent = saveCategory(nextRow, PARENT_CATEGORY_COLUMN, null);
                     final Category child = saveCategory(nextRow, CHILD_CATEGORY_COLUMN, parent);
-                    
+
                     // get compliance
                     final String legalname = getCellValue(nextRow.getCell(2));
-                    final Double year =  Double.parseDouble(getCellValue(nextRow.getCell(3)));
-                    
+                    final Double year = Double.parseDouble(getCellValue(nextRow.getCell(3)));
+
                     final Date publicDate = FD.parse(getCellValue(nextRow.getCell(4)));
                     final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(5)));
-                    
+
                     final Status status = Status.valueOf(getCellValue(nextRow.getCell(6)).toUpperCase());
-                    
+
                     final String department = getCellValue(nextRow.getCell(7));
                     final String ministry = getCellValue(nextRow.getCell(8));
                     final String important = getCellValue(nextRow.getCell(9));
                     final String legalDuty = getCellValue(nextRow.getCell(10));
-                    
+
                     final Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
                     compliance.setYear(year.intValue());
@@ -121,38 +121,37 @@ public class ProgressUploadController {
                     compliance.setMinistry(ministry);
                     compliance.setImportant(important);
                     compliance.setLegalDuty(legalDuty);
-                    
+
                     compliance.setCategory(child);
-                    
+
                     complianceRepository.save(compliance);
-                    
+
                 }
                 workbook.close();
             }
-            
+
         }
     }
 
     @RequestMapping(value = "/pdfupload", method = RequestMethod.PUT)
-    public void pdfUpload(@RequestBody byte[] file, HttpServletRequest request) throws 
-        UnsupportedEncodingException {
-        
+    public void pdfUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
-        if (request.getHeader("Content-End") != null 
+        appendFile(request.getHeader("Content-Start"), chunk,
+                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
+        if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-           
+
         }
     }
-    
+
     @RequestMapping(value = "/localeupload/{name}", method = RequestMethod.PUT)
     public void localeUpload(@RequestBody byte[] file, @PathVariable String name, HttpServletRequest request)
             throws Exception {
         InputStream chunk = new ByteArrayInputStream(file);
-        appendFile(request.getHeader("Content-Start"), chunk,
-                new File("/mnt/locales/" + name + ".json"));
-        
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/locales/" + name + ".json"));
+
         localeService.save(name);
     }
 
@@ -192,10 +191,10 @@ public class ProgressUploadController {
             }
         }
     }
-    
+
     private Category saveCategory(Row nextRow, int col, Category parent) {
         String categoryName = nextRow.getCell(col).getStringCellValue();
-        if (categoryName == null || "".equals(categoryName)) {    
+        if (categoryName == null || "".equals(categoryName)) {
             return parent;
         }
         Category category = null;
@@ -204,39 +203,39 @@ public class ProgressUploadController {
         } else {
             category = categoryRepository.findByNameAndParentAndDeletedIsFalse(categoryName, parent);
         }
-        
+
         if (category != null) {
             return category;
         }
-        
+
         category = new Category();
         category.setName(categoryName);
         category.setParent(parent);
         categoryRepository.save(category);
         return category;
-        
+
     }
-    
+
     private String getCellValue(Cell cell) {
-        if(cell == null) {
+        if (cell == null) {
             return null;
         }
-        
+
         final CellType type = cell.getCellTypeEnum();
-        switch(type) {
-            case BLANK :
-                return "";
-            case BOOLEAN :
-                return String.valueOf(cell.getBooleanCellValue());
-            case NUMERIC :
-                if(HSSFDateUtil.isCellDateFormatted(cell)) {
-                     return String.valueOf(cell.getDateCellValue());
-                }
-                return String.valueOf(cell.getNumericCellValue());          
-            default:
-                // String
-                return cell.getStringCellValue();
+        switch (type) {
+        case BLANK:
+            return "";
+        case BOOLEAN:
+            return String.valueOf(cell.getBooleanCellValue());
+        case NUMERIC:
+            if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                return String.valueOf(cell.getDateCellValue());
+            }
+            return String.valueOf(cell.getNumericCellValue());
+        default:
+            // String
+            return cell.getStringCellValue();
         }
-       
+
     }
 }
