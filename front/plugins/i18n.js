@@ -4,10 +4,10 @@ Vue.use(VueI18n)
 
 export default ({ app, store }) => {
   app.i18n = new VueI18n({
-    locale: 'en',
-    fallbackLocale: 'en',
+    locale: 'th',
+    fallbackLocale: 'th',
     messages: {
-      'en': require('~/assets/locales/en.json')
+      'th': require('~/assets/locales/th.json')
     }
   })
 }

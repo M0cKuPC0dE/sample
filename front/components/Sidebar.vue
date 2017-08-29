@@ -13,49 +13,49 @@
         <li>
           <nuxt-link to="/masterdata" class="waves-effect">
             <i class="zmdi zmdi-archive fa-fw"></i>
-            <span class="hide-menu">{{ $t('masterdatas.title') }}</span>
+            <span class="hide-menu">{{ $t('menu.masterdata') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/group" class="waves-effect">
             <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
+            <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/administrator" class="waves-effect">
             <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
+            <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
-            <span class="hide-menu">{{ $t('coordinators.title') }}</span>
+            <span class="hide-menu">{{ $t('menu.coordinators') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/owner" class="waves-effect">
             <i class="zmdi zmdi-account-circle fa-fw"></i>
-            <span class="hide-menu">{{ $t('owners.title') }}</span>
+            <span class="hide-menu">{{ $t('menu.owners') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/reviewer" class="waves-effect">
             <i class="zmdi zmdi-account-box-o fa-fw"></i>
-            <span class="hide-menu">{{ $t('reviewers.title') }}</span>
+            <span class="hide-menu">{{ $t('menu.reviewers') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/approver" class="waves-effect">
             <i class="zmdi zmdi-mood fa-fw"></i>
-            <span class="hide-menu">{{ $t('approvers.title') }}</span>
+            <span class="hide-menu">{{ $t('menu.approvers') }}</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/uploaddocument" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
-            <span class="hide-menu">นำเข้าไฟล์ข้อมูล</span>
+            <span class="hide-menu">{{ $t('menu.fileupload') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">

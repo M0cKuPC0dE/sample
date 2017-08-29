@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label class="control-label">ชื่อหมวดหมู่</label>
+            <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
           </div>
         </div>
@@ -12,7 +12,7 @@
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success">
-        <i class="fa fa-check"></i> บันทึก</button>
+        <i class="fa fa-check"></i>{{ $t('buttons.save') }}</button>
     </div>
   </form>
 </template>

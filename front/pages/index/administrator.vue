@@ -1,52 +1,52 @@
 <template>
   <div id="page-wrapper">
     <div class="container-fluid">
-  
+
       <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-          <h4 class="page-title">Compliant Group</h4>
+          <h4 class="page-title">{{ $t('menu.group') }}</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
           <ol class="breadcrumb">
-            <li>Dashboard</li>
-            <li class="active">Compliant Group</li>
+            <li>{{ $t('menu.dashboards') }}</li>
+            <li class="active">{{ $t('menu.group') }}</li>
           </ol>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
-  
+
             <div class="row">
               <div class="col-md-12">
-                <h3 class="box-title">Manage Compliant Group</h3>
+                <h3 class="box-title">{{ $t('menu.group') }}</h3>
               </div>
             </div>
-  
+
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-md-12">Group Name</label>
+                <label class="col-md-12">{{ $t('group.name') }}</label>
                 <div class="col-md-12">
                   <input type="text" class="form-control" placeholder="Group Name"> </div>
               </div>
-  
+
               <div class="form-group">
-                <label class="col-md-12">Assign To</label>
+                <label class="col-md-12">{{ $t('group.assignto') }}</label>
                 <div class="col-md-12">
                   <input type="text" class="form-control" placeholder="Assign To"> </div>
               </div>
             </form>
-  
+
             <div class="row">
               <div class="col-md-12">
                 <div id="allview" class="treeview"></div>
               </div>
             </div>
-  
+
           </div>
         </div>
       </div>
-  
+
     </div>
   </div>
 </template>

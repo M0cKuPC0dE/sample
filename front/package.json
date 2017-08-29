@@ -5,7 +5,6 @@
   "author": "Jirawong Wongdokpuang <greannetwork@gmail.com>",
   "private": true,
   "dependencies": {
-    "bootstrap-datepicker": "^1.7.1",
     "nuxt": "latest"
   },
   "scripts": {
@@ -21,6 +20,7 @@
     "axios": "^0.16.2",
     "babel-eslint": "^7.1.1",
     "bootstrap": "^3.3.7",
+    "bootstrap-datepicker": "^1.7.1",
     "bootstrap-treeview": "^1.2.0",
     "eslint": "^3.15.0",
     "eslint-config-standard": "^6.2.1",

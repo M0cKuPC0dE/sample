@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/category/edit" class="btn btn-block btn-warning">แก้ไขหมวดหมู่</nuxt-link>
+        <nuxt-link to="/masterdata/category/edit" class="btn btn-block btn-warning">{{ $t('buttons.category.edit') }}</nuxt-link>
       </div>
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info">เพิ่มหมวดหมู่</nuxt-link>
+        <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info">{{ $t('buttons.category.add') }}</nuxt-link>
       </div>
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/compliance/add" class="btn btn-block btn-info">เพิ่มข้อกฎหมาย</nuxt-link>
+        <nuxt-link to="/masterdata/compliance/add" class="btn btn-block btn-info">เ{{ $t('buttons.compliance.add') }}</nuxt-link>
       </div>
     </div>
     <div class="row">
@@ -32,9 +32,9 @@
         <table class="table">
           <thead>
             <tr>
-              <th>หน้าที่ตามกฎหมาย</th>
-              <th class="text-center">สถานะ</th>
-              <th class="text-center">จัดการ</th>
+              <th>{{ $t('compliance.legalduty') }}</th>
+              <th class="text-center">{{ $t('compliance.status') }}</th>
+              <th class="text-center">{{ $t('compliance.management') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +56,7 @@
         </table>
       </div>
     </div>
-  
+
   </div>
 </template>
 

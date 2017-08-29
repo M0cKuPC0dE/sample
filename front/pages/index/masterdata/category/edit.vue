@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label class="control-label">ชื่อหมวดหมู่</label>
+            <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="category.name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
           </div>
         </div>
@@ -12,24 +12,24 @@
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success m-r-10">
-        <i class="fa fa-check"></i> บันทึก</button>
+        <i class="fa fa-check"></i> {{ $t('buttons.save') }}</button>
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove-category-modal">
-        <i class="fa fa-times"></i> ลบหมวดหมู่</button>
+        <i class="fa fa-times"></i> {{ $t('buttons.category.delete') }}</button>
     </div>
-  
+
     <div id="remove-category-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title">ยืนยันการลบ</h4>
+            <h4 class="modal-title">{{ $t('message.delete.confirm') }}</h4>
           </div>
           <div class="modal-body">
-            ต้องการลบใช่หรือไม่
+            {{ $t('message.delete.description') }}
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">{{ $t('buttons.close') }}</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">{{ $t('buttons.delete') }}</button>
           </div>
         </div>
       </div>

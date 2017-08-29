@@ -186,7 +186,7 @@ import cookie from '~/utils/cookie'
 export default {
   name: 'navbar',
   data: function () {
-    return { selected: this.$store.state.locale || 'en' }
+    return { selected: this.$store.state.locale || 'th' }
   },
   mounted: function () {
     this.init()

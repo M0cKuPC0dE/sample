@@ -2,7 +2,7 @@
   <form class="form-horizontal" v-on:submit.prevent="onSave">
     <div class="form-group">
       <label class="col-md-12">
-        <span class="help">หมวดหมู่</span>
+        <span class="help">{{ $t('compliance.category') }}</span>
       </label>
       <div class="col-md-12">
         <input type="text" class="form-control" :value="category.name" readonly required>
@@ -10,13 +10,13 @@
     </div>
     <div class="form-group">
       <label class="col-md-12">
-        <span class="help">ชื่อกฎหมาย</span>
+        <span class="help">{{ $t('compliance.legalname') }}</span>
       </label>
       <div class="col-md-12">
         <input type="text" class="form-control" v-model="compliance.legalName" required> </div>
     </div>
     <div class="form-group">
-      <label class="col-md-12">วันที่ประกาศ</label>
+      <label class="col-md-12">{{ $t('compliance.publicdate') }}</label>
       <div class="col-md-12">
         <div class="input-group">
           <input type="text" class="form-control" id="publicdate" v-model="compliance.publicDate" required></input>
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-12">วันที่ผลบังคับใช้</label>
+      <label class="col-md-12">{{ $t('compliance.effectivedate') }}</label>
       <div class="col-md-12">
         <div class="input-group">
           <input type="text" class="form-control" id="effectivedate" v-model="compliance.effectiveDate" required></input>
@@ -38,30 +38,30 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-12">หน่วยงาน</label>
+      <label class="col-md-12">{{ $t('compliance.department') }}</label>
       <div class="col-md-12">
         <input type="text" class="form-control" v-model="compliance.department" required> </div>
     </div>
     <div class="form-group">
-      <label class="col-md-12">กระทรวง</label>
+      <label class="col-md-12">{{ $t('compliance.ministry') }}</label>
       <div class="col-md-12">
         <input type="text" class="form-control" v-model="compliance.ministry" required> </div>
     </div>
     <div class="form-group">
-      <label class="col-md-12">สาระสำคัญกฎหมาย</label>
+      <label class="col-md-12">{{ $t('compliance.important') }}</label>
       <div class="col-md-12">
         <textarea class="form-control" rows="5" v-model="compliance.important" required></textarea>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-12">หน้าที่ตามกฎหมาย</label>
+      <label class="col-sm-12">{{ $t('compliance.legalduty') }}</label>
       <div class="col-sm-12">
         <textarea class="form-control" rows="5" v-model="compliance.legalDuty" required></textarea>
       </div>
     </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
     <button type="button" data-toggle="modal" data-target="#responsive-modal" class="btn btn-danger waves-effect waves-light m-r-10">ลบข้อกฎหมาย</button>
-  
+
     <div id="responsive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-  
+
   </form>
 </template>
 

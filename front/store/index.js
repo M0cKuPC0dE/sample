@@ -3,8 +3,8 @@ import cookie from '~/utils/cookie'
 import * as Cookies from 'js-cookie'
 
 export const state = () => ({
-  locale: 'en',
-  locales: ['en']
+  locale: 'th',
+  locales: ['th']
 })
 
 export const getters = {

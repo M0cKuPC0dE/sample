@@ -5,7 +5,7 @@
       <div class="col-md-12 text-center is-fileinput">
         <span class="btn btn-info btn-file">
           <i class="zmdi zmdi-swap-vertical"></i>
-          นำเข้าข้อมูล
+          {{ $t('buttons.upload.template') }}
           <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('http://localhost:8080/api/templateupload',$event)">
         </span>
       </div>
