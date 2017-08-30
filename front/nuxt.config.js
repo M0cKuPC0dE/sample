@@ -29,6 +29,7 @@ module.exports = {
     { src: 'material-design-iconic-font/dist/css/material-design-iconic-font.css' },
     { src: 'bootstrap-treeview/dist/bootstrap-treeview.min.css' },
     { src: 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css' },
+    { src: 'jquery-ui-dist/jquery-ui.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
     { src: '~assets/less/colors/megna.less', lang: 'less' }
@@ -52,6 +53,7 @@ module.exports = {
   build: {
     vendor: [
       'jquery',
+      'jquery-ui-dist/jquery-ui.js',
       'bootstrap',
       'metismenu/dist/metisMenu.js',
       'bootstrap-treeview/dist/bootstrap-treeview.min.js',

@@ -38,6 +38,7 @@ public class Category {
     private List<Category> childs;
     private Boolean deleted = false;
     @OneToMany(mappedBy = "category")
+    @Where(clause = "deleted = 0")
     @JsonView(JsonViewer.CategoryWithCompliance.class)
     private List<Compliance> compliances;
     

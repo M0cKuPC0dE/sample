@@ -25,15 +25,26 @@
 
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-md-12">{{ $t('group.name') }}</label>
+                <label class="col-md-12">หน่วยงาน</label>
                 <div class="col-md-12">
-                  <input type="text" class="form-control" placeholder="Group Name"> </div>
+                  <input type="text" class="form-control" placeholder="หน่วยงาน"> </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-12">{{ $t('group.assignto') }}</label>
+                <label class="col-md-12">ผู้ดูแล</label>
                 <div class="col-md-12">
-                  <input type="text" class="form-control" placeholder="Assign To"> </div>
+                  <div class="ui-widget">
+                    <input id="search-coordinate" type="text" class="form-control" placeholder="ผู้ดูแล">
+                  </div>
+                </div>
+                <div class="col-md-12 p-t-20 p-l-20 p-r-20">
+                  <ul class="list-group list-group-full">
+                    <li class="list-group-item" :key="coordinate.id" v-for="coordinate in coordinates">
+                      <span class="badge badge-danger" v-on:click="removeCoordinate(coordinate)">
+                        <i class="fa fa-times"></i>
+                      </span> {{coordinate.value}} </li>
+                  </ul>
+                </div>
               </div>
             </form>
 
@@ -59,7 +70,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/api/category/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
         return { categories: response.data }
       })
@@ -68,10 +79,14 @@ export default {
       })
   },
   data: function () {
-    return { category: { id: 'null' } }
+    return {
+      category: { id: 'null' },
+      coordinates: []
+    }
   },
   mounted: function () {
     this.allview(this.categories)
+    this.initSuggestion()
   },
   methods: {
     allview: function (categories) {
@@ -104,11 +119,12 @@ export default {
         var node = {
           text: category.name,
           icon: 'fa fa-folder',
+          selectable: false,
           category: category,
-          nodes: category.childs.length === 0 ? '' : self.cat2node(category.childs)
+          nodes: category.childs.length === 0 ? [] : self.cat2node(category.childs)
         }
         var compNode = self.compliance2node(category.compliances)
-        node.nodes = Object.assign(node.nodes, compNode)
+        node.nodes = compNode.concat(node.nodes)
         node.nodes = node.nodes.length === 0 ? '' : node.nodes
         nodes.push(node)
       })
@@ -122,13 +138,74 @@ export default {
         var node = {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
+          selectable: false,
           category: compliance
         }
         nodes.push(node)
       })
       return nodes
+    },
+    split: function (val) {
+      return val.split(/,\s*/)
+    },
+    extractLast: function (term) {
+      return this.split(term).pop()
+    },
+    initSuggestion: function () {
+      var self = this
+      $('#search-coordinate').autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: 'https://api.mitrphol.com:3001/employee/find',
+            dataType: 'json',
+            headers: {
+              'Api-Key': '$2y$10$Pc0lTscxUAlq9O5V8Arwau6VpgLlMEj9xLAPymFqbay2mbM3qJJee',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            method: 'POST',
+            data: {
+              keyword: request.term
+            },
+            success: function (data) {
+              response(self.searchTransform(data))
+            }
+          })
+        },
+        minLength: 3,
+        select: function (event, ui) {
+          var checker = $.grep(self.coordinates, function (obj) {
+            return obj.id === ui.item.id
+          })
+          if (checker.length === 0) {
+            self.coordinates.push(ui.item)
+            self.$set(self, 'coordinates', self.coordinates)
+          }
+        },
+        close: function (el) {
+          el.target.value = ''
+        }
+      })
+    },
+    searchTransform: function (data) {
+      var nodes = []
+      if (data.success.code === 200) {
+        data.success.data.forEach(function (user) {
+          var node = {
+            id: user.user_info.id,
+            label: user.user_info.fullname.th,
+            value: user.user_info.fullname.th
+          }
+          nodes.push(node)
+        })
+      }
+      return nodes
+    },
+    removeCoordinate: function (val) {
+      var checker = $.grep(this.coordinates, function (obj) {
+        return obj.id !== val.id
+      })
+      this.$set(this, 'coordinates', checker)
     }
   }
 }
 </script>
-

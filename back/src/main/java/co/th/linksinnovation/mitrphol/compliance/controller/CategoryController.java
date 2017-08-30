@@ -34,8 +34,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    public List<Category> getCategoryWithoutCompliance() {
+        return categoryRepository.findByParentIsNullAndDeletedIsFalse();
+    }
+
+    @GetMapping("/compliance")
     @JsonView(JsonViewer.CategoryWithCompliance.class)
-    public List<Category> get() {
+    public List<Category> getCategoryWithCompliance() {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
@@ -46,13 +52,13 @@ public class CategoryController {
             Category parent = categoryRepository.findOne(child.getParent().getId());
             parent.addChild(child);
             categoryRepository.save(parent);
-        }else{
+        } else {
             category.setParent(null);
             Category child = categoryRepository.save(category);
         }
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
-    
+
     @PostMapping("/update")
     public List<Category> postUpdate(@RequestBody Category category) {
         Category findOne = categoryRepository.findOne(category.getId());
@@ -61,9 +67,9 @@ public class CategoryController {
         categoryRepository.save(category);
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
-    
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public void delete(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
     }
 }

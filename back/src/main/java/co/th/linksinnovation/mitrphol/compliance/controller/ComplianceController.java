@@ -7,8 +7,10 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
+import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +37,32 @@ public class ComplianceController {
     private CategoryRepository categoryRepository;
 
     @GetMapping
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public List<Compliance> get() {
         return complianceRepository.findByDeletedIsFalse();
     }
 
     @GetMapping("/{id}")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public Compliance get(@PathVariable("id") Long id) {
         return complianceRepository.findOne(id);
     }
 
     @GetMapping("/category/{id}")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public List<Compliance> getByCategory(@PathVariable("id") Long id) {
         Category findOne = categoryRepository.findOne(id);
         return complianceRepository.findByDeletedIsFalseAndCategory(findOne);
     }
 
     @PostMapping
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public Compliance post(@RequestBody Compliance compliance) {
         return complianceRepository.save(compliance);
     }
 
     @PostMapping("/search")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public List<Compliance> postSearch(@RequestBody Map<String, String> map) {
         if (!map.get("category").equals("null")) {
             Category findOne = categoryRepository.findOne(Long.parseLong(map.get("category")));
