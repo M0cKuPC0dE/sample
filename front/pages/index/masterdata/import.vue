@@ -9,7 +9,7 @@
           <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('http://localhost:8080/api/templateupload',$event)">
         </span>
         <nuxt-link to="/masterdata" class="btn btn-info" style="height:35px">
-          <i class="fa fa-chevron-left"></i> ย้อนกลับ
+          <i class="fa fa-chevron-left"></i> {{ $t('buttons.back') }}
         </nuxt-link>
       </div>
     </div>
