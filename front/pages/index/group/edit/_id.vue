@@ -43,7 +43,7 @@
                     <li class="list-group-item" :key="coordinate.userId" v-for="coordinate in legalgroup.coordinates">
                       <span class="badge badge-danger" v-on:click="removeCoordinate(coordinate)">
                         <i class="fa fa-times"></i>
-                      </span> {{coordinate.value}} </li>
+                      </span> {{coordinate.nameTh}} </li>
                   </ul>
                 </div>
               </div>
@@ -77,24 +77,25 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
-    return http
+  async asyncData (context) {
+    let categories = await http
       .get('/api/category/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
-        return { categories: response.data }
-      })
       .catch((e) => {
         context.redirect('/login')
       })
+    let legalgroup = await http
+      .get('/api/legalgroup/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/login')
+      })
+    return {
+      categories: categories.data,
+      legalgroup: legalgroup.data
+    }
   },
   data: function () {
     return {
-      category: { id: 'null' },
-      legalgroup: {
-        buName: '',
-        coordinates: [],
-        compliances: []
-      }
+      category: { id: 'null' }
     }
   },
   mounted: function () {
@@ -175,6 +176,7 @@ export default {
       return nodes
     },
     compliance2node: function (compliances) {
+      var self = this
       var nodes = []
       if (!compliances) return
 
@@ -183,6 +185,9 @@ export default {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
           selectable: false,
+          state: {
+            checked: self.isChecked(compliance)
+          },
           value: compliance
         }
         nodes.push(node)
@@ -231,7 +236,8 @@ export default {
           var node = {
             userId: user.user_info.id,
             label: user.user_info.fullname.th,
-            value: user.user_info.fullname.th
+            value: user.user_info.fullname.th,
+            nameTh: user.user_info.fullname.th
           }
           nodes.push(node)
         })
@@ -253,6 +259,13 @@ export default {
         return elm.id !== compliance.id
       })
       this.$set(this.legalgroup, 'compliances', compliances)
+    },
+    isChecked: function (val) {
+      if (this.legalgroup.compliances.filter(e => e.id === val.id).length > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

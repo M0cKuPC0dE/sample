@@ -6,28 +6,25 @@
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Authority;
+import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
+import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.RestService;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -45,16 +42,19 @@ public class LegalgroupController {
     private RestService restService;
 
     @GetMapping
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public List<LegalGroup> get() {
         return legalgroupRepository.findAll();
     }
 
     @GetMapping("/{id}")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public LegalGroup get(@PathVariable("id") Long id) {
         return legalgroupRepository.findOne(id);
     }
 
     @PostMapping
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
     public LegalGroup post(@RequestBody LegalGroup legalGroup) {
         List<UserDetails> fillDetails = new ArrayList<>();
         if (!legalGroup.getCoordinates().isEmpty()) {
@@ -76,10 +76,17 @@ public class LegalgroupController {
                         UserDetails save = userDetailsRepository.save(ud);
                         fillDetails.add(save);
                     }
+                } else {
+                    fillDetails.add(userdetails.get(0));
                 }
             }
         }
         legalGroup.setCoordinates(fillDetails);
         return legalgroupRepository.save(legalGroup);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        legalgroupRepository.delete(id);
     }
 }
