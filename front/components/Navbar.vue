@@ -101,7 +101,7 @@
             </li>
           </ul>
         </li>
-        <li class="dropdown" v-if="false">
+        <li class="dropdown">
           <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
             <strong>{{this.selected}}</strong>
           </a>
@@ -188,7 +188,9 @@ export default {
           let data = response.data
           data.forEach((locale) => {
             this.localeMessage(locale.code)
-            this.$store.state.locales.push(locale.code)
+            if (locale.code !== 'th') {
+              this.$store.state.locales.push(locale.code)
+            }
           })
         }).catch((e) => {
           this.$router.replace('/login')

@@ -58,9 +58,6 @@ public class ProgressUploadController {
     private static final int CHILD_CATEGORY_COLUMN = 1;
 
     @Autowired
-    private LocaleService localeService;
-
-    @Autowired
     private ComplianceRepository complianceRepository;
 
     @Autowired
@@ -72,13 +69,13 @@ public class ProgressUploadController {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, 
-                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk,
+                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
 
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-            try (FileInputStream inputStream = new FileInputStream( 
-                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+            try (FileInputStream inputStream = new FileInputStream(
+                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
 
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
@@ -147,8 +144,7 @@ public class ProgressUploadController {
             throws Exception {
         InputStream chunk = new ByteArrayInputStream(file);
         appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/locales/" + name + ".json"));
-
-        localeService.save(name);
+ 
     }
 
     private void appendFile(String start, InputStream in, File dest) {

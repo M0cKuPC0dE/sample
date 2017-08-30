@@ -64,10 +64,10 @@
             <span class="hide-menu">{{ $t('menu.fileupload') }}</span>
           </nuxt-link>
         </li>
-        <li v-if="false">
-          <nuxt-link to="/uploadlanguage" class="waves-effect">
-            <i class="zmdi zmdi-swap-vertical fa-fw"></i>
-            <span class="hide-menu">{{ $t('locales.title') }}</span>
+        <li>
+          <nuxt-link to="/language" class="waves-effect">
+            <i class="zmdi zmdi-text-format fa-fw"></i>
+            <span class="hide-menu">{{ $t('menu.languageupload') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">

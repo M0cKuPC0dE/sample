@@ -9,7 +9,8 @@
     "approver": "ผู้อนุมัติ",
     "import": "นำเข้าข้อมูล",
     "group": "กลุ่มกฎหมาย",
-    "fileupload": "นำเข้าไฟล์ข้อมูล"
+    "fileupload": "นำเข้าไฟล์ข้อมูล",
+    "languageupload": "นำเข้าภาษา"
   },
   "category": {
     "name": "ชื่อหมวดหมู่",
@@ -35,6 +36,12 @@
     "add": "เพิ่มกลุ่มกฎหมาย",
     "department": "หน่วยงาน",
     "admin": "ผู้ดูแล",
+    "management": "จัดการ"
+  },
+  "language": {
+    "add": "เพิ่มภาษา",
+    "name": "ชื่อ",
+    "code": "รหัสภาษา",
     "management": "จัดการ"
   },
   "buttons": {

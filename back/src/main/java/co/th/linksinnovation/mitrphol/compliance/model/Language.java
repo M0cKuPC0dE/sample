@@ -18,4 +18,6 @@ import lombok.Data;
 public class Language {
     @Id
     public String code;
+    
+    public String fullName;
 }
