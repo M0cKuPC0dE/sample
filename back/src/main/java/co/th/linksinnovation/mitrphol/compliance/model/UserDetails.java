@@ -30,14 +30,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     private String nameEn;
     private String nameTh;
     private String email;
-    private String citizenId;
-    private String nickname;
     private String photo;
-    private String description;
-    private Boolean line;
-    private String desk;
-    private String direct;
-    private String mobile;
     
     
     @ManyToMany(fetch = FetchType.EAGER)

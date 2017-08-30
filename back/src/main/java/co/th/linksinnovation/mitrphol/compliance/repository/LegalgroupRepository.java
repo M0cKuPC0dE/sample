@@ -5,16 +5,13 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.repository;
 
-import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
-import java.util.List;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
- * @author Piyawut Chiradejnunt<pchiradejnunt@gmail.com>
+ * @author jirawong
  */
-public interface UserDetailsRepository extends JpaRepository<UserDetails, String>{
-
-    public List<UserDetails> findByUserId(String userId);
+public interface LegalgroupRepository extends JpaRepository<LegalGroup, Long>{
     
 }

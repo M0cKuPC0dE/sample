@@ -75,7 +75,6 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
                 userDetails.setNameTh(userInfo.getFullname().getTh());
                 userDetails.setUserId(userInfo.getId());
                 userDetails.setPhoto(userInfo.getPhoto());
-                userDetails.setCitizenId(userInfo.getCitizenId());
                 userDetails.setEmail(userInfo.getEmail());
                 
                 Authority authority = new Authority();
