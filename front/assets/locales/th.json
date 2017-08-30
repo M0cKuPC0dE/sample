@@ -1,4 +1,7 @@
 {
+  "dashboards": {
+    "title": "หน้าหลัก"
+  },
   "menu": {
     "dashboard": "แผงควบคุม",
     "masterdata": "ข้อมูลหลัก",

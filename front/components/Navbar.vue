@@ -20,7 +20,7 @@
           </a>
         </li>
         <!-- .Task dropdown -->
-        <li class="dropdown">
+        <li class="dropdown" v-if="false">
           <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
             <i class="zmdi zmdi-notifications"></i>
             <div class="notify">
@@ -106,7 +106,7 @@
             <strong>{{this.selected}}</strong>
           </a>
           <ul class="dropdown-menu dropdown animated bounceInDown">
-            <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
+            <li v-if="locales.length >= 2 && langcode !== 'th'" :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
               <a href="#">
                 <div>
                   <p>
