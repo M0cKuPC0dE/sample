@@ -17,7 +17,9 @@ import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepositor
 import co.th.linksinnovation.mitrphol.compliance.service.RestService;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,8 +64,8 @@ public class LegalcategoryController {
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public LegalCategory post(@RequestBody LegalCategory legalCategory) {
-        List<UserDetails> owners = new ArrayList<>();
-        List<UserDetails> approvers = new ArrayList<>();
+        Set<UserDetails> owners = new HashSet<>();
+        Set<UserDetails> approvers = new HashSet<>();
         
         if (!legalCategory.getOwners().isEmpty()) {
             for (UserDetails u : legalCategory.getOwners()) {

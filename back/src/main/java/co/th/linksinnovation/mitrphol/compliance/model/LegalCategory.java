@@ -6,10 +6,12 @@
 package co.th.linksinnovation.mitrphol.compliance.model;
 
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Data;
 
@@ -26,11 +28,13 @@ public class LegalCategory {
     public String party;
     public String department;
     @ManyToMany
-    private List<UserDetails> owners;
+    private Set<UserDetails> owners;
     @ManyToMany
-    private List<UserDetails> approvers;
+    private Set<UserDetails> approvers;
     @ManyToMany
     private List<Compliance> compliances;
     @OneToOne
     private LegalGroup legalGroup;
+    @OneToMany(mappedBy = "legalCategory")
+    private List<Accord> accords;
 }

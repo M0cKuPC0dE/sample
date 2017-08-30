@@ -34,6 +34,12 @@
             <span class="hide-menu">หมวดหมู่กฎหมาย</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/accord" class="waves-effect">
+            <i class="zmdi zmdi-check-all fa-fw"></i>
+            <span class="hide-menu">ประเมินความสอดคล้อง</span>
+          </nuxt-link>
+        </li>
         <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
