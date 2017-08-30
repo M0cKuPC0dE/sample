@@ -22,6 +22,18 @@
             <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/category" class="waves-effect">
+            <i class="zmdi zmdi-ungroup fa-fw"></i>
+            <span class="hide-menu">จัดหมวดหมู่กฎหมาย</span>
+          </nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/category/list" class="waves-effect">
+            <i class="zmdi zmdi-collection-bookmark fa-fw"></i>
+            <span class="hide-menu">หมวดหมู่กฎหมาย</span>
+          </nuxt-link>
+        </li>
         <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>

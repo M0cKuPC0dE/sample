@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import lombok.Data;
 
 /**
@@ -18,13 +19,18 @@ import lombok.Data;
  */
 @Data
 @Entity
-public class LegalGroup {
+public class LegalCategory {
     @Id
     @GeneratedValue
-    private Long id;
-    private String buName;
+    public Long id;
+    public String party;
+    public String department;
     @ManyToMany
-    private List<UserDetails> coordinates;
+    private List<UserDetails> owners;
+    @ManyToMany
+    private List<UserDetails> approvers;
     @ManyToMany
     private List<Compliance> compliances;
+    @OneToOne
+    private LegalGroup legalGroup;
 }

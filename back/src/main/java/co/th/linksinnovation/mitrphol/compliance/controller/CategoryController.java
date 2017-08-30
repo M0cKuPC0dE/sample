@@ -72,4 +72,9 @@ public class CategoryController {
     public void delete(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
     }
+
+    @GetMapping("/{id}")
+    public void getByLegalgroup(@PathVariable("id") Long id) {
+        categoryService.deleteCategory(id);
+    }
 }
