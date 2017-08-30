@@ -39,11 +39,15 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="compliance.id" v-for="compliance in category.compliances">
-                        <td>{{compliance.legalName}}</td>
-                        <td>{{category.department}}</td>
+                      <tr :key="accord.id" v-for="accord in category.accords">
+                        <td>{{accord.compliance.legalName}}</td>
+                        <td>
+                          <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
+                          <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
+                          <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
+                        </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/accord/'+category.id+'/compliance/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
+                          <nuxt-link :to="'/accord/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
                         </td>

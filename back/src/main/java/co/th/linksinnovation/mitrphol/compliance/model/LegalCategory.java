@@ -5,6 +5,8 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
@@ -35,6 +37,7 @@ public class LegalCategory {
     private List<Compliance> compliances;
     @OneToOne
     private LegalGroup legalGroup;
-    @OneToMany(mappedBy = "legalCategory")
-    private List<Accord> accords;
+    @OneToMany(mappedBy = "legalCategory",orphanRemoval = true)
+    @JsonManagedReference
+    private List<Accord> accords = new ArrayList<>();
 }

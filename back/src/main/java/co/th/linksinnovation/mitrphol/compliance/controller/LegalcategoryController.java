@@ -5,12 +5,15 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Accord;
 import co.th.linksinnovation.mitrphol.compliance.model.Authority;
+import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
+import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
@@ -42,6 +45,8 @@ public class LegalcategoryController {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
     @Autowired
+    private AccordRepository accordRepository;
+    @Autowired
     private RestService restService;
 
     @GetMapping
@@ -66,7 +71,7 @@ public class LegalcategoryController {
     public LegalCategory post(@RequestBody LegalCategory legalCategory) {
         Set<UserDetails> owners = new HashSet<>();
         Set<UserDetails> approvers = new HashSet<>();
-        
+
         if (!legalCategory.getOwners().isEmpty()) {
             for (UserDetails u : legalCategory.getOwners()) {
                 List<UserDetails> userdetails = userDetailsRepository.findByUserId(u.getUserId());
@@ -119,6 +124,21 @@ public class LegalcategoryController {
 
         legalCategory.setOwners(owners);
         legalCategory.setApprovers(approvers);
+        legalCategory = legalcategoryRepository.save(legalCategory);
+
+        if (!legalCategory.getCompliances().isEmpty()) {
+            for (Compliance c : legalCategory.getCompliances()) {
+                Accord ac = accordRepository.findByLegalCategoryAndCompliance(legalCategory, c);
+                if (ac == null) {
+                    ac = new Accord();
+                    ac.setLegalCategory(legalCategory);
+                    ac.setCompliance(c);
+                    ac = accordRepository.save(ac);
+                    legalCategory.getAccords().add(ac);
+                }
+            }
+        }
+        
         return legalcategoryRepository.save(legalCategory);
     }
 }
