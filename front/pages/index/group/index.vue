@@ -8,7 +8,7 @@
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
           <ol class="breadcrumb">
-            <li>{{ $t('dashboards.title') }}</li>
+            <li>{{ $t('menu.dashboard') }}</li>
             <li class="active">{{ $t('menu.masterdata') }}</li>
           </ol>
         </div>
@@ -19,7 +19,7 @@
 
             <div class="row">
               <div class="col-md-4">
-                <h3 class="box-title">กลุ่มกฎหมาย</h3>
+                <h3 class="box-title">{{ $t('menu.group') }}</h3>
               </div>
             </div>
 
@@ -29,7 +29,7 @@
               <div class="col-md-6 m-b-10">
               </div>
               <div class="col-md-3 m-b-10">
-                <nuxt-link to="/group/add" class="btn btn-block btn-info">เพิ่มกลุ่มกฎหมาย</nuxt-link>
+                <nuxt-link to="/group/add" class="btn btn-block btn-info">{{ $t('group.add')}}</nuxt-link>
               </div>
             </div>
 
@@ -39,8 +39,8 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th class="col-xs-10">กลุ่มกฎหมาย</th>
-                        <th class="text-center">จัดการ</th>
+                        <th class="col-xs-10">{{ $t('group.name')}}</th>
+                        <th class="text-center">{{ $t('group.management')}}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -72,14 +72,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title">ยืนยันการลบ</h4>
+            <h4 class="modal-title">{{ $t('message.delete.confirm') }}</h4>
           </div>
           <div class="modal-body">
-            ต้องการลบใช่หรือไม่
+            {{ $t('message.delete.description') }}
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">{{ $t('buttons.close') }}</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">{{ $t('buttons.delete') }}</button>
           </div>
         </div>
       </div>

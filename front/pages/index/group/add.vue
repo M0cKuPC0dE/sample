@@ -56,9 +56,9 @@
 
               <div class="form-actions text-center">
                 <button type="submit" class="btn btn-success m-r-10">
-                  <i class="fa fa-check"></i> บันทึก</button>
+                  <i class="fa fa-check"></i> {{ $t('buttons.save') }}</button>
                 <nuxt-link to="/group" class="btn btn-info">
-                  <i class="fa fa-chevron-left"></i> ย้อนกลับ
+                  <i class="fa fa-chevron-left"></i> {{ $t('buttons.back') }}
                 </nuxt-link>
               </div>
             </form>

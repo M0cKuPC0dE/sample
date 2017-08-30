@@ -8,7 +8,7 @@
         <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info">{{ $t('buttons.category.add') }}</nuxt-link>
       </div>
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/compliance/add" class="btn btn-block btn-info">เ{{ $t('buttons.compliance.add') }}</nuxt-link>
+        <nuxt-link to="/masterdata/compliance/add" class="btn btn-block btn-info">{{ $t('buttons.compliance.add') }}</nuxt-link>
       </div>
     </div>
     <div class="row">

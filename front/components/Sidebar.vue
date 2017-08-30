@@ -19,31 +19,31 @@
         <li>
           <nuxt-link to="/group" class="waves-effect">
             <i class="zmdi zmdi-group fa-fw"></i>
-            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
+            <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.coordinators') }}</span>
+            <span class="hide-menu">{{ $t('menu.coordinator') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/owner" class="waves-effect">
             <i class="zmdi zmdi-account-circle fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.owners') }}</span>
+            <span class="hide-menu">{{ $t('menu.owner') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/reviewer" class="waves-effect">
             <i class="zmdi zmdi-account-box-o fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.reviewers') }}</span>
+            <span class="hide-menu">{{ $t('menu.reviewer') }}</span>
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link to="/approver" class="waves-effect">
             <i class="zmdi zmdi-mood fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.approvers') }}</span>
+            <span class="hide-menu">{{ $t('menu.approver') }}</span>
           </nuxt-link>
         </li>
         <li>
