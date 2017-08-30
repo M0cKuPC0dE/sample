@@ -16,16 +16,10 @@
             <span class="hide-menu">{{ $t('menu.masterdata') }}</span>
           </nuxt-link>
         </li>
-        <li v-if="false">
-          <nuxt-link to="/group" class="waves-effect">
-            <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.group') }}</span>
-          </nuxt-link>
-        </li>
         <li>
-          <nuxt-link to="/administrator" class="waves-effect">
-            <i class="zmdi zmdi-male-alt fa-fw"></i>
-            <span class="hide-menu">{{ $t('menu.group') }}</span>
+          <nuxt-link to="/group" class="waves-effect">
+            <i class="zmdi zmdi-group fa-fw"></i>
+            <span class="hide-menu">จัดการกลุ่มกฎหมาย</span>
           </nuxt-link>
         </li>
         <li v-if="false">
