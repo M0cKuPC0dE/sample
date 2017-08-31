@@ -10,37 +10,37 @@
         </h3>
       </div>
       <ul class="nav" id="side-menu">
-        <li>
+        <li v-if="authority === 'Administrator'">
           <nuxt-link to="/masterdata" class="waves-effect">
             <i class="zmdi zmdi-archive fa-fw"></i>
             <span class="hide-menu">{{ $t('menu.masterdata') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Administrator'">
           <nuxt-link to="/group" class="waves-effect">
             <i class="zmdi zmdi-group fa-fw"></i>
             <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Administrator' || authority === 'Coordinator'">
           <nuxt-link to="/category" class="waves-effect">
             <i class="zmdi zmdi-ungroup fa-fw"></i>
             <span class="hide-menu">จัดหมวดหมู่กฎหมาย</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Administrator' || authority === 'Coordinator'">
           <nuxt-link to="/category/list" class="waves-effect">
             <i class="zmdi zmdi-collection-bookmark fa-fw"></i>
             <span class="hide-menu">หมวดหมู่กฎหมาย</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Owner'">
           <nuxt-link to="/accord" class="waves-effect">
             <i class="zmdi zmdi-check-all fa-fw"></i>
             <span class="hide-menu">ประเมินความสอดคล้อง</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Approver'">
           <nuxt-link to="/approve" class="waves-effect">
             <i class="zmdi zmdi-check-circle-u fa-fw"></i>
             <span class="hide-menu">อนุมัติ</span>
@@ -76,7 +76,7 @@
             <span class="hide-menu">{{ $t('menu.fileupload') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="authority === 'Administrator'">
           <nuxt-link to="/language" class="waves-effect">
             <i class="zmdi zmdi-text-format fa-fw"></i>
             <span class="hide-menu">{{ $t('menu.languageupload') }}</span>
@@ -92,3 +92,15 @@
     </div>
   </div>
 </template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+  computed: mapGetters({
+    authenticated: 'auth/authenticated',
+    name: 'auth/name',
+    authority: 'auth/authority'
+  })
+}
+</script>

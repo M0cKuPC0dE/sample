@@ -28,7 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     private UserDetailsService userDetailsService;
     
     @Autowired
-    private AbstractCustomAuthenticationProvider customAuthenticationProvider;
+    private CustomAuthenticationProvider customAuthenticationProvider;
     
     @Bean
     public BCryptPasswordEncoder bcryptEncoder(){

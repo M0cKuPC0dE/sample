@@ -129,19 +129,19 @@
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-            <img src="~assets/images/user.jpg" alt="user-img" width="36" class="img-circle">
-            <b class="hidden-xs">ณัฐจักร์</b>
+            <img src="~assets/images/default_user.png" alt="user-img" width="36" class="img-circle">
+            <b class="hidden-xs">{{name}}</b>
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu dropdown-user animated flipInY">
             <li>
               <div class="dw-user-box">
                 <div class="u-img">
-                  <img src="~assets/images/user.jpg" alt="user">
+                  <img src="~assets/images/default_user.png" alt="user">
                 </div>
                 <div class="u-text">
-                  <h4>ณัฐจักร์ พูพัฒน์ศิริกร</h4>
-                  <p class="text-muted">Administrator</p>
+                  <h4>{{name}}</h4>
+                  <p class="text-muted">{{authority}}</p>
                 </div>
               </div>
             </li>

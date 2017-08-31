@@ -1,92 +1,60 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.th.linksinnovation.mitrphol.compliance.config;
 
-import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
-import co.th.linksinnovation.mitrphol.compliance.model.authen.UserInfo;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 /**
- *
- * @author Piyawut Chiradejnunt<pchiradejnunt@gmail.com>
+ * @author Jirawong Wongdokpuang <jiraowng@linksinnovation.com>
  */
-@Profile("prod")
 @Component
-public class CustomAuthenticationProvider extends AbstractCustomAuthenticationProvider {
+public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    private static final String APIKEY = "App-Key";
-    private static final String APIKEY_VALUE = "blySsonddG3ZDLU1d2V9hCEUyKt09iDdCKrndyFxAewAY4ny6xU4OOprDoJl5IWa.IqK3VvSVoQ6O4vt3-0kxA";
-
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-
-    private static final String LOGIN_URL = "https://api.mitrphol.com:3001/authentication/login";
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return validateAuthen(authentication);
+        UserDetails findOne = userDetailsRepository.findOne(authentication.getName().toLowerCase());
+        if(findOne != null && iserviceAuthen(authentication)){
+            Authentication auth = new UsernamePasswordAuthenticationToken(authentication.getName().toLowerCase(), authentication.getCredentials().toString(), findOne.getAuthorities());
+            return auth;
+        }else{
+            return null;
+        }
     }
 
     @Override
-    protected boolean isServiceAuthen(Authentication authentication) {
-        ResponseEntity<Authenticate> responseEntity = null;
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
 
+    private boolean iserviceAuthen(Authentication authentication) {
         RestTemplate rest = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.add(APIKEY, APIKEY_VALUE);
-        
-        final String userName = authentication.getName().trim().toLowerCase();
-        
+        headers.add("App-Key", "pap9DekzlVROhBplLVpx94Yk158w.RbNC8PRH5X3Kkju3JLnMu7m1JC70zhjZP6R8BFP-cINqY-t.8oS6lJbyw");
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add(USERNAME, userName);
-        map.add(PASSWORD, authentication.getCredentials().toString());
-
+        map.add("username", authentication.getName().trim().toLowerCase());
+        map.add("password", authentication.getCredentials().toString());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        responseEntity = rest.exchange(LOGIN_URL, HttpMethod.POST, request, Authenticate.class);
-
-        if (responseEntity.getBody().getSuccess() != null) {
-            UserDetails userDetails = userDetailsRepository.findOne(userName);
-            if (userDetails == null) {
-                userDetails = new UserDetails();
-                userDetails.setUsername(userName);
-                userDetails.setPassword(authentication.getCredentials().toString());
-                
-                final UserInfo userInfo = responseEntity.getBody().getSuccess().getData().getUserInfo();
-                userDetails.setNameEn(userInfo.getFullname().getEn());
-                userDetails.setNameTh(userInfo.getFullname().getTh());
-                userDetails.setUserId(userInfo.getId());
-                userDetails.setPhoto(userInfo.getPhoto());
-                userDetails.setEmail(userInfo.getEmail());
-                
-                Authority authority = new Authority();
-                authority.setAuthority("User");
-                userDetails.addAuthority(authority);
-                
-            }
-            userDetailsRepository.save(userDetails);
-            return true;
-
-        }
-
-        return false;
+        ResponseEntity<Authenticate> postForEntity = rest.exchange("https://api.mitrphol.com:3001/authentication/login", HttpMethod.POST, request, Authenticate.class);
+        return postForEntity.getStatusCode() == HttpStatus.OK;
     }
 }

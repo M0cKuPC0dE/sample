@@ -57,9 +57,6 @@
       <label class="col-sm-12">{{ $t('compliance.legalduty') }}</label>
       <div class="col-sm-12">
         <textarea class="form-control" rows="5" v-model="compliance.legalDuty" required></textarea>
-        <span class="help-block">
-          <small>A block of help text that breaks onto a new line and may extend beyond one line.</small>
-        </span>
       </div>
     </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>

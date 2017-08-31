@@ -13,6 +13,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
+import co.th.linksinnovation.mitrphol.compliance.service.MailService;
 import co.th.linksinnovation.mitrphol.compliance.service.RestService;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class LegalgroupController {
     private UserDetailsRepository userDetailsRepository;
     @Autowired
     private RestService restService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
@@ -82,6 +85,7 @@ public class LegalgroupController {
             }
         }
         legalGroup.setCoordinates(fillDetails);
+        mailService.send2Coordinator(fillDetails);
         return legalgroupRepository.save(legalGroup);
     }
 

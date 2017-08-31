@@ -38,6 +38,7 @@ export const mutations = {
 export const actions = {
   login: (context, vc) => {
     auth.login(vc).then((data) => {
+      console.log(jwt(data.data.access_token))
       Cookies.set('AT', data.data.access_token, { expires: 1, secure: false })
       Cookies.set('RT', data.data.refresh_token, { expires: 1, secure: false })
       context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities[0] })

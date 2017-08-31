@@ -6,11 +6,6 @@
           <div class="form-group">
             <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
-            <span class="help-block">
-              <small>เพิ่มหมวดหมู่
-                <strong>ภายใต้ พรบ 2555</strong>
-              </small>
-            </span>
           </div>
         </div>
       </div>
