@@ -27,7 +27,7 @@
               <div class="form-group">
                 <label class="col-md-12">{{ $t('language.code') }}</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="รหัส" v-model="locale.code" required>
+                  <input type="text" class="form-control" style="text-transform:uppercase" placeholder="รหัส" v-model="locale.code" required>
                 </div>
               </div>
               <div class="form-group">
@@ -42,7 +42,7 @@
                   <span class="btn btn-info btn-file m-r-10">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     {{ $t('buttons.upload.template') }}
-                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('http://localhost:8080/api/localeupload/' + locale.code,$event)">
+                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('http://localhost:8080/api/localeupload/' + locale.code.toUpperCase(),$event)">
                   </span>
                   <span>{{displayname}}</span>
                 </div>
@@ -94,6 +94,7 @@ export default {
       obj[index] = undefined
       this.$set(this, 'files', obj)
       var self = this
+      self.locale.code = self.locale.code.toUpperCase()
       http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/language' })

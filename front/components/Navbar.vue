@@ -171,7 +171,7 @@ import cookie from '~/utils/cookie'
 export default {
   name: 'navbar',
   data: function () {
-    return { selected: this.$store.state.locale || 'th' }
+    return { selected: this.$store.state.locale }
   },
   mounted: function () {
     this.init()
@@ -188,7 +188,7 @@ export default {
           let data = response.data
           data.forEach((locale) => {
             this.localeMessage(locale.code)
-            if (locale.code !== 'th') {
+            if (locale.code !== 'TH') {
               this.$store.state.locales.push(locale.code)
             }
           })
@@ -196,14 +196,14 @@ export default {
           this.$router.replace('/login')
         })
     },
-    localeMessage: function (locale) {
+    localeMessage: function (code) {
       http
-        .get('/api/locales/' + locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/api/locales/' + code, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           let data = response.data
-          this.$i18n.setLocaleMessage(locale, data)
-          if (this.$store.state.locale === locale) {
-            this.$i18n.locale = locale
+          this.$i18n.setLocaleMessage(code, data)
+          if (this.$store.state.locale === code) {
+            this.$i18n.locale = code
           }
         }).catch((e) => {
           this.$router.replace('/login')

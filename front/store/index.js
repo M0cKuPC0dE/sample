@@ -3,8 +3,8 @@ import cookie from '~/utils/cookie'
 import * as Cookies from 'js-cookie'
 
 export const state = () => ({
-  locale: 'th',
-  locales: ['th']
+  locale: 'TH',
+  locales: ['TH']
 })
 
 export const getters = {
@@ -28,7 +28,7 @@ export const actions = {
       var result = cookie(vc)
       try {
         context.commit('auth/authen', { status: true, error: '', name: jwt(result.AT).name, authority: jwt(result.AT).authorities[0] })
-        context.commit('locale', { locale: result.locale })
+        context.commit('locale', { locale: result.locale || 'TH' })
       } catch (e) {
         console.log(e.name + ' : store/index.js')
       }
