@@ -47,6 +47,10 @@ public class AccordController {
     
     @PostMapping
     public Accord post(@RequestBody Accord accord){
-        return accordRepository.save(accord);
+        Accord ac = accordRepository.save(accord);
+        LegalCategory legalCategory = ac.getLegalCategory();
+        legalCategory.setApproved(Boolean.FALSE);
+        legalcategoryRepository.save(legalCategory);
+        return ac;
     }
 }

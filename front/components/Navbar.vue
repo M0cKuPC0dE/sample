@@ -106,7 +106,7 @@
             <strong>{{this.selected}}</strong>
           </a>
           <ul class="dropdown-menu dropdown animated bounceInDown">
-            <li v-if="locales.length >= 2 && langcode !== 'th'" :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
+            <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
               <a href="#">
                 <div>
                   <p>

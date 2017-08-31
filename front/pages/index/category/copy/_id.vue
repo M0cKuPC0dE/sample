@@ -140,6 +140,7 @@ export default {
       var self = this
       self.legalcategory.legalGroup = {}
       self.legalcategory.legalGroup.id = self.legalgroup.id
+      self.legalcategory.approved = false
       http.post('/api/legalcategory', self.legalcategory, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/category/list' })

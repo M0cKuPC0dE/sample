@@ -29,6 +29,7 @@ public class LegalCategory {
     public Long id;
     public String party;
     public String department;
+    public Boolean approved = false;
     @ManyToMany
     private Set<UserDetails> owners;
     @ManyToMany

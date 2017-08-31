@@ -40,6 +40,12 @@
             <span class="hide-menu">ประเมินความสอดคล้อง</span>
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link to="/approve" class="waves-effect">
+            <i class="zmdi zmdi-check-circle-u fa-fw"></i>
+            <span class="hide-menu">อนุมัติ</span>
+          </nuxt-link>
+        </li>
         <li v-if="false">
           <nuxt-link to="/coordinator" class="waves-effect">
             <i class="zmdi zmdi-accounts-alt fa-fw"></i>
@@ -64,7 +70,7 @@
             <span class="hide-menu">{{ $t('menu.approver') }}</span>
           </nuxt-link>
         </li>
-        <li>
+        <li v-if="false">
           <nuxt-link to="/uploaddocument" class="waves-effect">
             <i class="zmdi zmdi-swap-vertical fa-fw"></i>
             <span class="hide-menu">{{ $t('menu.fileupload') }}</span>

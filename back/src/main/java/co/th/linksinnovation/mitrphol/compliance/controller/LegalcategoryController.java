@@ -65,6 +65,14 @@ public class LegalcategoryController {
     public void delete(@PathVariable("id") Long id) {
         legalcategoryRepository.delete(id);
     }
+    
+    @PostMapping("/approve")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    public LegalCategory approve(@RequestBody LegalCategory legalCategory){
+        LegalCategory findOne = legalcategoryRepository.findOne(legalCategory.getId());
+        findOne.setApproved(Boolean.TRUE);
+        return legalcategoryRepository.save(findOne);
+    }
 
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)

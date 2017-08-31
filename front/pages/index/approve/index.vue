@@ -19,7 +19,7 @@
 
             <div class="row">
               <div class="col-md-4">
-                <h3 class="box-title">ประเมินความสอดคล้อง</h3>
+                <h3 class="box-title">อนุมัติแบบประเมิน</h3>
               </div>
             </div>
 
@@ -47,8 +47,8 @@
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                         </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/accord/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
-                            <i class="ti-marker-alt"></i>
+                          <nuxt-link :to="'/approve/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="เปิด">
+                            <i class="ti-search"></i>
                           </nuxt-link>
                         </td>
                       </tr>
@@ -56,12 +56,34 @@
                   </table>
                 </div>
               </div>
-            </div>
 
+              <div class="col-md-12 text-right">
+                <button class="btn btn-info" v-on:click="onConfirmApprove(category)" v-if="category.approved === false">อณุมัติแบบประเมิน</button>
+                <button class="btn btn-info" v-on:click="onConfirmApprove(category)" v-if="category.approved === true" disabled>อณุมัติแบบประเมิน</button>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
+    <div id="approve-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">ยืนยันการอนุมัติ</h4>
+          </div>
+          <div class="modal-body">
+            ต้องการอนุมัติแบบประเมินใช่หรือไม่
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+            <button type="button" class="btn btn-success waves-effect waves-light" v-on:click="onApprove">อนุมัติ</button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -83,13 +105,18 @@ export default {
         context.redirect('/login')
       })
   },
+  data: function () {
+    return {
+      approve: {}
+    }
+  },
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
   },
   methods: {
     onLoad: function () {
       var self = this
-      http
+      return http
         .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           self.$set(self, 'categories', response.data)
@@ -97,6 +124,22 @@ export default {
         .catch((e) => {
           self.$router.replace('/login')
         })
+    },
+    onApprove: function () {
+      var self = this
+      $('#approve-modal').modal('hide')
+      return http
+        .post('/api/legalcategory/approve', self.approve, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          self.onLoad()
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    },
+    onConfirmApprove: function (category) {
+      $('#approve-modal').modal('show')
+      this.$set(this, 'approve', category)
     }
   }
 }
