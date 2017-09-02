@@ -71,7 +71,7 @@
 <script>
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
-import ProgressUpload from '~components/ProgressUpload'
+import ProgressUpload from '~/components/ProgressUpload'
 
 export default {
   components: {

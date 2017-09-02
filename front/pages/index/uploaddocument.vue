@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import ProgressUpload from '~components/ProgressUpload'
+import ProgressUpload from '~/components/ProgressUpload'
 
 export default {
   components: {
