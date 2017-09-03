@@ -151,7 +151,7 @@
               <div class="form-actions text-center m-t-20">
                 <button type="submit" class="btn btn-success m-r-10">
                   <i class="fa fa-check"></i> บันทึก</button>
-                <nuxt-link to="/accord" class="btn btn-info">
+                <nuxt-link to="/checklist/accord" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
               </div>
@@ -188,7 +188,7 @@ export default {
       self.accord.legalCategory.id = this.$route.params.accord
       http.post('/api/accord', self.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/accord' })
+          self.$router.push({ path: '/checklist/accord' })
         })
         .catch((e) => {
           self.$router.replace('/login')

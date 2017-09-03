@@ -85,7 +85,7 @@ public class LegalgroupController {
             }
         }
         legalGroup.setCoordinates(fillDetails);
-        mailService.send2Coordinator(fillDetails);
+//        mailService.send2Coordinator(fillDetails);
         return legalgroupRepository.save(legalGroup);
     }
 

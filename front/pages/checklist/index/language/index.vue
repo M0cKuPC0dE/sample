@@ -29,7 +29,7 @@
               <div class="col-md-6 m-b-10">
               </div>
               <div class="col-md-3 m-b-10">
-                <nuxt-link to="/language/add" class="btn btn-block btn-info">{{ $t('language.add')}}</nuxt-link>
+                <nuxt-link to="/checklist/language/add" class="btn btn-block btn-info">{{ $t('language.add')}}</nuxt-link>
               </div>
             </div>
 
@@ -49,7 +49,7 @@
                         <td>{{locale.code}}</td>
                         <td>{{locale.fullName}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/language/edit/'+locale.code" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/language/edit/'+locale.code" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
                           <a href="javascript:void(0)" v-on:click="onConfirmDelete(locale)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
@@ -97,7 +97,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/api/locales', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/locales', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
         return { locales: response.data }
       })

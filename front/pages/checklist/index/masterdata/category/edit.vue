@@ -18,7 +18,7 @@
         <i class="fa fa-check"></i> บันทึก</button>
       <button type="button" class="btn btn-danger m-r-10" data-toggle="modal" data-target="#remove-category-modal">
         <i class="fa fa-times"></i> ลบหมวดหมู่</button>
-      <nuxt-link to="/masterdata" class="btn btn-info">
+      <nuxt-link to="/checklist/masterdata" class="btn btn-info">
         <i class="fa fa-chevron-left"></i> ย้อนกลับ
       </nuxt-link>
     </div>
@@ -72,7 +72,7 @@ export default {
       var self = this
       http.post('/api/category/update', self.category, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/masterdata' })
+          self.$router.push({ path: '/checklist/masterdata' })
         })
         .catch((e) => {
           self.$router.replace('/login')
@@ -84,10 +84,10 @@ export default {
       return http
         .delete('/api/category/' + this.category.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
-          self.$router.push('/masterdata')
+          self.$router.push('/checklist/masterdata')
         })
         .catch((e) => {
-          self.$router.push('/masterdata')
+          self.$router.push('/checklist/masterdata')
         })
     }
   }

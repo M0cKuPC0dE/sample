@@ -47,7 +47,7 @@
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                         </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/accord/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
+                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
                         </td>

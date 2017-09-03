@@ -13,7 +13,7 @@
     <div class="form-actions">
       <button type="submit" class="btn btn-success m-r-10">
         <i class="fa fa-check"></i> บันทึก</button>
-      <nuxt-link to="/masterdata" class="btn btn-info">
+      <nuxt-link to="/checklist/masterdata" class="btn btn-info">
         <i class="fa fa-chevron-left"></i> ย้อนกลับ
       </nuxt-link>
     </div>
@@ -60,7 +60,7 @@ export default {
       var self = this
       http.post('/api/category', { parent: { id: self.category.id }, name: self.name }, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/masterdata' })
+          self.$router.push({ path: '/checklist/masterdata' })
         })
     }
   }

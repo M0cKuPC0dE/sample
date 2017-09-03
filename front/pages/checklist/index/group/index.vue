@@ -29,7 +29,7 @@
               <div class="col-md-6 m-b-10">
               </div>
               <div class="col-md-3 m-b-10">
-                <nuxt-link to="/group/add" class="btn btn-block btn-info">{{ $t('group.add')}}</nuxt-link>
+                <nuxt-link to="/checklist/group/add" class="btn btn-block btn-info">{{ $t('group.add')}}</nuxt-link>
               </div>
             </div>
 
@@ -47,10 +47,10 @@
                       <tr :key="index" v-for="(legalgroup,index) in groups">
                         <td>{{legalgroup.buName}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/group/edit/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/group/edit/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <nuxt-link :to="'/group/copy/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
+                          <nuxt-link :to="'/checklist/group/copy/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
                             <i class="ti-stamp"></i>
                           </nuxt-link>
                           <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalgroup)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">

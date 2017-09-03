@@ -81,7 +81,7 @@
               <div class="form-actions text-center">
                 <button type="submit" class="btn btn-success m-r-10">
                   <i class="fa fa-check"></i> บันทึก</button>
-                <nuxt-link to="/category" class="btn btn-info">
+                <nuxt-link to="/checklist/category" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
               </div>
@@ -141,7 +141,7 @@ export default {
       self.legalcategory.legalGroup = self.legalgroup
       http.post('/api/legalcategory', self.legalcategory, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/category/list' })
+          self.$router.push({ path: '/checklist/category/list' })
         })
         .catch((e) => {
           self.$router.replace('/login')

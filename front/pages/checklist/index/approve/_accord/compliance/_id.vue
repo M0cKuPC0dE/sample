@@ -149,7 +149,7 @@
               </div>
 
               <div class="form-actions text-center m-t-20">
-                <nuxt-link to="/approve" class="btn btn-info">
+                <nuxt-link to="/checklist/approve" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
               </div>

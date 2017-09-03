@@ -60,7 +60,7 @@
       </div>
     </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
-    <nuxt-link to="/masterdata" class="btn btn-info">
+    <nuxt-link to="/checklist/masterdata" class="btn btn-info">
       <i class="fa fa-chevron-left"></i> ย้อนกลับ
     </nuxt-link>
   </form>
@@ -119,7 +119,7 @@ export default {
       self.compliance.category = this.category
       http.post('/api/compliance', self.compliance, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/masterdata' })
+          self.$router.push({ path: '/checklist/masterdata' })
         })
     }
   }

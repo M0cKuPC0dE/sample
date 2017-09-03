@@ -16,7 +16,7 @@
 
             <div class="row">
               <div class="col-md-4 m-b-10">
-                <nuxt-link v-show="$route.path === '/checklist/masterdata'" to="/masterdata/import" class="btn btn-block btn-success m-b-10">นำเข้าข้อมูล</nuxt-link>
+                <nuxt-link v-show="$route.path === '/checklist/masterdata'" to="/checklist/masterdata/import" class="btn btn-block btn-success m-b-10">นำเข้าข้อมูล</nuxt-link>
                 <div id="category" class="treeview"></div>
               </div>
               <div class="col-md-8">
@@ -67,7 +67,7 @@ export default {
   watch: {
     $route: function (val) {
       var self = this
-      if (val.path === '/masterdata') {
+      if (val.path === '/checklist/masterdata') {
         return http
           .get('/api/category', { headers: { Authorization: 'bearer ' + cookie(self).AT } })
           .then((response) => {

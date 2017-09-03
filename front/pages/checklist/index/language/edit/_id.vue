@@ -50,7 +50,7 @@
               <div class="form-actions text-center">
                 <button type="submit" class="btn btn-success m-r-10">
                   <i class="fa fa-check"></i> {{ $t('buttons.save') }}</button>
-                <nuxt-link to="/language" class="btn btn-info">
+                <nuxt-link to="/checklist/language" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> {{ $t('buttons.back') }}
                 </nuxt-link>
               </div>
@@ -107,7 +107,7 @@ export default {
       var self = this
       http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/language' })
+          self.$router.push({ path: '/checklist/language' })
         })
         .catch((e) => {
           self.$router.replace('/login')

@@ -125,7 +125,7 @@ export default {
       self.compliance.category = this.category
       http.post('/api/compliance', self.compliance, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/masterdata' })
+          self.$router.push({ path: '/checklist/masterdata' })
         })
         .catch((e) => {
           self.$router.replace('/login')
@@ -137,7 +137,7 @@ export default {
       return http
         .delete('/api/compliance/' + this.$route.params.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
-          self.$router.push('/masterdata')
+          self.$router.push('/checklist/masterdata')
         })
         .catch((e) => {
           self.$router.replace('/login')

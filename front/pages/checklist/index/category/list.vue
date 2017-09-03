@@ -39,10 +39,10 @@
                         <td>{{category.party}}</td>
                         <td>{{category.department}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/category/edit/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/category/edit/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <nuxt-link :to="'/category/copy/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
+                          <nuxt-link :to="'/checklist/category/copy/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
                             <i class="ti-stamp"></i>
                           </nuxt-link>
                           <a href="javascript:void(0)" v-on:click="onConfirmDelete(category)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">

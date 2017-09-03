@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/category/edit" class="btn btn-block btn-warning">{{ $t('buttons.category.edit') }}</nuxt-link>
+        <nuxt-link to="/checklist/masterdata/category/edit" class="btn btn-block btn-warning">{{ $t('buttons.category.edit') }}</nuxt-link>
       </div>
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/category/add" class="btn btn-block btn-info">{{ $t('buttons.category.add') }}</nuxt-link>
+        <nuxt-link to="/checklist/masterdata/category/add" class="btn btn-block btn-info">{{ $t('buttons.category.add') }}</nuxt-link>
       </div>
       <div class="col-md-4 m-b-10">
-        <nuxt-link to="/masterdata/compliance/add" class="btn btn-block btn-info">{{ $t('buttons.compliance.add') }}</nuxt-link>
+        <nuxt-link to="/checklist/masterdata/compliance/add" class="btn btn-block btn-info">{{ $t('buttons.compliance.add') }}</nuxt-link>
       </div>
     </div>
     <div class="row">
@@ -46,10 +46,10 @@
                 <span class="label label-success">ACTIVE</span>
               </td>
               <td class="text-center">
-                <nuxt-link :to="'/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
+                <nuxt-link :to="'/checklist/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
                   <i class="ti-search"></i>
                 </nuxt-link>
-                <nuxt-link :to="'/masterdata/compliance/edit/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                <nuxt-link :to="'/checklist/masterdata/compliance/edit/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
                 </nuxt-link>
                 <a href="javascript:void(0)" v-on:click="onConfirmDelete(compliance)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
