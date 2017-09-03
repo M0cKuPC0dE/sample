@@ -114,7 +114,7 @@ export default {
     onLoad: function () {
       var self = this
       http
-        .get('/api/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           self.$set(self, 'locales', response.data)
         })

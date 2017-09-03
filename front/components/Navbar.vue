@@ -103,15 +103,16 @@
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
-            <strong>{{this.locale}}</strong>
+            <strong>{{locale}}</strong>
           </a>
           <ul class="dropdown-menu dropdown animated bounceInDown">
             <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode.code)">
               <a href="#">
                 <div>
-                  <p>
+                  <p class="m-b-0">
                     <strong>{{langcode.code}}</strong>
                   </p>
+                  <p class="mail-desc m-b-0">{{langcode.fullName}}</p>
                 </div>
               </a>
             </li>
@@ -147,7 +148,7 @@
             </li>
             <li role="separator" class="divider"></li>
             <li>
-              <a href="#" v-on:click="logout(this)">
+              <a href="javascript:void(0)" v-on:click="logout(this)">
                 <i class="fa fa-power-off"></i> Logout</a>
             </li>
           </ul>

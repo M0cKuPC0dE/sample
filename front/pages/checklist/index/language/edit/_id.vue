@@ -129,7 +129,7 @@ export default {
         var self = this
         http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
           .then(response => {
-            self.$router.push({ path: '/language' })
+            self.$router.push({ path: '/checklist/language' })
           })
           .catch((e) => {
             self.$router.replace('/login')

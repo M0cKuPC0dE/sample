@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jirawong
  */
 @RestController
-@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired
@@ -33,19 +31,25 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping
+    @GetMapping("/api/category")
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public List<Category> getCategoryWithoutCompliance() {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
-    @GetMapping("/compliance")
+    @GetMapping("/category/compliance")
+    @JsonView(JsonViewer.CategoryWithCompliance.class)
+    public List<Category> getCategoryWithCompliancePublic() {
+        return categoryRepository.findByParentIsNullAndDeletedIsFalse();
+    }
+
+    @GetMapping("/api/category/compliance")
     @JsonView(JsonViewer.CategoryWithCompliance.class)
     public List<Category> getCategoryWithCompliance() {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
-    @PostMapping
+    @PostMapping("/api/category")
     public List<Category> post(@RequestBody Category category) {
         if (category.getParent().getId() != null) {
             Category child = categoryRepository.save(category);
@@ -59,7 +63,7 @@ public class CategoryController {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
-    @PostMapping("/update")
+    @PostMapping("/api/category/update")
     public List<Category> postUpdate(@RequestBody Category category) {
         Category findOne = categoryRepository.findOne(category.getId());
         Category parent = findOne.getParent();
@@ -68,12 +72,12 @@ public class CategoryController {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/category/{id}")
     public void delete(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/category/{id}")
     public void getByLegalgroup(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
     }
