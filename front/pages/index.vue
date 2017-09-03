@@ -26,6 +26,123 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myLargeModalLabel">รายละเอียดกฎหมาย</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="white-box">
+
+                  <form class="form-horizontal">
+
+                    <div class="form-group">
+                      <label class="col-md-12">
+                        <strong>{{ $t('compliance.legalname') }}</strong>
+                      </label>
+                      <div class="col-md-12">
+                        {{compliance.legalName}}
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>{{ $t('compliance.effectivedate') }}</strong>
+                          </label>
+                          <div class="col-md-12">
+                            {{compliance.effectiveDate}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>{{ $t('compliance.department') }}</strong>
+                          </label>
+                          <div class="col-md-12">
+                            {{compliance.department}}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>{{ $t('compliance.ministry') }}</strong>
+                          </label>
+                          <div class="col-md-12">
+                            {{compliance.ministry}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>หน่วยงานที่เกี่ยวข้อง</strong>
+                          </label>
+                          <div class="col-md-12">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>ฝ่ายที่เกี่ยวข้อง</strong>
+                          </label>
+                          <div class="col-md-12">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                          <label class="col-md-12">
+                            <strong>แผนกที่เกี่ยวข้อง</strong>
+                          </label>
+                          <div class="col-md-12">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-md-12">
+                        <strong>{{ $t('compliance.important') }}</strong>
+                      </label>
+                      <div class="col-md-12">
+                        {{compliance.important}}
+                      </div>
+                    </div>
+
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">ปิด</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -48,7 +165,17 @@ export default {
   },
   data: function () {
     return {
-      lastPattern: ''
+      lastPattern: '',
+      compliance: {
+        legalName: '',
+        year: '',
+        publicDate: '',
+        effectiveDate: '',
+        department: '',
+        ministry: '',
+        importain: '',
+        legalDuty: ''
+      }
     }
   },
   mounted: function () {
@@ -61,9 +188,14 @@ export default {
       $('#allview').treeview({
         expandIcon: 'glyphicon glyphicon-chevron-right',
         collapseIcon: 'glyphicon glyphicon-chevron-down',
-        showTags: false,
-        showCheckbox: false,
-        data: self.cat2node(categories)
+        data: self.cat2node(categories),
+        onNodeSelected: function (event, data) {
+          self.$set(self, 'compliance', data.value)
+          $('.bs-example-modal-lg').modal('show')
+          $('.bs-example-modal-lg').on('hidden.bs.modal', function () {
+            $('#allview').treeview('unselectNode', [data.nodeId, { silent: true }])
+          })
+        }
       })
       $('#allview').treeview('collapseAll', { silent: true })
     },
@@ -96,7 +228,7 @@ export default {
         var node = {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
-          selectable: false,
+          selectable: true,
           value: compliance
         }
         nodes.push(node)
