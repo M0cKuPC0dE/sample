@@ -11,6 +11,15 @@
           </span>
         </div>
       </div>
+      <br>
+      <a class="form-group p-t-20" href="http:localhost:8080/file/download/1" id="download">
+        <div class="col-md-12 text-center is-fileinput">
+          <span class="btn btn-info btn-file">
+            <i class="zmdi zmdi-swap-vertical"></i>
+            download
+          </span>
+        </div>
+      </a>
 
       <div class="form-group" v-if="files.file">
         <div class="col-md-12">
@@ -22,7 +31,9 @@
 </template>
 
 <script>
-import ProgressUpload from '~/components/ProgressUpload'
+import ProgressUpload from '~components/ProgressUpload'
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
 
 export default {
   components: {
@@ -35,10 +46,19 @@ export default {
   },
   created: function () {
     this.$on('onCompleteUpload', function (index) {
-      var obj = {}
-      obj[index] = undefined
-      this.$set(this, 'files', obj)
-      this.$router.push('/masterdata')
+      let legalFile = {}
+      legalFile['name'] = this.files.file.name
+      http.post('/api/file/', legalFile, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then(response => {
+          var obj = {}
+          obj[index] = undefined
+          this.$set(this, 'files', obj)
+
+          this.$router.push('/checklist/masterdata')
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
     })
   },
   methods: {
