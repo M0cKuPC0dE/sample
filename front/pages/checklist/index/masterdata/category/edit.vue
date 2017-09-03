@@ -6,9 +6,6 @@
           <div class="form-group">
             <label class="control-label">{{ $t('category.name') }}</label>
             <input v-model="category.name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
-            <span class="help-block">
-              <small>A block of help text that breaks onto a new line and may extend beyond one line.</small>
-            </span>
           </div>
         </div>
       </div>

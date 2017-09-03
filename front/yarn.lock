@@ -896,6 +896,10 @@ bootstrap-datepicker@^1.7.1:
   dependencies:
     jquery ">=1.7.1 <4.0.0"
 
+bootstrap-tagsinput@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-tagsinput/-/bootstrap-tagsinput-0.7.1.tgz#ffe3b06bbe2a106945ef2814568005a94f211937"
+
 bootstrap-treeview@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/bootstrap-treeview/-/bootstrap-treeview-1.2.0.tgz#a1bcc81dce784051027a79a8dc9769dc6c8839f4"

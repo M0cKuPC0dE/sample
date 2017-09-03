@@ -54,6 +54,12 @@
       </div>
     </div>
     <div class="form-group">
+      <label class="col-md-12">แท็ก</label>
+      <div class="col-md-12">
+        <input type="text" class="form-control" id="tags" placeholder="เพิ่มแท็ก"></input>
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-sm-12">{{ $t('compliance.legalduty') }}</label>
       <div class="col-sm-12">
         <textarea class="form-control" rows="5" v-model="compliance.legalDuty" required></textarea>
@@ -102,11 +108,12 @@ export default {
   }),
   mounted: function () {
     this.$set(this, 'category', this.initCategory)
+    $('#tags').tagsinput()
     $('#publicdate')
-      .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
+      .datepicker({ language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
       .on('changeDate', () => { this.compliance.publicDate = $('#publicdate').val() })
     $('#effectivedate')
-      .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
+      .datepicker({ language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
       .on('changeDate', () => { this.compliance.effectiveDate = $('#effectivedate').val() })
 
     $('.readonly').on('keydown paste', function (e) {

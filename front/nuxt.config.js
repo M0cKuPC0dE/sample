@@ -29,6 +29,7 @@ module.exports = {
     { src: 'material-design-iconic-font/dist/css/material-design-iconic-font.css' },
     { src: 'bootstrap-treeview/dist/bootstrap-treeview.min.css' },
     { src: 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css' },
+    { src: 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' },
     { src: 'jquery-ui-dist/jquery-ui.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
@@ -57,8 +58,10 @@ module.exports = {
       'bootstrap',
       'metismenu/dist/metisMenu.js',
       'bootstrap-treeview/dist/bootstrap-treeview.min.js',
-      'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+      // 'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+      '~/assets/js/bootstrap-datepicker-custom.js',
       'bootstrap-datepicker/dist/locales/bootstrap-datepicker.th.min.js',
+      'bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
       'vue-i18n'
     ],
     plugins: [
