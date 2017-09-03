@@ -42,7 +42,7 @@ export const actions = {
       Cookies.set('AT', data.data.access_token, { expires: 1, secure: false })
       Cookies.set('RT', data.data.refresh_token, { expires: 1, secure: false })
       context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities[0] })
-      vc.$router.push('/')
+      vc.$router.push('/checklist')
     }, (data) => {
       if (data.response.status === 500) {
         context.commit('authen', { status: false, error: 'เกิดความผิดพลาดจากการเชื่อมต่อ Mirtphol API' })
@@ -57,7 +57,7 @@ export const actions = {
     Cookies.remove('AT', { secure: false })
     Cookies.remove('RT', { secure: false })
     context.commit('authen', { status: false, error: '' })
-    vc.$router.replace('/login')
+    vc.$router.replace('/')
   },
   clearerror: (context, vc) => {
     context.commit('authen', { status: false, error: '' })
@@ -69,7 +69,7 @@ export const actions = {
         context.commit('authen', { status: true, error: '', name: jwt(rt).name, authority: jwt(rt).authorities[0] })
       }, (data) => {
         context.commit('authen', { status: false, error: 'Session ของคุณหมดอายุ' })
-        router.replace('/login')
+        router.replace('/')
       })
     }
   }

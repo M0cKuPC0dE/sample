@@ -1,20 +1,16 @@
 <template>
   <div>
-    <navbar />
-    <sidebar />
-    <nuxt-child/>
+    <LibraryNavbar></LibraryNavbar>
   </div>
 </template>
 
 <script>
-import Navbar from '~/components/Navbar'
-import Sidebar from '~/components/Sidebar'
+import LibraryNavbar from '~/components/LibraryNavbar'
 
 export default {
-  middleware: 'auth',
+  layout: 'index',
   components: {
-    Navbar,
-    Sidebar
+    LibraryNavbar
   }
 }
 </script>
