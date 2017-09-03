@@ -5,11 +5,8 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
-import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.Language;
-import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.repository.LocaleRespository;
-import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,30 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Piyawut Chiradejnunt<pchiradejnunt@gmail.com>
  */
 @RestController
-@RequestMapping("/api/locales")
 public class LocaleController {
     
     @Autowired
     private LocaleRespository localeRespository;
     
-    @GetMapping
+    @GetMapping("/locales")
     public List<Language> get(){
         return localeRespository.findAll();
     }
     
-    @GetMapping("code/{lang}")
+    @GetMapping("/api/locales/code/{lang}")
     public Language getEditLocale(@PathVariable String lang) {
         return localeRespository.findOne(lang);
     }
     
-    @PostMapping
-    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    @PostMapping("/api/locales")
     public Language post(@RequestBody Language language) {
          return localeRespository.save(language);
    
     }
     
-    @GetMapping("/{lang}")
+    @GetMapping("/locales/{lang}")
     public String getLocale(@PathVariable String lang) {
         final String jsonFile = "/mnt/locales/"+ lang + ".json";
         final File file = new File(jsonFile);
@@ -74,7 +68,7 @@ public class LocaleController {
 	return jsonResult.toString();
     }
     
-    @DeleteMapping("/{lang}")
+    @DeleteMapping("/api/locales/{lang}")
     public void delete(@PathVariable("lang") String lang) {
         localeRespository.delete(lang);
     }

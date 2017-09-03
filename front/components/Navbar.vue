@@ -103,14 +103,14 @@
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
-            <strong>{{this.selected}}</strong>
+            <strong>{{this.locale}}</strong>
           </a>
           <ul class="dropdown-menu dropdown animated bounceInDown">
-            <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode)">
+            <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode.code)">
               <a href="#">
                 <div>
                   <p>
-                    <strong>{{langcode}}</strong>
+                    <strong>{{langcode.code}}</strong>
                   </p>
                 </div>
               </a>
@@ -165,54 +165,19 @@
 <script>
 /* global $ */
 import { mapGetters } from 'vuex'
-import http from '~/utils/http'
-import cookie from '~/utils/cookie'
 
 export default {
   name: 'navbar',
-  data: function () {
-    return { selected: this.$store.state.locale }
-  },
   mounted: function () {
-    this.init()
     $('.open-close').on('click', function () {
       $('body').toggleClass('show-sidebar').toggleClass('hide-sidebar')
       $('.sidebar-head .open-close i').toggleClass('ti-menu')
     })
   },
   methods: {
-    init: function () {
-      http
-        .get('/api/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          let data = response.data
-          data.forEach((locale) => {
-            this.localeMessage(locale.code)
-            if (locale.code !== 'TH') {
-              this.$store.state.locales.push(locale.code)
-            }
-          })
-        }).catch((e) => {
-          this.$router.replace('/login')
-        })
-    },
-    localeMessage: function (code) {
-      http
-        .get('/api/locales/' + code, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          let data = response.data
-          this.$i18n.setLocaleMessage(code, data)
-          if (this.$store.state.locale === code) {
-            this.$i18n.locale = code
-          }
-        }).catch((e) => {
-          this.$router.replace('/login')
-        })
-    },
     setLanguage: function (val) {
-      this.selected = val
       this.$i18n.locale = val
-      this.$store.dispatch('changeLanguage', val)
+      this.$store.dispatch('locale/changeLanguage', val)
     },
     logout: function () {
       this.$store.dispatch('auth/logout', this)
@@ -222,8 +187,8 @@ export default {
     authenticated: 'auth/authenticated',
     name: 'auth/name',
     authority: 'auth/authority',
-    locale: 'locale',
-    locales: 'locales'
+    locale: 'locale/locale',
+    locales: 'locale/locales'
   })
 }
 
