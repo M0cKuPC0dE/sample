@@ -1,4 +1,4 @@
-const DEV_LOGIN_URL = 'https://compliance.mitrphol.com/'
+const DEV_LOGIN_URL = 'http://127.0.0.1:8080/'
 
 import axios from 'axios'
 import https from 'https'

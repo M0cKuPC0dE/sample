@@ -42,7 +42,7 @@
                   <span class="btn btn-info btn-file m-r-10">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     {{ $t('buttons.upload.template') }}
-                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('https://compliance.mitrphol.com/api/localeupload/' + locale.code.toUpperCase(),$event)">
+                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('http://localhost/api/localeupload/' + locale.code.toUpperCase(),$event)">
                   </span>
                   <span>{{displayname}}</span>
                 </div>
