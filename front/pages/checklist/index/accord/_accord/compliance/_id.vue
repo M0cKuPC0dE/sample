@@ -19,7 +19,7 @@
 
             <div class="row">
               <div class="col-md-12">
-                <h3 class="box-title">{{accord.compliance.legalDuty}}</h3>
+                <h3 class="box-title">{{accord.legalDuty.name}}</h3>
               </div>
             </div>
 
@@ -32,7 +32,7 @@
                       <strong>{{ $t('compliance.category') }}</strong>
                     </label>
                     <div class="col-md-12">
-                      {{accord.compliance.category.name}}
+                      <!-- {{accord.legalDuty.compliance.category.name}} -->
                     </div>
                   </div>
                 </div>
@@ -43,7 +43,7 @@
                       <strong>{{ $t('compliance.effectivedate') }}</strong>
                     </label>
                     <div class="col-md-12">
-                      {{accord.compliance.effectiveDate}}
+                      {{accord.legalDuty.compliance.effectiveDate}}
                     </div>
                   </div>
                 </div>
@@ -54,7 +54,7 @@
                   <strong>{{ $t('compliance.legalname') }}</strong>
                 </label>
                 <div class="col-md-12">
-                  {{accord.compliance.legalName}}
+                  {{accord.legalDuty.compliance.legalName}}
                 </div>
               </div>
 
@@ -65,7 +65,7 @@
                       <strong>{{ $t('compliance.department') }}</strong>
                     </label>
                     <div class="col-md-12">
-                      {{accord.compliance.department}}
+                      {{accord.legalDuty.compliance.department}}
                     </div>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
                       <strong>{{ $t('compliance.ministry') }}</strong>
                     </label>
                     <div class="col-md-12">
-                      {{accord.compliance.ministry}}
+                      {{accord.legalDuty.compliance.ministry}}
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@
                   <strong>{{ $t('compliance.important') }}</strong>
                 </label>
                 <div class="col-md-12">
-                  {{accord.compliance.important}}
+                  {{accord.legalDuty.compliance.important}}
                 </div>
               </div>
 

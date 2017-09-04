@@ -8,9 +8,11 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
@@ -34,7 +36,8 @@ public class ComplianceController {
 
     @Autowired
     private ComplianceRepository complianceRepository;
-
+    @Autowired
+    private LegalDutyRepository legalDutyRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -63,11 +66,21 @@ public class ComplianceController {
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public Compliance post(@RequestBody Compliance compliance) {
         Compliance save = complianceRepository.save(compliance);
+        for(LegalFile lf : save.getLegalFiles()){
+            lf.setCompliance(null);
+        }
+        for(LegalDuty ld : save.getLegalDuties()){
+            ld.setCompliance(null);
+        }
         for(LegalFile lf : compliance.getLegalFiles()){
             lf.setCompliance(save);
             legalFileRepository.save(lf);
         }
-        return save;
+        for(LegalDuty ld : compliance.getLegalDuties()){
+            ld.setCompliance(save);
+            legalDutyRepository.save(ld);
+        }
+        return complianceRepository.save(compliance);
     }
 
     @PostMapping("/search")

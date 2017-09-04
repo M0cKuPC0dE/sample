@@ -51,10 +51,9 @@ public class Compliance {
     private String ministry;
     @Column(length = 4000)
     private String important;
-    @ElementCollection
-    @CollectionTable(name = "legal_duty")
-    @Column(length = 4000)
-    private List<String> legalDuties;
+    @OneToMany(mappedBy = "compliance")
+    @JsonView(JsonViewer.ComplianceWithLegalDuty.class)
+    private List<LegalDuty> legalDuties;
     @Column(length = 4000)
     private String tags;
     @OneToMany(mappedBy = "compliance")

@@ -5,8 +5,6 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.repository;
 
-import co.th.linksinnovation.mitrphol.compliance.model.Accord;
-import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author jirawong
  */
-public interface AccordRepository extends JpaRepository<Accord, Long>{
-    public Accord findByLegalCategoryAndLegalDuty(LegalCategory lc,LegalDuty c);
+public interface LegalDutyRepository extends JpaRepository<LegalDuty, Long>{
+    
 }

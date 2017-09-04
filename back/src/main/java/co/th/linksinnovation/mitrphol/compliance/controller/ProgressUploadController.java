@@ -146,7 +146,7 @@ public class ProgressUploadController {
     public void localeUpload(@RequestBody byte[] file, @PathVariable String name, HttpServletRequest request)
             throws Exception {
         InputStream chunk = new ByteArrayInputStream(file);
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/upload/locales/" + name + ".json"));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/locales/" + name + ".json"));
 
     }
 

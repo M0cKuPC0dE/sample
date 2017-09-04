@@ -3,7 +3,7 @@
     <div class="navbar-header">
       <div class="top-left-part">
         <!-- Logo -->
-        <nuxt-link class="logo" to="/">
+        <nuxt-link class="logo" to="/checklist">
           <!-- Logo icon image, you can use font-icon also -->
           <b>
             <!--This is light logo icon-->
@@ -105,7 +105,7 @@
           <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
             <strong>{{locale}}</strong>
           </a>
-          <ul class="dropdown-menu dropdown animated bounceInDown">
+          <ul class="dropdown-menu dropdown animated bounceInDown" v-if="locales.length !== 0">
             <li :key="index" v-for="(langcode,index) in locales" v-on:click="setLanguage(langcode.code)">
               <a href="#">
                 <div>

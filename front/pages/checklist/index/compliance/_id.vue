@@ -138,12 +138,51 @@
                   <strong>Keyword Tags</strong>
                 </label>
                 <div class="col-md-12">
+                  {{compliance.tags}}
                 </div>
               </div>
 
               <div class="form-group">
-                <div class="col-md-12 m-b-10">
-                  <nuxt-link :to="'/masterdata/compliance/edit/'+compliance.id" class="btn btn-block btn-warning">แก้ไขข้อกฎหมาย</nuxt-link>
+                <label class="col-md-12">
+                  <strong>หน้าที่ตามกฎหมาย</strong>
+                </label>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr :key="index" v-for="(legalDuty,index) in compliance.legalDuties">
+                          <td>{{legalDuty.name}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
+                          <td>{{file.name}}</td>
+                          <td class="text-center">
+                            <a :href="'http://localhost:8080/file/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                              <i class="fa fa-download"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-12 m-b-10 text-center">
+                  <nuxt-link :to="'/checklist/masterdata/compliance/edit/'+compliance.id" class="btn btn-warning m-r-10">แก้ไขข้อกฎหมาย</nuxt-link>
+                  <nuxt-link to="/checklist/masterdata" class="btn btn-info">
+                    <i class="fa fa-chevron-left"></i> ย้อนกลับ</nuxt-link>
                 </div>
               </div>
 

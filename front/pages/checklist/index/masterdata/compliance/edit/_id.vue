@@ -110,7 +110,7 @@
             </thead>
             <tbody>
               <tr :key="index" v-for="(legalduty,index) in compliance.legalDuties">
-                <td>{{legalduty}}</td>
+                <td>{{legalduty.name}}</td>
                 <td class="text-center">
                   <a href="javascript:void(0)" v-on:click="onConfirmDelete('legalduty',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                     <i class="ti-trash"></i>
@@ -139,6 +139,8 @@
 
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
     <button type="button" data-toggle="modal" data-target="#responsive-modal" class="btn btn-danger waves-effect waves-light m-r-10">ลบข้อกฎหมาย</button>
+    <nuxt-link to="/checklist/masterdata" class="btn btn-info">
+      <i class="fa fa-chevron-left"></i> ย้อนกลับ</nuxt-link>
 
     <div id="responsive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
@@ -153,6 +155,24 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
             <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="masterdata-add-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">ยืนยันการลบ</h4>
+          </div>
+          <div class="modal-body">
+            ต้องการลบใช่หรือไม่
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDeleteList">ลบ</button>
           </div>
         </div>
       </div>
@@ -207,6 +227,7 @@ export default {
   },
   mounted: function () {
     this.$set(this, 'category', this.compliance.category)
+    $('#tags').tagsinput()
     $('#publicdate')
       .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
       .on('changeDate', () => { this.compliance.publicDate = $('#publicdate').val() })
@@ -234,7 +255,7 @@ export default {
     },
     addLegalDuty: function () {
       if (this.legalDuty === '') return
-      this.compliance.legalDuties.push(this.legalDuty)
+      this.compliance.legalDuties.push({ name: this.legalDuty })
       this.$set(this.compliance, 'legalDuties', this.compliance.legalDuties)
       this.$set(this, 'legalDuty', '')
     },
@@ -249,6 +270,19 @@ export default {
         .catch((e) => {
           self.$router.replace('/login')
         })
+    },
+    onConfirmDelete: function (type, index) {
+      $('#masterdata-add-modal').modal('show')
+      this.$set(this, 'deleteIndex', index)
+      this.$set(this, 'deleteType', type)
+    },
+    onDeleteList: function () {
+      $('#masterdata-add-modal').modal('hide')
+      if (this.deleteType === 'file') {
+        this.compliance.legalFiles.splice(this.deleteIndex, 1)
+      } else {
+        this.compliance.legalDuties.splice(this.deleteIndex, 1)
+      }
     }
   }
 }

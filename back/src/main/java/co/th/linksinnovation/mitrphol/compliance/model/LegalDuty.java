@@ -7,14 +7,12 @@ package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.Data;
 
 /**
@@ -23,17 +21,13 @@ import lombok.Data;
  */
 @Data
 @Entity
-public class Accord {
+public class LegalDuty {
     @Id
     @GeneratedValue
     private Long id;
     @Column(length = 4000)
-    private String remark;
-    @Enumerated(EnumType.STRING)
-    private Accorded accorded;
+    private String name;
     @ManyToOne
-    @JsonBackReference
-    private LegalCategory legalCategory;
-    @OneToOne
-    private LegalDuty legalDuty;
+    @JsonView(JsonViewer.LegalDutyWithCompliance.class)
+    private Compliance compliance;
 }

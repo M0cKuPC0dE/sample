@@ -33,21 +33,21 @@
                   <table class="table table-hover manage-u-table">
                     <thead>
                       <tr>
-                        <th class="col-xs-5">ข้อกฎหมาย</th>
+                        <th class="col-xs-5">หน้าที่ตามกฎหมาย</th>
                         <th class="col-xs-5">ความสอดคล้อง</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr :key="accord.id" v-for="accord in category.accords">
-                        <td>{{accord.compliance.legalName}}</td>
+                        <td>{{accord.legalDuty.name}}</td>
                         <td>
                           <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                           <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                         </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
+                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ประเมิน">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
                         </td>
@@ -75,7 +75,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/api/legalcategory/list', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
         return { categories: response.data }
       })

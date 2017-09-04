@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +47,15 @@ public class LegalgroupController {
 
     @GetMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public List<LegalGroup> get() {
-        return legalgroupRepository.findAll();
+    public List<LegalGroup> get(@AuthenticationPrincipal String username) {
+        UserDetails findOne = userDetailsRepository.findOne(username);
+        if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
+            return legalgroupRepository.findAll();
+        } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
+            return legalgroupRepository.findByCoordinatesIn(findOne);
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/{id}")

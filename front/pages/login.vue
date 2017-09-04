@@ -15,10 +15,10 @@
             </strong>
             {{error}}
           </div>
-  
+
           <div class="form-group  m-t-20">
             <div class="col-xs-12">
-              <label>Email Address</label>
+              <label>Username</label>
               <input class="form-control" type="text" required="" placeholder="Username" v-model="credentials.username">
             </div>
           </div>

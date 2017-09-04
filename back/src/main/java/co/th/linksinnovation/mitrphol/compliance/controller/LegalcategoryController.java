@@ -10,6 +10,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +45,8 @@ public class LegalcategoryController {
     @Autowired
     private LegalcategoryRepository legalcategoryRepository;
     @Autowired
+    private LegalgroupRepository legalgroupRepository;
+    @Autowired
     private UserDetailsRepository userDetailsRepository;
     @Autowired
     private AccordRepository accordRepository;
@@ -51,8 +55,46 @@ public class LegalcategoryController {
 
     @GetMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public List<LegalCategory> get() {
-        return legalcategoryRepository.findAll();
+    public List<LegalCategory> get(@AuthenticationPrincipal String username) {
+        UserDetails findOne = userDetailsRepository.findOne(username);
+        if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
+            return legalcategoryRepository.findAll();
+        } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
+            List<LegalGroup> findByCoordinatesIn = legalgroupRepository.findByCoordinatesIn(findOne);
+            List<LegalCategory> legalCategories = new ArrayList<>();
+            for (LegalGroup g : findByCoordinatesIn) {
+                List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(g);
+                legalCategories.addAll(findByLegalGroup);
+            }
+            return legalCategories;
+
+        } else if (findOne.getAuthorities().contains(new Authority("Owner"))) {
+            return legalcategoryRepository.findByOwnersIn(findOne);
+        } else {
+            return null;
+        }
+    }
+    
+    @GetMapping("/list")
+    @JsonView(JsonViewer.LegalDutyWithCompliance.class)
+    public List<LegalCategory> getList(@AuthenticationPrincipal String username) {
+        UserDetails findOne = userDetailsRepository.findOne(username);
+        if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
+            return legalcategoryRepository.findAll();
+        } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
+            List<LegalGroup> findByCoordinatesIn = legalgroupRepository.findByCoordinatesIn(findOne);
+            List<LegalCategory> legalCategories = new ArrayList<>();
+            for (LegalGroup g : findByCoordinatesIn) {
+                List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(g);
+                legalCategories.addAll(findByLegalGroup);
+            }
+            return legalCategories;
+
+        } else if (findOne.getAuthorities().contains(new Authority("Owner"))) {
+            return legalcategoryRepository.findByOwnersIn(findOne);
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/{id}")
@@ -65,10 +107,10 @@ public class LegalcategoryController {
     public void delete(@PathVariable("id") Long id) {
         legalcategoryRepository.delete(id);
     }
-    
+
     @PostMapping("/approve")
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public LegalCategory approve(@RequestBody LegalCategory legalCategory){
+    public LegalCategory approve(@RequestBody LegalCategory legalCategory) {
         LegalCategory findOne = legalcategoryRepository.findOne(legalCategory.getId());
         findOne.setApproved(Boolean.TRUE);
         return legalcategoryRepository.save(findOne);
@@ -136,17 +178,19 @@ public class LegalcategoryController {
 
         if (!legalCategory.getCompliances().isEmpty()) {
             for (Compliance c : legalCategory.getCompliances()) {
-                Accord ac = accordRepository.findByLegalCategoryAndCompliance(legalCategory, c);
-                if (ac == null) {
-                    ac = new Accord();
-                    ac.setLegalCategory(legalCategory);
-                    ac.setCompliance(c);
-                    ac = accordRepository.save(ac);
-                    legalCategory.getAccords().add(ac);
+                for (LegalDuty ld : c.getLegalDuties()) {
+                    Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, ld);
+                    if (ac == null) {
+                        ac = new Accord();
+                        ac.setLegalCategory(legalCategory);
+                        ac.setLegalDuty(ld);
+                        ac = accordRepository.save(ac);
+                        legalCategory.getAccords().add(ac);
+                    }
                 }
             }
         }
-        
+
         return legalcategoryRepository.save(legalCategory);
     }
 }

@@ -9,8 +9,10 @@ import co.th.linksinnovation.mitrphol.compliance.model.Accord;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +37,14 @@ public class AccordController {
     @Autowired
     private LegalcategoryRepository legalcategoryRepository;
     @Autowired
-    private ComplianceRepository complianceRepository;
+    private LegalDutyRepository legalDutyRepository;
 
     @GetMapping("/{legalCategory}/{compliance}")
-    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public Accord get(@PathVariable("legalCategory") Long legalCategory,@PathVariable("compliance") Long compliance) {
         LegalCategory lc = legalcategoryRepository.findOne(legalCategory);
-        Compliance c = complianceRepository.findOne(compliance);
-        return accordRepository.findByLegalCategoryAndCompliance(lc, c);
+        LegalDuty c = legalDutyRepository.findOne(compliance);
+        return accordRepository.findByLegalCategoryAndLegalDuty(lc, c);
     }
     
     @PostMapping

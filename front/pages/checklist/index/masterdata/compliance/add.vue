@@ -109,7 +109,7 @@
             </thead>
             <tbody>
               <tr :key="index" v-for="(legalduty,index) in compliance.legalDuties">
-                <td>{{legalduty}}</td>
+                <td>{{legalduty.name}}</td>
                 <td class="text-center">
                   <a href="javascript:void(0)" v-on:click="onConfirmDelete('legalduty',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                     <i class="ti-trash"></i>
@@ -186,7 +186,7 @@ export default {
         effectiveDate: '',
         department: '',
         ministry: '',
-        importain: '',
+        important: '',
         legalDuties: [],
         tags: '',
         legalFiles: [],
@@ -245,7 +245,7 @@ export default {
     },
     addLegalDuty: function () {
       if (this.legalDuty === '') return
-      this.compliance.legalDuties.push(this.legalDuty)
+      this.compliance.legalDuties.push({ name: this.legalDuty })
       this.$set(this.compliance, 'legalDuties', this.compliance.legalDuties)
       this.$set(this, 'legalDuty', '')
     },
