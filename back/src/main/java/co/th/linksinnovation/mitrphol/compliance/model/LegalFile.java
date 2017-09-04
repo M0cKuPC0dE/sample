@@ -5,9 +5,11 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import lombok.Data;
 
 /**
@@ -22,4 +24,7 @@ public class LegalFile {
     @GeneratedValue
     public Long id;
     public String name;
+    @ManyToOne
+    @JsonBackReference
+    public Compliance compliance;
 }

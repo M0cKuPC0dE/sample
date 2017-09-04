@@ -58,16 +58,16 @@ export default {
       self.uploadRequest.send(chunk)
       self.uploadRequest.onreadystatechange = function () {
         if (self.uploadRequest.readyState === 4 && self.uploadRequest.status === 200) {
-          self.onChunkComplete()
+          self.onChunkComplete(self.uploadRequest.responseText)
         }
       }
     },
-    onChunkComplete: function () {
+    onChunkComplete: function (json) {
       var uploadPercent = (this.rangeEnd / this.fileSize) * 100
       this.$set(this, 'uploadPercent', uploadPercent.toFixed(2))
 
       if (this.rangeEnd === this.fileSize) {
-        this.$parent.$emit('onCompleteUpload', this.index)
+        this.$parent.$emit('onCompleteUpload', json)
         return
       }
 

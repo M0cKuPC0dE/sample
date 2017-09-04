@@ -8,8 +8,10 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ public class ComplianceController {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private LegalFileRepository legalFileRepository;
 
     @GetMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
@@ -58,7 +62,12 @@ public class ComplianceController {
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public Compliance post(@RequestBody Compliance compliance) {
-        return complianceRepository.save(compliance);
+        Compliance save = complianceRepository.save(compliance);
+        for(LegalFile lf : compliance.getLegalFiles()){
+            lf.setCompliance(save);
+            legalFileRepository.save(lf);
+        }
+        return save;
     }
 
     @PostMapping("/search")

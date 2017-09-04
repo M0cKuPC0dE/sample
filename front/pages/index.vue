@@ -129,6 +129,25 @@
                       </div>
                     </div>
 
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <tbody>
+                              <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
+                                <td>{{file.name}}</td>
+                                <td class="text-center">
+                                  <a :href="'http://localhost:8080/file/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                                    <i class="fa fa-download"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
                   </form>
 
                 </div>

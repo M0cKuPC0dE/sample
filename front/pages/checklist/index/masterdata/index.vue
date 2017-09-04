@@ -33,7 +33,6 @@
           <thead>
             <tr>
               <th>ข้อกฎหมาย</th>
-              <th>หน้าที่ตามกฎหมาย</th>
               <th class="text-center">สถานะ</th>
               <th class="text-center">จัดการ</th>
             </tr>
@@ -41,7 +40,6 @@
           <tbody>
             <tr :key="index" v-for="(compliance,index) in compliances">
               <td>{{compliance.legalName}}</td>
-              <td>{{compliance.legalDuty}}</td>
               <td class="text-center">
                 <span class="label label-success">ACTIVE</span>
               </td>

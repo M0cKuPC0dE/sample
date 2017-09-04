@@ -21,10 +21,10 @@ public interface ComplianceRepository extends JpaRepository<Compliance, Long>{
 
     public List<Compliance> findByDeletedIsFalseAndCategory(Category findOne);
 
-    @Query(value = "SELECT c FROM Compliance c WHERE (c.legalName LIKE ?1 OR c.legalDuty LIKE ?2) AND c.category=?3 AND c.deleted = false")
+    @Query(value = "SELECT c FROM Compliance c JOIN c.legalDuties l WHERE (c.legalName LIKE ?1 OR l LIKE ?2) AND c.category=?3 AND c.deleted = false")
     public List<Compliance> searchWithCategory(String get, String get0, Category findOne);
 
-    @Query(value = "SELECT c FROM Compliance c WHERE (c.legalName LIKE ?1 OR c.legalDuty LIKE ?2) AND c.deleted = false")
+    @Query(value = "SELECT c FROM Compliance c JOIN c.legalDuties l WHERE (c.legalName LIKE ?1 OR l LIKE ?2) AND c.deleted = false")
     public List<Compliance> searchWithoutCategory(String get, String get0);
 
 }

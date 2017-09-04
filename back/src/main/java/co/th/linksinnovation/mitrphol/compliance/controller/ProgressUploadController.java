@@ -7,9 +7,11 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
 import co.th.linksinnovation.mitrphol.compliance.model.Status;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.LocaleService;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -43,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 
+ *
  * @author Piyawut Chiradejnunt<pchiradejnunt@gmail.com>
  */
 @RestController
@@ -59,18 +61,19 @@ public class ProgressUploadController {
 
     @Autowired
     private ComplianceRepository complianceRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private LegalFileRepository legalFileRepository;
 
     @RequestMapping(value = "/templateupload", method = RequestMethod.PUT)
-    public void examUpload(@RequestBody byte[] file, HttpServletRequest request)
+    public void templateUpload(@RequestBody byte[] file, HttpServletRequest request)
             throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
         appendFile(request.getHeader("Content-Start"), chunk,
-                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
+                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
 
         if (request.getHeader("Content-End") != null
                 && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
@@ -117,7 +120,7 @@ public class ProgressUploadController {
                     compliance.setDepartment(department);
                     compliance.setMinistry(ministry);
                     compliance.setImportant(important);
-                    compliance.setLegalDuty(legalDuty);
+//                    compliance.setLegalDuty(legalDuty);
 
                     compliance.setCategory(child);
 
@@ -135,16 +138,30 @@ public class ProgressUploadController {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + 
-                request.getHeader("Content-Name") + "-" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/"
+                + request.getHeader("Content-Name") + "-" + filename));
     }
 
     @RequestMapping(value = "/localeupload/{name}", method = RequestMethod.PUT)
     public void localeUpload(@RequestBody byte[] file, @PathVariable String name, HttpServletRequest request)
             throws Exception {
         InputStream chunk = new ByteArrayInputStream(file);
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/locales/" + name + ".json"));
- 
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/upload/locales/" + name + ".json"));
+
+    }
+
+    @RequestMapping(value = "/legalupload", method = RequestMethod.PUT)
+    public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+        InputStream chunk = new ByteArrayInputStream(file);
+        String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/"+ filename));
+        if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            LegalFile legalFile = new LegalFile();
+            legalFile.setName(filename);
+            return legalFileRepository.save(legalFile);
+        }else{
+            return null;
+        }
     }
 
     private void appendFile(String start, InputStream in, File dest) {
@@ -215,18 +232,18 @@ public class ProgressUploadController {
 
         final CellType type = cell.getCellTypeEnum();
         switch (type) {
-        case BLANK:
-            return "";
-        case BOOLEAN:
-            return String.valueOf(cell.getBooleanCellValue());
-        case NUMERIC:
-            if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                return String.valueOf(cell.getDateCellValue());
-            }
-            return String.valueOf(cell.getNumericCellValue());
-        default:
-            // String
-            return cell.getStringCellValue();
+            case BLANK:
+                return "";
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case NUMERIC:
+                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    return String.valueOf(cell.getDateCellValue());
+                }
+                return String.valueOf(cell.getNumericCellValue());
+            default:
+                // String
+                return cell.getStringCellValue();
         }
 
     }

@@ -32,7 +32,7 @@ public class LegalFileController {
     @Autowired
     private LegalFileRepository legalFileRepository;
 
-    @GetMapping("file/download/{id}")
+    @GetMapping("/file/download/{id}")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) {
 
         InputStream in = null;
@@ -50,7 +50,9 @@ public class LegalFileController {
             Logger.getLogger(LegalFileController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(LegalFileController.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -53,12 +53,90 @@
         <textarea class="form-control" rows="5" v-model="compliance.important" required></textarea>
       </div>
     </div>
+
+    <div class="form-group">
+      <label class="col-md-12">แท็ก</label>
+      <div class="col-md-12">
+        <input type="text" :value="compliance.tags" class="form-control" id="tags" placeholder="เพิ่มแท็ก"></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ไฟล์เอกสาร</th>
+                <th class="text-center">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
+                <td>{{file.name}}</td>
+                <td class="text-center">
+                  <a href="javascript:void(0)" v-on:click="onConfirmDelete('file',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                    <i class="ti-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" v-if="!files.file">
+      <div class="col-md-12 text-center is-fileinput">
+        <span class="btn btn-info btn-file">
+          <i class="zmdi zmdi-swap-vertical"></i>
+          {{ $t('buttons.upload.file') }}
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/legalupload',$event)">
+        </span>
+      </div>
+    </div>
+    <div class="form-group" v-if="files.file">
+      <div class="col-md-12">
+        <progressUpload :props="files.file" :url="files.url" :fileid="$route.params.id"></progressUpload>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>หน้าที่ตามกฎหมาย</th>
+                <th class="text-center">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr :key="index" v-for="(legalduty,index) in compliance.legalDuties">
+                <td>{{legalduty}}</td>
+                <td class="text-center">
+                  <a href="javascript:void(0)" v-on:click="onConfirmDelete('legalduty',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                    <i class="ti-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <div class="form-group">
       <label class="col-sm-12">{{ $t('compliance.legalduty') }}</label>
       <div class="col-sm-12">
-        <textarea class="form-control" rows="5" v-model="compliance.legalDuty" required></textarea>
+        <textarea class="form-control" rows="5" v-model="legalDuty"></textarea>
       </div>
     </div>
+    <div class="form-group">
+      <div class="col-md-12 text-center">
+        <button type="button" v-on:click="addLegalDuty" class="btn btn-info btn-file">
+          <i class="fa fa-arrow-up"></i>
+          เพิ่มหน้าที่ตามกฎหมาย
+        </button>
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
     <button type="button" data-toggle="modal" data-target="#responsive-modal" class="btn btn-danger waves-effect waves-light m-r-10">ลบข้อกฎหมาย</button>
 
@@ -87,9 +165,13 @@
 /* global $ */
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
+import ProgressUpload from '~/components/ProgressUpload'
 
 export default {
   props: ['selected', 'categories'],
+  components: {
+    ProgressUpload
+  },
   asyncData: function (context) {
     return http
       .get('/api/compliance/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
@@ -102,13 +184,26 @@ export default {
   },
   data: function () {
     return {
-      category: { id: 'null' }
+      files: {},
+      category: { id: 'null' },
+      legalDuty: '',
+      deleteIndex: {},
+      deleteType: ''
     }
   },
   watch: {
     selected: function (val) {
       this.$set(this, 'category', val)
     }
+  },
+  created: function () {
+    this.$on('onCompleteUpload', function (json) {
+      var obj = {}
+      obj['file'] = undefined
+      this.$set(this, 'files', obj)
+      this.compliance.legalFiles.push(JSON.parse(json))
+      this.$set(this.compliance, 'legalFiles', this.compliance.legalFiles)
+    })
   },
   mounted: function () {
     this.$set(this, 'category', this.compliance.category)
@@ -130,6 +225,18 @@ export default {
         .catch((e) => {
           self.$router.replace('/login')
         })
+    },
+    onBrowse: function (url, e) {
+      var obj = {}
+      obj['file'] = e.target.files[0]
+      obj['url'] = url
+      this.$set(this, 'files', obj)
+    },
+    addLegalDuty: function () {
+      if (this.legalDuty === '') return
+      this.compliance.legalDuties.push(this.legalDuty)
+      this.$set(this.compliance, 'legalDuties', this.compliance.legalDuties)
+      this.$set(this, 'legalDuty', '')
     },
     onDelete: function () {
       var self = this
