@@ -37,7 +37,7 @@ public class CategoryController {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
 
-    @GetMapping("/category/compliance")
+    @GetMapping("/public/category/compliance")
     @JsonView(JsonViewer.CategoryWithCompliance.class)
     public List<Category> getCategoryWithCompliancePublic() {
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();

@@ -174,7 +174,7 @@ export default {
   layout: 'index',
   async asyncData (context) {
     let categories = await http
-      .get('/api/category/compliance')
+      .get('/public/category/compliance')
     return {
       categories: categories.data
     }
