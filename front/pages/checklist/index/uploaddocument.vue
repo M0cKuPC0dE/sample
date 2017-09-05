@@ -7,12 +7,12 @@
           <span class="btn btn-info btn-file">
             <i class="zmdi zmdi-swap-vertical"></i>
             {{ $t('buttons.upload.file') }}
-            <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/fileupload',$event)">
+            <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/fileupload',$event)">
           </span>
         </div>
       </div>
       <br>
-      <a class="form-group p-t-20" href="http://localhost:8080/public/download/1" id="download">
+      <a class="form-group p-t-20" href="https://compliance.mitrphol.com/public/download/1" id="download">
         <div class="col-md-12 text-center is-fileinput">
           <span class="btn btn-info btn-file">
             <i class="zmdi zmdi-swap-vertical"></i>
