@@ -167,7 +167,7 @@
                         <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                           <td>{{file.name}}</td>
                           <td class="text-center">
-                            <a :href="'http://localhost/file/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'https://compliance.mitrphol.com/file/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
