@@ -97,7 +97,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/locales', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/public/locales', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
         return { locales: response.data }
       })
@@ -114,7 +114,7 @@ export default {
     onLoad: function () {
       var self = this
       http
-        .get('/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/public/locales', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           self.$set(self, 'locales', response.data)
         })

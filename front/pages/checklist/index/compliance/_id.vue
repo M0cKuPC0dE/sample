@@ -130,7 +130,7 @@
                   <strong>{{ $t('compliance.important') }}</strong>
                 </label>
                 <div class="col-md-12">
-                  {{compliance.important}}
+                  <span style="white-space: pre-wrap;">{{compliance.important}}</span>
                 </div>
               </div>
 
