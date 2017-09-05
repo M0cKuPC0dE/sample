@@ -12,7 +12,7 @@
         </div>
       </div>
       <br>
-      <a class="form-group p-t-20" href="http:localhost:8080/file/download/1" id="download">
+      <a class="form-group p-t-20" href="http://localhost:8080/public/download/1" id="download">
         <div class="col-md-12 text-center is-fileinput">
           <span class="btn btn-info btn-file">
             <i class="zmdi zmdi-swap-vertical"></i>
