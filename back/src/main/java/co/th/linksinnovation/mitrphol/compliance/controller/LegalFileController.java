@@ -32,7 +32,7 @@ public class LegalFileController {
     @Autowired
     private LegalFileRepository legalFileRepository;
 
-    @GetMapping("/file/download/{id}")
+    @GetMapping("/public/download/{id}")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) {
 
         InputStream in = null;

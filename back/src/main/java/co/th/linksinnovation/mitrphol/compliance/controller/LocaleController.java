@@ -30,7 +30,7 @@ public class LocaleController {
     @Autowired
     private LocaleRespository localeRespository;
     
-    @GetMapping("/locales")
+    @GetMapping("/public/locales")
     public List<Language> get(){
         return localeRespository.findAll();
     }
@@ -46,7 +46,7 @@ public class LocaleController {
    
     }
     
-    @GetMapping("/locales/{lang}")
+    @GetMapping("/public/locales/{lang}")
     public String getLocale(@PathVariable String lang) {
         final String jsonFile = "/mnt/locales/"+ lang + ".json";
         final File file = new File(jsonFile);
