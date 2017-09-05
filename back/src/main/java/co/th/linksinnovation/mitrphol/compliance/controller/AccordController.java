@@ -45,6 +45,7 @@ public class AccordController {
     }
     
     @PostMapping
+    @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public Accord post(@RequestBody Accord accord){
         Accord ac = accordRepository.save(accord);
         LegalCategory legalCategory = ac.getLegalCategory();

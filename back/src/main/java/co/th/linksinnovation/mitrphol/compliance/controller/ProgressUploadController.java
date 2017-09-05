@@ -7,11 +7,15 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
+import co.th.linksinnovation.mitrphol.compliance.model.EvidenceFile;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
+import co.th.linksinnovation.mitrphol.compliance.model.LicenseFile;
 import co.th.linksinnovation.mitrphol.compliance.model.Status;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.EvidenceFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LicenseFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.LocaleService;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -65,6 +69,10 @@ public class ProgressUploadController {
     private CategoryRepository categoryRepository;
     @Autowired
     private LegalFileRepository legalFileRepository;
+    @Autowired
+    private LicenseFileRepository licenseFileRepository;
+    @Autowired
+    private EvidenceFileRepository evidenceFileRepository;
 
     @RequestMapping(value = "/templateupload", method = RequestMethod.PUT)
     public void templateUpload(@RequestBody byte[] file, HttpServletRequest request)
@@ -154,12 +162,40 @@ public class ProgressUploadController {
     public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/"+ filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             LegalFile legalFile = new LegalFile();
             legalFile.setName(filename);
             return legalFileRepository.save(legalFile);
-        }else{
+        } else {
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/licenseupload", method = RequestMethod.PUT)
+    public LicenseFile licenseFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+        InputStream chunk = new ByteArrayInputStream(file);
+        String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
+        if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            LicenseFile licenseFile = new LicenseFile();
+            licenseFile.setName(filename);
+            return licenseFileRepository.save(licenseFile);
+        } else {
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/evidenceupload", method = RequestMethod.PUT)
+    public EvidenceFile evidenceFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+        InputStream chunk = new ByteArrayInputStream(file);
+        String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
+        if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            EvidenceFile evidenceFile = new EvidenceFile();
+            evidenceFile.setName(filename);
+            return evidenceFileRepository.save(evidenceFile);
+        } else {
             return null;
         }
     }
