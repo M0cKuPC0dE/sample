@@ -5,7 +5,9 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.repository;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,5 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author jirawong
  */
 public interface LegalDutyRepository extends JpaRepository<LegalDuty, Long>{
+
+    public List<LegalDuty> findByCompliance(Compliance c);
     
 }

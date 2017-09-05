@@ -15,6 +15,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
@@ -46,6 +47,8 @@ public class LegalcategoryController {
     private LegalcategoryRepository legalcategoryRepository;
     @Autowired
     private LegalgroupRepository legalgroupRepository;
+    @Autowired
+    private LegalDutyRepository legalDutyRepository;
     @Autowired
     private UserDetailsRepository userDetailsRepository;
     @Autowired
@@ -92,7 +95,9 @@ public class LegalcategoryController {
 
         } else if (findOne.getAuthorities().contains(new Authority("Owner"))) {
             return legalcategoryRepository.findByOwnersIn(findOne);
-        } else {
+        } else if(findOne.getAuthorities().contains(new Authority("Approver"))) {
+            return legalcategoryRepository.findByApproversIn(findOne);
+        }else{
             return null;
         }
     }
@@ -178,7 +183,8 @@ public class LegalcategoryController {
 
         if (!legalCategory.getCompliances().isEmpty()) {
             for (Compliance c : legalCategory.getCompliances()) {
-                for (LegalDuty ld : c.getLegalDuties()) {
+                List<LegalDuty> legalDuties = legalDutyRepository.findByCompliance(c);
+                for (LegalDuty ld : legalDuties) {
                     Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, ld);
                     if (ac == null) {
                         ac = new Accord();

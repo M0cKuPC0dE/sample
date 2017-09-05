@@ -26,18 +26,8 @@
             <form class="form-horizontal" v-on:submit.prevent="onSave">
 
               <div class="form-group">
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>{{ $t('compliance.category') }}</strong>
-                    </label>
-                    <div class="col-md-12">
-                      <!-- {{accord.legalDuty.compliance.category.name}} -->
-                    </div>
-                  </div>
-                </div>
 
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-12 col-sm-12">
                   <div class="form-group">
                     <label class="col-md-12">
                       <strong>{{ $t('compliance.effectivedate') }}</strong>

@@ -20,5 +20,7 @@ public interface LegalcategoryRepository extends JpaRepository<LegalCategory, Lo
     public List<LegalCategory> findByLegalGroup(LegalGroup g);
 
     public List<LegalCategory> findByOwnersIn(UserDetails findOne);
+
+    public List<LegalCategory> findByApproversIn(UserDetails findOne);
     
 }

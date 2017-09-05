@@ -88,7 +88,7 @@
         <span class="btn btn-info btn-file">
           <i class="zmdi zmdi-swap-vertical"></i>
           {{ $t('buttons.upload.file') }}
-          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com:8080/api/legalupload',$event)">
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/legalupload',$event)">
         </span>
       </div>
     </div>
