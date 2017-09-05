@@ -1,4 +1,4 @@
-const DEV_LOGIN_URL = 'http://localhost:8080'
+const DEV_LOGIN_URL = 'http://localhost:8080/'
 
 import axios from 'axios'
 import https from 'https'

@@ -4,8 +4,8 @@ import http from '~/utils/http'
 Vue.use(VueI18n)
 
 export default async (context) => {
-  let locales = await http.get('/locales')
-  let messages = await http.get('/locales/TH')
+  let locales = await http.get('/public/locales')
+  let messages = await http.get('/public/locales/TH')
 
   await context.store.commit('locale/locales', { locales: locales.data })
   await context.store.commit('locale/messages', { messages: { 'TH': messages.data } })
