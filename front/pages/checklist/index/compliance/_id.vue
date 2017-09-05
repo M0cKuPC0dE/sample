@@ -41,7 +41,8 @@
                       <strong>{{ $t('compliance.status') }}</strong>
                     </label>
                     <div class="col-md-12">
-                      <span class="label label-success">ACTIVE</span>
+                      <span class="label label-success" v-if="compliance.status === 'ACTIVE'">{{compliance.status}}</span>
+                      <span class="label label-warning" v-if="compliance.status === 'INACTIVE'">{{compliance.status}}</span>
                     </div>
                   </div>
                 </div>
@@ -167,7 +168,7 @@
                         <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                           <td>{{file.name}}</td>
                           <td class="text-center">
-                            <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>

@@ -10,11 +10,14 @@ import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
+import co.th.linksinnovation.mitrphol.compliance.model.Status;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,19 +69,29 @@ public class ComplianceController {
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public Compliance post(@RequestBody Compliance compliance) {
         Compliance save = complianceRepository.save(compliance);
-        for(LegalFile lf : save.getLegalFiles()){
+        for (LegalFile lf : save.getLegalFiles()) {
             lf.setCompliance(null);
         }
-        for(LegalDuty ld : save.getLegalDuties()){
+        for (LegalDuty ld : save.getLegalDuties()) {
             ld.setCompliance(null);
         }
-        for(LegalFile lf : compliance.getLegalFiles()){
+        for (LegalFile lf : compliance.getLegalFiles()) {
             lf.setCompliance(save);
             legalFileRepository.save(lf);
         }
-        for(LegalDuty ld : compliance.getLegalDuties()){
+        for (LegalDuty ld : compliance.getLegalDuties()) {
             ld.setCompliance(save);
             legalDutyRepository.save(ld);
+        }
+
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, 543);
+        Date now = c.getTime();
+        
+        if (compliance.getEffectiveDate().after(now)) {
+            compliance.setStatus(Status.INACTIVE);
+        } else {
+            compliance.setStatus(Status.ACTIVE);
         }
         return complianceRepository.save(compliance);
     }
@@ -88,9 +101,9 @@ public class ComplianceController {
     public List<Compliance> postSearch(@RequestBody Map<String, String> map) {
         if (!map.get("category").equals("null")) {
             Category findOne = categoryRepository.findOne(Long.parseLong(map.get("category")));
-            return complianceRepository.searchWithCategory("%"+map.get("search")+"%","%"+ map.get("search")+"%", findOne);
+            return complianceRepository.searchWithCategory("%" + map.get("search") + "%", "%" + map.get("search") + "%", findOne);
         } else {
-            return complianceRepository.searchWithoutCategory("%"+map.get("search")+"%", "%"+map.get("search")+"%");
+            return complianceRepository.searchWithoutCategory("%" + map.get("search") + "%", "%" + map.get("search") + "%");
         }
     }
 

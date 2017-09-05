@@ -41,7 +41,8 @@
             <tr :key="index" v-for="(compliance,index) in compliances">
               <td>{{compliance.legalName}}</td>
               <td class="text-center">
-                <span class="label label-success">ACTIVE</span>
+                <span class="label label-success" v-if="compliance.status === 'ACTIVE'">{{compliance.status}}</span>
+                <span class="label label-warning" v-if="compliance.status === 'INACTIVE'">{{compliance.status}}</span>
               </td>
               <td class="text-center">
                 <nuxt-link :to="'/checklist/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
