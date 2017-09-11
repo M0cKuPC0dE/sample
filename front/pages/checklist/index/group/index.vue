@@ -13,13 +13,83 @@
           </ol>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="white-box">
+            <div class="row row-in">
+              <div class="col-lg-4 col-sm-12 row-in-br">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-danger">
+                      <i class="ti-clipboard"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">23</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>Total projects</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-4 col-sm-12 row-in-br  b-r-none">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-info">
+                      <i class="ti-wallet"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">76</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>Total Earnings</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-4 col-sm-12  b-0">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-warning">
+                      <i class="fa fa-dollar"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">83</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>Total Earnings</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
 
             <div class="row">
-              <div class="col-md-4">
-                <h3 class="box-title">{{ $t('menu.group') }}</h3>
+              <div class="col-md-12">
+                <h3 class="box-title">รายการกฎหมายที่มอบหมายให้ Compliance Coordinator</h3>
               </div>
             </div>
 
@@ -39,13 +109,19 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th class="col-xs-10">{{ $t('group.name')}}</th>
+                        <th>Compliance Coordinator</th>
+                        <th class="text-center">Admin Assign</th>
+                        <th class="text-center">Assign to Owner</th>
+                        <th class="text-center">ประเมินแล้ว</th>
                         <th class="text-center">{{ $t('group.management')}}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="index" v-for="(legalgroup,index) in groups">
+                      <tr :key="index" v-for="(legalgroup,index) in groups" v-if="legalgroup.legalDuties.length > 0">
                         <td>{{legalgroup.buName}}</td>
+                        <td class="text-center">{{legalgroup.legalDuties.length}}</td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/edit/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
@@ -130,10 +206,11 @@ export default {
     onDelete: function () {
       var self = this
       $('#group-remove-modal').modal('hide')
-      return http
-        .delete('/api/legalgroup/' + this.deleteGroup.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          self.onLoad(self.selected)
+
+      this.deleteGroup.legalDuties = []
+      return http.post('/api/legalgroup', self.deleteGroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then(response => {
+          self.onLoad()
         })
         .catch((e) => {
           self.$router.replace('/checklist/login')
@@ -146,3 +223,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.white-box .box-title {
+  text-transform: none;
+}
+</style>

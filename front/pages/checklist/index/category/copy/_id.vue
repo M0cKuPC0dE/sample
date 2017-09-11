@@ -161,32 +161,32 @@ export default {
           if (data.nodes) {
             data.nodes.forEach(function (node) {
               $('#allview').treeview('checkNode', [node.nodeId, { silent: true }])
-              if (node.value) { self.addCompliance(node.value) }
+              if (node.value) { self.addLegalDuty(node.value) }
               if (node.nodes) {
                 node.nodes.forEach(function (subNode) {
                   $('#allview').treeview('checkNode', [subNode.nodeId, { silent: true }])
-                  if (subNode.value) { self.addCompliance(subNode.value) }
+                  if (subNode.value) { self.addLegalDuty(subNode.value) }
                 })
               }
             })
           } else {
-            if (data.value) { self.addCompliance(data.value) }
+            if (data.value) { self.addLegalDuty(data.value) }
           }
         },
         onNodeUnchecked: function (event, data) {
           if (data.nodes) {
             data.nodes.forEach(function (node) {
               $('#allview').treeview('uncheckNode', [node.nodeId, { silent: true }])
-              if (node.value) { self.removeCompliance(node.value) }
+              if (node.value) { self.removeLegalDuty(node.value) }
               if (node.nodes) {
                 node.nodes.forEach(function (subNode) {
                   $('#allview').treeview('uncheckNode', [subNode.nodeId, { silent: true }])
-                  if (subNode.value) { self.removeCompliance(subNode.value) }
+                  if (subNode.value) { self.removeLegalDuty(subNode.value) }
                 })
               }
             })
           } else {
-            if (data.value) { self.removeCompliance(data.value) }
+            if (data.value) { self.removeLegalDuty(data.value) }
           }
         }
       })
@@ -224,12 +224,30 @@ export default {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
           selectable: false,
-          state: {
-            checked: self.nodeChecked(compliance)
-          },
-          value: compliance
+          nodes: compliance.legalDuties.length === 0 ? [] : self.legalduty2node(compliance.legalDuties)
         }
-        if (self.isChecked(compliance) === true) {
+        if (node.nodes.length !== 0) {
+          nodes.push(node)
+        }
+      })
+      return nodes
+    },
+    legalduty2node: function (legalDuties) {
+      var self = this
+      var nodes = []
+      if (!legalDuties) return
+
+      legalDuties.forEach(function (legalDuty) {
+        var node = {
+          text: legalDuty.name,
+          icon: 'fa fa-tag',
+          selectable: false,
+          state: {
+            checked: self.nodeChecked(legalDuty)
+          },
+          value: legalDuty
+        }
+        if (self.isChecked(legalDuty) === true) {
           nodes.push(node)
         }
       })
@@ -332,25 +350,25 @@ export default {
       })
       this.$set(this.legalcategory, 'approvers', checker)
     },
-    addCompliance: function (compliance) {
-      this.legalcategory.compliances.push(compliance)
-      this.$set(this.legalcategory, 'compliances', this.legalcategory.compliances)
+    addLegalDuty: function (legalDuty) {
+      this.legalcategory.legalDuties.push(legalDuty)
+      this.$set(this.legalcategory, 'legalDuties', this.legalcategory.legalDuties)
     },
-    removeCompliance: function (compliance) {
-      var compliances = $.grep(this.legalcategory.compliances, function (elm) {
-        return elm.id !== compliance.id
+    removeLegalDuty: function (legalDuty) {
+      var legalDuties = $.grep(this.legalcategory.legalDuties, function (elm) {
+        return elm.id !== legalDuty.id
       })
-      this.$set(this.legalcategory, 'compliances', compliances)
+      this.$set(this.legalcategory, 'legalDuties', legalDuties)
     },
     isChecked: function (val) {
-      if (this.legalgroup.compliances.filter(e => e.id === val.id).length > 0) {
+      if (this.legalgroup.legalDuties.filter(e => e.id === val.id).length > 0) {
         return true
       } else {
         return false
       }
     },
     nodeChecked: function (val) {
-      if (this.legalcategory.compliances.filter(e => e.id === val.id).length > 0) {
+      if (this.legalcategory.legalDuties.filter(e => e.id === val.id).length > 0) {
         return true
       } else {
         return false

@@ -18,8 +18,14 @@
         </li>
         <li v-if="authority === 'Administrator'">
           <nuxt-link to="/checklist/legalduty" class="waves-effect">
-            <i class="zmdi zmdi-archive fa-fw"></i>
+            <i class="fa fa-id-card-o fa-fw"></i>
             <span class="hide-menu">หน้าที่ตามกฎหมาย</span>
+          </nuxt-link>
+        </li>
+        <li v-if="authority === 'Administrator'">
+          <nuxt-link to="/checklist/coordinator" class="waves-effect">
+            <i class="fa fa-users fa-fw"></i>
+            <span class="hide-menu">จัดการผู้ประสานงาน</span>
           </nuxt-link>
         </li>
         <li v-if="authority === 'Administrator'">

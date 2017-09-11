@@ -35,7 +35,7 @@ public class LegalCategory {
     @ManyToMany
     private Set<UserDetails> approvers;
     @ManyToMany
-    private List<Compliance> compliances;
+    private List<LegalDuty> legalDuties;
     @OneToOne
     private LegalGroup legalGroup;
     @OneToMany(mappedBy = "legalCategory",orphanRemoval = true)

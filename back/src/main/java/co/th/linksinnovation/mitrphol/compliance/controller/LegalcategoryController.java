@@ -77,7 +77,7 @@ public class LegalcategoryController {
             return null;
         }
     }
-    
+
     @GetMapping("/list")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public List<LegalCategory> getList(@AuthenticationPrincipal String username) {
@@ -95,9 +95,9 @@ public class LegalcategoryController {
 
         } else if (findOne.getAuthorities().contains(new Authority("Owner"))) {
             return legalcategoryRepository.findByOwnersIn(findOne);
-        } else if(findOne.getAuthorities().contains(new Authority("Approver"))) {
+        } else if (findOne.getAuthorities().contains(new Authority("Approver"))) {
             return legalcategoryRepository.findByApproversIn(findOne);
-        }else{
+        } else {
             return null;
         }
     }
@@ -181,18 +181,15 @@ public class LegalcategoryController {
         legalCategory.setApprovers(approvers);
         legalCategory = legalcategoryRepository.save(legalCategory);
 
-        if (!legalCategory.getCompliances().isEmpty()) {
-            for (Compliance c : legalCategory.getCompliances()) {
-                List<LegalDuty> legalDuties = legalDutyRepository.findByCompliance(c);
-                for (LegalDuty ld : legalDuties) {
-                    Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, ld);
-                    if (ac == null) {
-                        ac = new Accord();
-                        ac.setLegalCategory(legalCategory);
-                        ac.setLegalDuty(ld);
-                        ac = accordRepository.save(ac);
-                        legalCategory.getAccords().add(ac);
-                    }
+        if (!legalCategory.getLegalDuties().isEmpty()) {
+            for (LegalDuty ld : legalCategory.getLegalDuties()) {
+                Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, ld);
+                if (ac == null) {
+                    ac = new Accord();
+                    ac.setLegalCategory(legalCategory);
+                    ac.setLegalDuty(ld);
+                    ac = accordRepository.save(ac);
+                    legalCategory.getAccords().add(ac);
                 }
             }
         }

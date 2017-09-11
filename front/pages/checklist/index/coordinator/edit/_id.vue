@@ -1,0 +1,161 @@
+<template>
+  <div id="page-wrapper">
+    <div class="container-fluid">
+
+      <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+          <h4 class="page-title">{{ $t('menu.group') }}</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+          <ol class="breadcrumb">
+            <li>{{ $t('menu.dashboard') }}</li>
+            <li class="active">{{ $t('menu.group') }}</li>
+          </ol>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="white-box">
+
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="box-title">{{ $t('menu.group') }}</h3>
+              </div>
+            </div>
+
+            <form class="form-horizontal" v-on:submit.prevent="onSave">
+              <div class="form-group">
+                <label class="col-md-12">หน่วยงาน</label>
+                <div class="col-md-12">
+                  <input type="text" class="form-control" placeholder="หน่วยงาน" v-model="legalgroup.buName" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">ผู้ดูแล</label>
+                <div class="col-md-12">
+                  <div class="ui-widget">
+                    <input id="search-coordinate" type="text" class="form-control" placeholder="ผู้ดูแล">
+                  </div>
+                </div>
+                <div class="col-md-12 p-t-20 p-l-20 p-r-20">
+                  <ul class="list-group list-group-full">
+                    <li class="list-group-item" :key="coordinate.userId" v-for="coordinate in legalgroup.coordinates">
+                      <span class="badge badge-danger" v-on:click="removeCoordinate(coordinate)">
+                        <i class="fa fa-times"></i>
+                      </span> {{coordinate.nameTh}} </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="form-actions text-center">
+                <button type="submit" class="btn btn-success m-r-10">
+                  <i class="fa fa-check"></i> บันทึก</button>
+                <nuxt-link to="/checklist/coordinator" class="btn btn-info">
+                  <i class="fa fa-chevron-left"></i> ย้อนกลับ
+                </nuxt-link>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+/* global $ */
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
+
+export default {
+  async asyncData (context) {
+    let legalgroup = await http
+      .get('/api/legalgroup/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    return {
+      legalgroup: legalgroup.data
+    }
+  },
+  data: function () {
+    return {
+      category: { id: 'null' }
+    }
+  },
+  mounted: function () {
+    this.initSuggestion()
+  },
+  methods: {
+    onSave: function () {
+      var self = this
+      http.post('/api/legalgroup', self.legalgroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then(response => {
+          self.$router.push({ path: '/checklist/coordinator' })
+        })
+        .catch((e) => {
+          self.$router.replace('/checklist/login')
+        })
+    },
+    initSuggestion: function () {
+      var self = this
+      $('#search-coordinate').autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: 'https://api.mitrphol.com:3001/employee/find',
+            dataType: 'json',
+            headers: {
+              'Api-Key': '$2y$10$Pc0lTscxUAlq9O5V8Arwau6VpgLlMEj9xLAPymFqbay2mbM3qJJee',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            method: 'POST',
+            data: {
+              keyword: request.term
+            },
+            success: function (data) {
+              response(self.searchTransform(data))
+            }
+          })
+        },
+        minLength: 3,
+        select: function (event, ui) {
+          var checker = $.grep(self.legalgroup.coordinates, function (obj) {
+            return obj.userId === ui.item.userId
+          })
+          if (checker.length === 0) {
+            self.legalgroup.coordinates.push(ui.item)
+            self.$set(self.legalgroup, 'coordinates', self.legalgroup.coordinates)
+          }
+        },
+        close: function (el) {
+          el.target.value = ''
+        }
+      })
+    },
+    searchTransform: function (data) {
+      var nodes = []
+      if (data.success.code === 200) {
+        data.success.data.forEach(function (user) {
+          var node = {
+            userId: user.user_info.id,
+            label: user.user_info.fullname.th,
+            value: user.user_info.fullname.th,
+            nameTh: user.user_info.fullname.th
+          }
+          nodes.push(node)
+        })
+      }
+      return nodes
+    },
+    removeCoordinate: function (val) {
+      var checker = $.grep(this.legalgroup.coordinates, function (obj) {
+        return obj.userId !== val.userId
+      })
+      this.$set(this.legalgroup, 'coordinates', checker)
+    }
+  }
+}
+</script>

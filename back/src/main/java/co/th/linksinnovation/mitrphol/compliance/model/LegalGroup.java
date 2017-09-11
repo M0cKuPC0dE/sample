@@ -26,5 +26,5 @@ public class LegalGroup {
     @ManyToMany
     private List<UserDetails> coordinates;
     @ManyToMany
-    private List<Compliance> compliances;
+    private List<LegalDuty> legalDuties;
 }

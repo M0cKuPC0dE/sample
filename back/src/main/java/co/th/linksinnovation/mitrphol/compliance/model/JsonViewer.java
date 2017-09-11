@@ -10,7 +10,7 @@ package co.th.linksinnovation.mitrphol.compliance.model;
  * @author jirawong
  */
 public class JsonViewer {
-    public interface CategoryWithCompliance {}
+    public interface CategoryWithCompliance extends ComplianceWithLegalDuty {}
     public interface ComplianceWithCategory extends ComplianceWithLegalDuty{}
     
     public interface LegalDutyWithCompliance{}
