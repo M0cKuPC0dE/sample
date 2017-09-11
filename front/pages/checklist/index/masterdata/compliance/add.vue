@@ -17,24 +17,48 @@
     </div>
     <div class="form-group">
       <label class="col-md-12">{{ $t('compliance.publicdate') }}</label>
-      <div class="col-md-12">
-        <div class="input-group">
-          <input type="text" class="form-control" id="publicdate" v-model="compliance.publicDate" required></input>
-          <span class="input-group-addon">
-            <i class="glyphicon glyphicon-calendar"></i>
-          </span>
-        </div>
+      <div class="col-md-3">
+        <select class="form-control" v-model="date.publicDate" required>
+          <option value="">วัน</option>
+          <option :key="n" v-for="n in (1, 31)" :value="n">{{n}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <select class="form-control" v-model="date.publicMonth" required>
+          <option value="">เดือน</option>
+          <option :key="n" v-for="(n,index) in getMonth()" :value="index+1">{{n}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select class="form-control" v-model="date.publicYear" required>
+          <option value="">ปี</option>
+          <option :key="n" v-for="n in getYear()" :value="n">{{n+543}}</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
       <label class="col-md-12">{{ $t('compliance.effectivedate') }}</label>
-      <div class="col-md-12">
-        <div class="input-group">
-          <input type="text" class="form-control" id="effectivedate" v-model="compliance.effectiveDate" required></input>
-          <span class="input-group-addon">
-            <i class="glyphicon glyphicon-calendar"></i>
-          </span>
-        </div>
+      <div class="col-md-3">
+        <select class="form-control" v-model="date.effectiveDate" required>
+          <option value="">วัน</option>
+          <option :key="n" v-for="n in (1, 31)" :value="n">{{n}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <select class="form-control" v-model="date.effectiveMonth" required>
+          <option value="">เดือน</option>
+          <option :key="n" v-for="(n,index) in getMonth()" :value="index+1">{{n}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select class="form-control" v-model="date.effectiveYear" required>
+          <option value="">ปี</option>
+          <option :key="n" v-for="n in getYear()" :value="n">{{n+543}}</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
@@ -136,6 +160,14 @@ export default {
   },
   data: function () {
     return {
+      date: {
+        publicDate: '',
+        publicMonth: '',
+        publicYear: '',
+        effectiveDate: '',
+        effectiveMonth: '',
+        effectiveYear: ''
+      },
       files: {},
       category: { id: 'null' },
       legalDuty: '',
@@ -192,6 +224,8 @@ export default {
   methods: {
     onSave: function () {
       var self = this
+      self.compliance.publicDate = self.date.publicDate + '/' + self.date.publicMonth + '/' + self.date.publicYear
+      self.compliance.effectiveDate = self.date.effectiveDate + '/' + self.date.effectiveMonth + '/' + self.date.effectiveYear
       self.compliance.category = this.category
       self.compliance.tags = $('#tags').val()
       http.post('/api/compliance', self.compliance, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
@@ -223,6 +257,16 @@ export default {
       } else {
         this.compliance.legalDuties.splice(this.deleteIndex, 1)
       }
+    },
+    getYear: function () {
+      var year = []
+      for (var i = 1900; i < new Date().getFullYear() + 2; i++) {
+        year.push(i)
+      }
+      return year
+    },
+    getMonth: function () {
+      return ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
     }
   }
 }
