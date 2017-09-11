@@ -59,7 +59,7 @@ export default {
     return { compliance: { id: 'null' } }
   },
   computed: mapGetters({
-    initCategory: 'category/category'
+    initCompliance: 'category/compliance'
   }),
   mounted: function () {
     this.renderTreeview(this.categories)
@@ -89,6 +89,7 @@ export default {
         data: self.cat2node(categories),
         onNodeSelected: function (event, data) {
           if (data.value) {
+            self.$store.dispatch('category/setcompliance', data.value)
             self.$set(self, 'compliance', data.value)
           }
         }
@@ -125,6 +126,9 @@ export default {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
           selectable: true,
+          state: {
+            selected: self.initCompliance && self.initCompliance.id === compliance.id
+          },
           value: compliance
         }
         nodes.push(node)

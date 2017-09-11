@@ -97,44 +97,6 @@
         <progressUpload :props="files.file" :url="files.url" :fileid="$route.params.id"></progressUpload>
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-md-12">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>หน้าที่ตามกฎหมาย</th>
-                <th class="text-center">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr :key="index" v-for="(legalduty,index) in compliance.legalDuties">
-                <td>{{legalduty.name}}</td>
-                <td class="text-center">
-                  <a href="javascript:void(0)" v-on:click="onConfirmDelete('legalduty',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
-                    <i class="ti-trash"></i>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-12">{{ $t('compliance.legalduty') }}</label>
-      <div class="col-sm-12">
-        <textarea class="form-control" rows="5" v-model="legalDuty"></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-md-12 text-center">
-        <button type="button" v-on:click="addLegalDuty" class="btn btn-info btn-file">
-          <i class="fa fa-arrow-up"></i>
-          เพิ่มหน้าที่ตามกฎหมาย
-        </button>
-      </div>
-    </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
     <nuxt-link to="/checklist/masterdata" class="btn btn-info">
       <i class="fa fa-chevron-left"></i> ย้อนกลับ

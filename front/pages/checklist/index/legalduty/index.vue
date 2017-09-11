@@ -20,7 +20,7 @@
             <tr :key="index" v-for="(legalDuty,index) in compliance.legalDuties">
               <td>{{legalDuty.name}}</td>
               <td class="text-center">
-                <nuxt-link :to="'/checklist/masterdata/compliance/edit/'" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                <nuxt-link :to="'/checklist/legalduty/edit/'+legalDuty.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
                 </nuxt-link>
                 <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalDuty)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
@@ -56,6 +56,7 @@
 
 <script>
 /* global $ */
+import { mapGetters } from 'vuex'
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
@@ -67,6 +68,9 @@ export default {
       deleteLegalDuty: ''
     }
   },
+  computed: mapGetters({
+    initCompliance: 'category/compliance'
+  }),
   watch: {
     selected: function (val) {
       this.onLoad(val)

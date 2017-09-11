@@ -29,6 +29,16 @@ import cookie from '~/utils/cookie'
 
 export default {
   props: ['selected'],
+  asyncData: function (context) {
+    return http
+      .get('/api/legalduty/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .then((response) => {
+        return { legalDuty: response.data }
+      })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+  },
   data: function () {
     return {
       compliance: {},
