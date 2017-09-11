@@ -72,7 +72,7 @@ export default {
           self.$router.push({ path: '/checklist/masterdata' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onDelete: function () {

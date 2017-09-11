@@ -199,7 +199,7 @@ export default {
         return { compliance: response.data }
       })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
   },
   data: function () {
@@ -244,7 +244,7 @@ export default {
           self.$router.push({ path: '/checklist/masterdata' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onBrowse: function (url, e) {
@@ -268,7 +268,7 @@ export default {
           self.$router.push('/checklist/masterdata')
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onConfirmDelete: function (type, index) {

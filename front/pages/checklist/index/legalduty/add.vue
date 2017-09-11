@@ -46,7 +46,7 @@ export default {
           self.$router.replace('/checklist/legalduty')
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     }
   }

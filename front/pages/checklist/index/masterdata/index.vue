@@ -97,7 +97,7 @@ export default {
         return { compliances: response.data }
       })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
   },
   data: function () {
@@ -125,7 +125,7 @@ export default {
         this.$set(this, 'compliances', response.data)
       })
       .catch((e) => {
-        self.$router.replace('/login')
+        self.$router.replace('/checklist/login')
       })
   },
   methods: {
@@ -138,7 +138,7 @@ export default {
           this.$set(this, 'compliances', response.data)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onSearch: function () {
@@ -149,7 +149,7 @@ export default {
           self.$set(this, 'compliances', response.data)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onDelete: function () {
@@ -161,7 +161,7 @@ export default {
           self.onLoad(self.selected)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onConfirmDelete: function (compliance) {

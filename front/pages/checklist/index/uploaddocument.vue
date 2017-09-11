@@ -57,7 +57,7 @@ export default {
           this.$router.push('/checklist/masterdata')
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     })
   },

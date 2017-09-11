@@ -281,7 +281,7 @@ export default {
     let accord = await http
       .get('/api/accord/' + context.params.accord + '/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
 
     return {
@@ -329,7 +329,7 @@ export default {
           self.$router.push({ path: '/checklist/accord' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onBrowse: function (url, e) {

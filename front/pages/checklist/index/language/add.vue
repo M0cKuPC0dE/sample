@@ -100,7 +100,7 @@ export default {
           self.$router.push({ path: '/checklist/language' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     })
   },

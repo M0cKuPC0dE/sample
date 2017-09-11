@@ -207,7 +207,7 @@ export default {
         return { compliance: response.data }
       })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
   }
 }

@@ -52,7 +52,7 @@ export default {
         return { categories: response.data }
       })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
   },
   data: function () {
@@ -74,7 +74,7 @@ export default {
             self.renderTreeview(response.data)
           })
           .catch((e) => {
-            self.$router.replace('/login')
+            self.$router.replace('/checklist/login')
           })
       }
     }

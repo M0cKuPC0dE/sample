@@ -81,7 +81,7 @@ export default {
     let locale = await http
       .get('/api/locales/code/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
     return {
       locale: locale.data
@@ -110,7 +110,7 @@ export default {
           self.$router.push({ path: '/checklist/language' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     })
   },
@@ -132,7 +132,7 @@ export default {
             self.$router.push({ path: '/checklist/language' })
           })
           .catch((e) => {
-            self.$router.replace('/login')
+            self.$router.replace('/checklist/login')
           })
       }
     }

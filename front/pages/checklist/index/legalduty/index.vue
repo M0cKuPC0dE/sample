@@ -84,7 +84,7 @@ export default {
           this.$set(this, 'compliance', response.data)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onDelete: function () {
@@ -96,7 +96,7 @@ export default {
           self.onLoad(self.selected)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onConfirmDelete: function (legalDuty) {

@@ -96,7 +96,7 @@ export default {
         return { categories: response.data }
       })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
   },
   mounted: function () {
@@ -116,7 +116,7 @@ export default {
           self.$set(self, 'categories', response.data)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onDelete: function () {
@@ -128,7 +128,7 @@ export default {
           self.onLoad(self.selected)
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     onConfirmDelete: function (category) {

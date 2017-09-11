@@ -81,12 +81,12 @@ export default {
     let categories = await http
       .get('/api/category/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
     let legalgroup = await http
       .get('/api/legalgroup/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .catch((e) => {
-        context.redirect('/login')
+        context.redirect('/checklist/login')
       })
     return {
       categories: categories.data,
@@ -110,7 +110,7 @@ export default {
           self.$router.push({ path: '/checklist/group' })
         })
         .catch((e) => {
-          self.$router.replace('/login')
+          self.$router.replace('/checklist/login')
         })
     },
     allview: function (categories) {
