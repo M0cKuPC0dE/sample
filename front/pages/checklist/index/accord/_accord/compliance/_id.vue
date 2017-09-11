@@ -17,27 +17,7 @@
         <div class="col-md-12">
           <div class="white-box">
 
-            <div class="row">
-              <div class="col-md-12">
-                <h3 class="box-title">{{accord.legalDuty.name}}</h3>
-              </div>
-            </div>
-
             <form class="form-horizontal" v-on:submit.prevent="onSave">
-
-              <div class="form-group">
-
-                <div class="col-md-12 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>{{ $t('compliance.effectivedate') }}</strong>
-                    </label>
-                    <div class="col-md-12">
-                      {{accord.legalDuty.compliance.effectiveDate}}
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               <div class="form-group">
                 <label class="col-md-12">
@@ -48,73 +28,16 @@
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>{{ $t('compliance.department') }}</strong>
-                    </label>
-                    <div class="col-md-12">
-                      {{accord.legalDuty.compliance.department}}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>{{ $t('compliance.ministry') }}</strong>
-                    </label>
-                    <div class="col-md-12">
-                      {{accord.legalDuty.compliance.ministry}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>หน่วยงานที่เกี่ยวข้อง</strong>
-                    </label>
-                    <div class="col-md-12">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>ฝ่ายที่เกี่ยวข้อง</strong>
-                    </label>
-                    <div class="col-md-12">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6 col-sm-12">
-                  <div class="form-group">
-                    <label class="col-md-12">
-                      <strong>แผนกที่เกี่ยวข้อง</strong>
-                    </label>
-                    <div class="col-md-12">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div class="form-group">
                 <label class="col-md-12">
-                  <strong>{{ $t('compliance.important') }}</strong>
+                  <strong>หน้าที่ตามกฎหมาย</strong>
                 </label>
                 <div class="col-md-12">
-                  {{accord.legalDuty.compliance.important}}
+                  {{accord.legalDuty.name}}
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row m-b-20">
                 <div class="col-md-6">
                   <strong>ประเมินความสอดคล้อง</strong>
                   <div class="radio radio-success">
@@ -131,14 +54,65 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <strong>หมายเหตุ</strong>
+                  <strong>ประเภท</strong>
                   <div>
-                    <textarea class="form-control" rows="3" v-model="accord.remark"></textarea>
+                    <div class="radio radio-success">
+                      <input type="radio" name="type" id="type1" value="LICENSE" v-model="accord.accordType" required>
+                      <label for="type1"> ใบอนุญาต </label>
+                    </div>
+                    <div class="radio radio-danger">
+                      <input type="radio" name="type" id="type2" value="EVIDENCE" v-model="accord.accordType" required>
+                      <label for="type2"> กฎหมายทั่วไป </label>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group m-t-20">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <span class="remark-block">สอดคล้อง หมายถึง ปฎิบัติตามกฎหมาย</span><br>
+                  <span class="remark-block">ไม่สอดคล้อง หมายถึง ไม่ปฎิบัติหรืออยู่ระหว่างดำเนินการตามกฎหมาย</span><br>
+                  <span class="remark-block">ไม่เกี่ยวข้อง หมายถึง กรณีอื่นๆ เช่น กฎหมายถูกยกเลิก, ไม่เกี่ยวข้องกับกฎหมายนั้น หรือไม่ได้เป็นผู้รับผิดชอบกฎหมายนั้นแล้ว</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ</strong>
+                </label>
+                <div class="col-md-12">
+                  <textarea v-if="accord.accorded === 'NOT_ACCORDED' || accord.accorded === 'NOT_CONCERN'" class="form-control" rows="5" v-model="accord.remark" required></textarea>
+                  <textarea class="form-control" rows="5" v-model="accord.remark" v-else></textarea>
+                </div>
+              </div>
+
+              <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
+                <label class="col-md-12">
+                  <strong>วันที่ที่จะดำเนินการเสร็จ</strong>
+                </label>
+                <div class="col-md-2">
+                  <select class="form-control" v-model="date.publicDate" required>
+                    <option value="">วัน</option>
+                    <option :key="n" v-for="n in (1, 31)" :value="n">{{n}}</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2">
+                  <select class="form-control" v-model="date.publicMonth" required>
+                    <option value="">เดือน</option>
+                    <option :key="n" v-for="(n,index) in getMonth()" :value="index+1">{{n}}</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2">
+                  <select class="form-control" v-model="date.publicYear" required>
+                    <option value="">ปี</option>
+                    <option :key="n" v-for="n in getYear()" :value="n">{{n+543}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group m-t-20" v-if="accord.accordType === 'LICENSE'">
                 <div class="col-md-12">
                   <div class="table-responsive">
                     <table class="table">
@@ -181,7 +155,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file">
+              <div class="form-group" v-if="!files.file && accord.accordType === 'LICENSE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
@@ -191,7 +165,7 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20">
+              <div class="form-group m-t-20" v-if="accord.accordType === 'EVIDENCE'">
                 <div class="col-md-12">
                   <div class="table-responsive">
                     <table class="table">
@@ -216,7 +190,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file">
+              <div class="form-group" v-if="!files.file && accord.accordType === 'EVIDENCE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
@@ -284,15 +258,27 @@ export default {
         context.redirect('/checklist/login')
       })
 
+    var date = {
+      publicDate: accord.data.completeDate ? accord.data.completeDate.split('/')[0].replace(/^0+/, '') : '',
+      publicMonth: accord.data.completeDate ? accord.data.completeDate.split('/')[1].replace(/^0+/, '') : '',
+      publicYear: accord.data.completeDate ? accord.data.completeDate.split('/')[2].replace(/^0+/, '') : ''
+    }
+
     return {
-      accord: accord.data
+      accord: accord.data,
+      date: date
     }
   },
   data: function () {
     return {
       files: {},
       deleteIndex: {},
-      deleteType: ''
+      deleteType: '',
+      date: {
+        publicDate: '',
+        publicMonth: '',
+        publicYear: ''
+      }
     }
   },
   created: function () {
@@ -322,6 +308,7 @@ export default {
   methods: {
     onSave: function () {
       var self = this
+      self.accord.completeDate = self.date.publicDate + '/' + self.date.publicMonth + '/' + self.date.publicYear
       self.accord.legalCategory = {}
       self.accord.legalCategory.id = this.$route.params.accord
       http.post('/api/accord', self.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
@@ -359,7 +346,24 @@ export default {
       } else {
         this.accord.evidenceFiles.splice(this.deleteIndex, 1)
       }
+    },
+    getYear: function () {
+      var year = []
+      for (var i = new Date().getFullYear(); i <= new Date().getFullYear() + 2; i++) {
+        year.push(i)
+      }
+      return year
+    },
+    getMonth: function () {
+      return ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
     }
   }
 }
 </script>
+
+<style lang="scss">
+.remark-block {
+  color: #737373;
+}
+</style>
+
