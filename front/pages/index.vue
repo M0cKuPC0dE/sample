@@ -1,309 +1,132 @@
 <template>
-  <div>
-    <LibraryNavbar></LibraryNavbar>
-    <div class="library-wrapper">
-      <div class="container-fluid">
-        <div class="row m-t-10 p-t-20">
-          <div class="col-md-12">
-            <form>
-              <div class="form-group">
-                <div class="input-group bootstrap-touchspin">
-                  <input id="search-tree" type="text" class="form-control" style="display: block" autocomplete="off">
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-outline">
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </span>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div id="allview" class="treeview"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <section id="wrapper" class="new-login-register">
+    <div class="lg-info-panel"></div>
+    <div class="module-select">
 
-    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="myLargeModalLabel">รายละเอียดกฎหมาย</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="white-box">
-
-                  <form class="form-horizontal">
-
-                    <div class="form-group">
-                      <label class="col-md-12">
-                        <strong>{{ $t('compliance.legalname') }}</strong>
-                      </label>
-                      <div class="col-md-12">
-                        {{compliance.legalName}}
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>{{ $t('compliance.effectivedate') }}</strong>
-                          </label>
-                          <div class="col-md-12">
-                            {{compliance.effectiveDate}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>{{ $t('compliance.department') }}</strong>
-                          </label>
-                          <div class="col-md-12">
-                            {{compliance.department}}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>{{ $t('compliance.ministry') }}</strong>
-                          </label>
-                          <div class="col-md-12">
-                            {{compliance.ministry}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>หน่วยงานที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>ฝ่ายที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>แผนกที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-md-12">
-                        <strong>{{ $t('compliance.important') }}</strong>
-                      </label>
-                      <div class="col-md-12">
-                        <span style="white-space: pre-wrap;">{{compliance.important}}</span>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <div class="col-md-12">
-                        <div class="table-responsive">
-                          <table class="table">
-                            <tbody>
-                              <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
-                                <td>{{file.name}}</td>
-                                <td class="text-center">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
-                                    <i class="fa fa-download"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-
-                  </form>
-
-                </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+              <div class="white-box border-black" v-on:click="changePage('/library')">
+                <h3 class="box-title">LIBRARY</h3>
+                <ul class="list-inline card-block">
+                  <li>
+                    <i class="ti-wallet text-success"></i>
+                  </li>
+                  <li class="text-right">
+                    <span class="counter">ห้องสมุดกฎหมาย</span>
+                  </li>
+                </ul>
               </div>
             </div>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">ปิด</button>
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+              <div class="white-box border-black">
+                <h3 class="box-title">CHECKLIST</h3>
+                <ul class="list-inline card-block" v-on:click="changePage('/checklist')">
+                  <li>
+                    <i class="ti-wallet text-success"></i>
+                  </li>
+                  <li class="text-right">
+                    <span class="counter">COMPLIANCE</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+              <div class="white-box border-black">
+                <h3 class="box-title">MANUAL</h3>
+                <ul class="list-inline card-block">
+                  <li>
+                    <i class="ti-wallet text-success"></i>
+                  </li>
+                  <li class="text-right">
+                    <span class="counter">คู่มือการใช้งาน</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
-/* global $ */
-import http from '~/utils/http'
-import LibraryNavbar from '~/components/LibraryNavbar'
-
 export default {
-  layout: 'index',
-  async asyncData (context) {
-    let categories = await http
-      .get('/public/category/compliance')
-    return {
-      categories: categories.data
-    }
-  },
-  components: {
-    LibraryNavbar
-  },
-  data: function () {
-    return {
-      lastPattern: '',
-      compliance: {
-        legalName: '',
-        year: '',
-        publicDate: '',
-        effectiveDate: '',
-        department: '',
-        ministry: '',
-        importain: '',
-        legalDuty: ''
-      }
-    }
-  },
-  mounted: function () {
-    this.allview(this.categories)
-    $('#search-tree').on('keyup', this.search)
-  },
   methods: {
-    allview: function (categories) {
-      var self = this
-      $('#allview').treeview({
-        expandIcon: 'glyphicon glyphicon-chevron-right',
-        collapseIcon: 'glyphicon glyphicon-chevron-down',
-        data: self.cat2node(categories),
-        onNodeSelected: function (event, data) {
-          self.$set(self, 'compliance', data.value)
-          $('.bs-example-modal-lg').modal('show')
-          $('.bs-example-modal-lg').on('hidden.bs.modal', function () {
-            $('#allview').treeview('unselectNode', [data.nodeId, { silent: true }])
-          })
-        }
-      })
-      $('#allview').treeview('collapseAll', { silent: true })
-    },
-    cat2node: function (categories) {
-      var self = this
-      var nodes = []
-      if (!categories) return
-
-      categories.forEach(function (category) {
-        var node = {
-          text: category.name,
-          icon: 'fa fa-folder',
-          selectable: false,
-          nodes: category.childs.length === 0 ? [] : self.cat2node(category.childs)
-        }
-        var compNode = self.compliance2node(category.compliances)
-        node.nodes = compNode.concat(node.nodes)
-        node.nodes = node.nodes.length === 0 ? '' : node.nodes
-        if (node.nodes.length !== 0) {
-          nodes.push(node)
-        }
-      })
-      return nodes
-    },
-    compliance2node: function (compliances) {
-      var nodes = []
-      if (!compliances) return
-
-      compliances.forEach(function (compliance) {
-        var node = {
-          text: compliance.legalName,
-          icon: 'fa fa-file-text-o',
-          selectable: true,
-          value: compliance
-        }
-        nodes.push(node)
-      })
-      return nodes
-    },
-    search: function (e) {
-      var pattern = $('#search-tree').val()
-      if (pattern === this.lastPattern) {
-        return
-      }
-      this.lastPattern = pattern
-      var tree = $('#allview').treeview(true)
-      this.reset(tree)
-      if (pattern.length < 3) {
-        tree.clearSearch()
-      } else {
-        tree.search(pattern)
-        var roots = tree.getSiblings(0)
-        roots.push(tree.getNode(0))
-        var unrelated = this.collectUnrelated(roots)
-        tree.disableNode(unrelated, { silent: true })
-      }
-    },
-    reset: function (tree) {
-      tree.collapseAll()
-      tree.enableAll()
-    },
-    collectUnrelated: function (nodes) {
-      var unrelated = []
-      var self = this
-      $.each(nodes, function (i, n) {
-        if (!n.searchResult && !n.state.expanded) {
-          unrelated.push(n.nodeId)
-        }
-        if (!n.searchResult && n.nodes) {
-          $.merge(unrelated, self.collectUnrelated(n.nodes))
-        }
-      })
-      return unrelated
+    changePage: function (url) {
+      this.$router.push(url)
     }
   }
 }
 </script>
 
+
 <style lang="scss">
-.library-wrapper {
-  background-color: #edf1f5;
-  margin-top: 60px;
-  width: 100%;
-  min-height: calc(100vh - 60px);
-  .row {
-    background-color: #fff;
+.module-select {
+  margin-left: 30%;
+  margin-top: 10%;
+  width: 800px;
+
+  .border-black {
+    border: 1px solid #666;
+    .card-block {
+      li {
+        width: 18%;
+        span {
+          font-size: 25px;
+          font-weight: 100;
+          font-family: Rubik, sans-serif;
+        }
+        i {
+          font-size: 25px;
+        }
+      }
+      li:last-child {
+        width: 80%;
+      }
+    }
+
+    &:hover {
+      border: 1px solid #999;
+      background-color: #00C0EF;
+      cursor: pointer;
+      color: #fff;
+      h3 {
+        color: #fff;
+      }
+    }
   }
-  #allview .node-disabled {
-    display: none;
+}
+
+@media(max-width:1350px) {
+  .module-select {
+    margin-left: 500px;
+  }
+}
+
+@media (max-width:1023px) {
+  .module-select {
+    margin: 0px auto;
+    margin-top: 10%;
+  }
+}
+
+@media(max-width:767px) {
+  .module-select {
+    margin: 0px auto;
+    width: 500px;
+    margin-top: 10%;
+  }
+}
+
+@media(max-width:480px) {
+  .module-select {
+    margin: 0px auto;
+    width: 300px;
+    margin-top: 10%;
   }
 }
 </style>

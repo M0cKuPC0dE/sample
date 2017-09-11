@@ -56,7 +56,7 @@ export const actions = {
     Cookies.remove('AT', { secure: false })
     Cookies.remove('RT', { secure: false })
     context.commit('authen', { status: false, error: '' })
-    vc.$router.replace('/')
+    vc.$router.replace('/checklist/login')
   },
   clearerror: (context, vc) => {
     context.commit('authen', { status: false, error: '' })

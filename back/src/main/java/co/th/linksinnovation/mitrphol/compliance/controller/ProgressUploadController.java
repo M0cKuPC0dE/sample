@@ -16,7 +16,6 @@ import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository
 import co.th.linksinnovation.mitrphol.compliance.repository.EvidenceFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LicenseFileRepository;
-import co.th.linksinnovation.mitrphol.compliance.service.LocaleService;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
