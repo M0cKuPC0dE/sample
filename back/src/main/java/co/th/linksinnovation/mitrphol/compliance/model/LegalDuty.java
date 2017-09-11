@@ -5,8 +5,6 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ public class LegalDuty {
     private Long id;
     @Column(length = 4000)
     private String name;
+    private Boolean deleted = false;
     @ManyToOne
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     private Compliance compliance;

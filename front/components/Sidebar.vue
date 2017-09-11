@@ -17,6 +17,12 @@
           </nuxt-link>
         </li>
         <li v-if="authority === 'Administrator'">
+          <nuxt-link to="/checklist/legalduty" class="waves-effect">
+            <i class="zmdi zmdi-archive fa-fw"></i>
+            <span class="hide-menu">หน้าที่ตามกฎหมาย</span>
+          </nuxt-link>
+        </li>
+        <li v-if="authority === 'Administrator'">
           <nuxt-link to="/checklist/group" class="waves-effect">
             <i class="zmdi zmdi-group fa-fw"></i>
             <span class="hide-menu">{{ $t('menu.group') }}</span>

@@ -25,6 +25,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 /**
  *
@@ -52,6 +53,7 @@ public class Compliance {
     @Column(length = 4000)
     private String important;
     @OneToMany(mappedBy = "compliance")
+    @Where(clause = "deleted = 0")
     @JsonView(JsonViewer.ComplianceWithLegalDuty.class)
     private List<LegalDuty> legalDuties;
     @Column(length = 4000)

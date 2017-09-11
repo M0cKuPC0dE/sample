@@ -1,0 +1,108 @@
+<template>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 m-b-10">
+      </div>
+      <div class="col-md-4 m-b-10">
+        <nuxt-link to="/checklist/legalduty/add" class="btn btn-block btn-info">เพิ่มหน้าที่ตามกฎหมาย</nuxt-link>
+      </div>
+    </div>
+    <div class="row">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>หน้าที่ตามกฎหมาย</th>
+              <th class="text-center col-md-2">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr :key="index" v-for="(legalDuty,index) in compliance.legalDuties">
+              <td>{{legalDuty.name}}</td>
+              <td class="text-center">
+                <nuxt-link :to="'/checklist/masterdata/compliance/edit/'" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                  <i class="ti-marker-alt"></i>
+                </nuxt-link>
+                <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalDuty)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                  <i class="ti-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="masterdata-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">ยืนยันการลบ</h4>
+          </div>
+          <div class="modal-body">
+            ต้องการลบใช่หรือไม่
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+/* global $ */
+import http from '~/utils/http'
+import cookie from '~/utils/cookie'
+
+export default {
+  props: ['selected'],
+  data: function () {
+    return {
+      compliance: {},
+      deleteLegalDuty: ''
+    }
+  },
+  watch: {
+    selected: function (val) {
+      this.onLoad(val)
+    }
+  },
+  mounted: function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  },
+  methods: {
+    onLoad: function (selected) {
+      var self = this
+      return http
+        .get('/api/compliance/' + selected.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          this.$set(this, 'compliance', response.data)
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    },
+    onDelete: function () {
+      var self = this
+      $('#masterdata-remove-modal').modal('hide')
+      return http
+        .delete('/api/legalduty/' + this.deleteLegalDuty.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          self.onLoad(self.selected)
+        })
+        .catch((e) => {
+          self.$router.replace('/login')
+        })
+    },
+    onConfirmDelete: function (legalDuty) {
+      $('#masterdata-remove-modal').modal('show')
+      this.$set(this, 'deleteLegalDuty', legalDuty)
+    }
+  }
+}
+</script>
