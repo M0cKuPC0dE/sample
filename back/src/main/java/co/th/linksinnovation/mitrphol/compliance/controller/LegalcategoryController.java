@@ -78,6 +78,13 @@ public class LegalcategoryController {
         }
     }
 
+    @GetMapping("/legalgroup/{id}")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    public List<LegalCategory> getByGroup(@PathVariable("id") Long id) {
+        LegalGroup findOne = legalgroupRepository.findOne(id);
+        return legalcategoryRepository.findByLegalGroup(findOne);
+    }
+
     @GetMapping("/list")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public List<LegalCategory> getList(@AuthenticationPrincipal String username) {
@@ -105,6 +112,12 @@ public class LegalcategoryController {
     @GetMapping("/{id}")
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     public LegalCategory get(@PathVariable("id") Long id) {
+        return legalcategoryRepository.findOne(id);
+    }
+    
+    @GetMapping("/view/{id}")
+    @JsonView(JsonViewer.LegalDutyWithCompliance.class)
+    public LegalCategory getView(@PathVariable("id") Long id) {
         return legalcategoryRepository.findOne(id);
     }
 

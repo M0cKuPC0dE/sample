@@ -34,13 +34,13 @@
             <span class="hide-menu">{{ $t('menu.group') }}</span>
           </nuxt-link>
         </li>
-        <li v-if="authority === 'Administrator' || authority === 'Coordinator'">
+        <li v-if="authority === 'Coordinator'">
           <nuxt-link to="/checklist/category" class="waves-effect">
             <i class="zmdi zmdi-ungroup fa-fw"></i>
             <span class="hide-menu">จัดหมวดหมู่กฎหมาย</span>
           </nuxt-link>
         </li>
-        <li v-if="authority === 'Administrator' || authority === 'Coordinator'">
+        <li v-if="authority === 'Coordinator'">
           <nuxt-link to="/checklist/category/list" class="waves-effect">
             <i class="zmdi zmdi-collection-bookmark fa-fw"></i>
             <span class="hide-menu">หมวดหมู่กฎหมาย</span>
