@@ -8,9 +8,11 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.MailService;
@@ -39,6 +41,8 @@ public class LegalgroupController {
     @Autowired
     private LegalgroupRepository legalgroupRepository;
     @Autowired
+    private LegalcategoryRepository legalcategoryRepository;
+    @Autowired
     private UserDetailsRepository userDetailsRepository;
     @Autowired
     private RestService restService;
@@ -50,9 +54,19 @@ public class LegalgroupController {
     public List<LegalGroup> get(@AuthenticationPrincipal String username) {
         UserDetails findOne = userDetailsRepository.findOne(username);
         if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
-            return legalgroupRepository.findAll();
+            List<LegalGroup> findAll = legalgroupRepository.findAll();
+            for (LegalGroup legalGroup : findAll) {
+                List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(legalGroup);
+                legalGroup.getLegalCategories().addAll(findByLegalGroup);
+            }
+            return findAll;
         } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
-            return legalgroupRepository.findByCoordinatesIn(findOne);
+            List<LegalGroup> findAll = legalgroupRepository.findByCoordinatesIn(findOne);
+            for (LegalGroup legalGroup : findAll) {
+                List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(legalGroup);
+                legalGroup.getLegalCategories().addAll(findByLegalGroup);
+            }
+            return findAll;
         } else {
             return null;
         }

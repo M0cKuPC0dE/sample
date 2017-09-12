@@ -5,11 +5,16 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import lombok.Data;
 
 /**
@@ -18,7 +23,9 @@ import lombok.Data;
  */
 @Data
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class LegalGroup {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -27,4 +34,7 @@ public class LegalGroup {
     private List<UserDetails> coordinates;
     @ManyToMany
     private List<LegalDuty> legalDuties;
+    @Transient
+    @JsonProperty
+    private List<LegalCategory> legalCategories = new ArrayList<>();
 }

@@ -26,7 +26,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">0</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.accord}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>สอดคล้อง</h4>
@@ -46,7 +46,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">0</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.notAccord}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่สอดคล้อง</h4>
@@ -66,7 +66,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">0</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.notConcern}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่เกี่ยวข้อง</h4>
@@ -86,7 +86,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">0</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.inprogress}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ยังไม่ดำเนินการ</h4>
@@ -141,9 +141,9 @@
                         <td>
                           <nuxt-link :to="'/checklist/group/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
                         </td>
-                        <td class="text-center">0</td>
-                        <td class="text-center">0</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{legalgroup.legalDuties.length}}</td>
+                        <td class="text-center">{{countDuty(legalgroup).total}}</td>
+                        <td class="text-center">{{countDuty(legalgroup).process}}</td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/manage/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="จัดหมวดหมู่">
                             <i class="ti-direction-alt"></i>
@@ -210,10 +210,12 @@ export default {
   },
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
+    this.calculateProgress()
   },
   data: function () {
     return {
-      deleteGroup: {}
+      deleteGroup: {},
+      progress: {}
     }
   },
   methods: {
@@ -244,6 +246,45 @@ export default {
     onConfirmDelete: function (legalgroup) {
       $('#group-remove-modal').modal('show')
       this.$set(this, 'deleteGroup', legalgroup)
+    },
+    countDuty: function (group) {
+      var data = {
+        total: 0,
+        process: 0
+      }
+      group.legalCategories.forEach(function (category) {
+        category.accords.forEach(function (accord) {
+          if (accord.accorded) {
+            data.process = data.process + 1
+          }
+          data.total = data.total + 1
+        })
+      })
+      return data
+    },
+    calculateProgress: function () {
+      var data = {
+        accord: 0,
+        notAccord: 0,
+        notConcern: 0,
+        inprogress: 0
+      }
+      this.groups.forEach(function (group) {
+        group.legalCategories.forEach(function (category) {
+          category.accords.forEach(function (accord) {
+            if (accord.accorded === 'ACCORDED') {
+              data.accord = data.accord + 1
+            } else if (accord.accorded === 'NOT_ACCORDED') {
+              data.notAccord = data.notAccord + 1
+            } else if (accord.accorded === 'NOT_CONCERN') {
+              data.notConcern = data.notConcern + 1
+            } else {
+              data.inprogress = data.inprogress + 1
+            }
+          })
+        })
+      })
+      this.$set(this, 'progress', data)
     }
   }
 }
