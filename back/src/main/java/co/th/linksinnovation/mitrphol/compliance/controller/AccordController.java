@@ -73,4 +73,33 @@ public class AccordController {
         findOne.setApprove(Boolean.TRUE);
         accordRepository.save(findOne);
     }
+
+    @GetMapping("/reject/{id}")
+    public void reject(@PathVariable("id") Long id) {
+        Accord findOne = accordRepository.findOne(id);
+        findOne.setApprove(Boolean.FALSE);
+        accordRepository.save(findOne);
+    }
+
+    @GetMapping("/approveall/{id}")
+    public void approveAll(@PathVariable("id") Long id) {
+        LegalCategory findOne = legalcategoryRepository.findOne(id);
+        for (Accord accord : findOne.getAccords()) {
+            if (accord.getAccept() != null && accord.getAccept() == true) {
+                accord.setApprove(Boolean.TRUE);
+                accordRepository.save(accord);
+            }
+        }
+    }
+
+    @GetMapping("/rejectall/{id}")
+    public void rejectAll(@PathVariable("id") Long id) {
+        LegalCategory findOne = legalcategoryRepository.findOne(id);
+        for (Accord accord : findOne.getAccords()) {
+            if (accord.getAccept() != null && accord.getAccept() == true) {
+                accord.setApprove(Boolean.FALSE);
+                accordRepository.save(accord);
+            }
+        }
+    }
 }

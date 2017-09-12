@@ -13,6 +13,96 @@
           </ol>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="white-box">
+            <div class="row row-in">
+              <div class="col-lg-6 col-sm-12 row-in-br">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-success">
+                      <i class="ti-clipboard"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">{{progress.accord}}</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>สอดคล้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12 b-0">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-warning">
+                      <i class="ti-wallet"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">{{progress.notAccord}}</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ไม่สอดคล้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12 row-in-br  b-r-none">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-danger">
+                      <i class="ti-wallet"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">{{progress.notConcern}}</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ไม่เกี่ยวข้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12  b-0">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-info">
+                      <i class="fa fa-dollar"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">{{progress.inprogress}}</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ยังไม่ดำเนินการ</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
@@ -25,31 +115,32 @@
 
             <div class="row" :key="index" v-for="(category,index) in categories">
               <div class="col-md-12">
-                <span>
-                  <strong>ฝ่าย</strong> {{category.party}}
-                  <strong>หน่วยงาน</strong> {{category.department}}
-                </span>
                 <div class="table-responsive">
                   <table class="table table-hover manage-u-table">
                     <thead>
                       <tr>
-                        <th class="col-xs-5">หน้าที่ตามกฎหมาย</th>
-                        <th class="col-xs-5">ความสอดคล้อง</th>
-                        <th class="text-center">จัดการ</th>
+                        <th>ชื่อกฎหมาย</th>
+                        <th>หน้าที่ตามกฎหมาย</th>
+                        <th>การประเมินจากผู้ดูแล</th>
+                        <th class="text-center">การพิจารณา</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="accord.id" v-for="accord in category.accords">
-                        <td>{{accord.legalDuty.name}}</td>
+                      <tr :key="accord.id" v-for="accord in category.accords" v-if="accord.accept === true">
+                        <td>{{accord.legalDuty.compliance.legalName}}</td>
+                        <td>
+                          <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
+                            {{accord.legalDuty.name}}
+                          </nuxt-link>
+                        </td>
                         <td>
                           <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                           <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                         </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id" class="text-inverse p-r-10" data-toggle="tooltip" title="เปิด">
-                            <i class="ti-search"></i>
-                          </nuxt-link>
+                          <span class="label label-success" v-if="accord.approve">อนุมัติ</span>
+                          <span class="label label-danger" v-if="!accord.approve">ไม่อนุมัตื</span>
                         </td>
                       </tr>
                     </tbody>
@@ -58,29 +149,11 @@
               </div>
 
               <div class="col-md-12 text-right">
-                <button class="btn btn-info" v-on:click="onConfirmApprove(category)" v-if="category.approved === false">อณุมัติแบบประเมิน</button>
-                <button class="btn btn-info" v-on:click="onConfirmApprove(category)" v-if="category.approved === true" disabled>อณุมัติแบบประเมิน</button>
+                <button class="btn btn-success" v-on:click="onApprove(category)">อณุมัติทั้งหมด</button>
+                <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อณุมัติทั้งหมด</button>
               </div>
 
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="approve-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title">ยืนยันการอนุมัติ</h4>
-          </div>
-          <div class="modal-body">
-            ต้องการอนุมัติแบบประเมินใช่หรือไม่
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
-            <button type="button" class="btn btn-success waves-effect waves-light" v-on:click="onApprove">อนุมัติ</button>
           </div>
         </div>
       </div>
@@ -107,11 +180,13 @@ export default {
   },
   data: function () {
     return {
-      approve: {}
+      approve: {},
+      progress: {}
     }
   },
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
+    this.calculateProgress()
   },
   methods: {
     onLoad: function () {
@@ -125,11 +200,11 @@ export default {
           self.$router.replace('/checklist/login')
         })
     },
-    onApprove: function () {
+    onApprove: function (category) {
       var self = this
       $('#approve-modal').modal('hide')
       return http
-        .post('/api/legalcategory/approve', self.approve, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/api/accord/approveall/' + category.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           self.onLoad()
         })
@@ -137,9 +212,39 @@ export default {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmApprove: function (category) {
-      $('#approve-modal').modal('show')
-      this.$set(this, 'approve', category)
+    onReject: function (category) {
+      var self = this
+      $('#approve-modal').modal('hide')
+      return http
+        .get('/api/accord/rejectall/' + category.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .then((response) => {
+          self.onLoad()
+        })
+        .catch((e) => {
+          self.$router.replace('/checklist/login')
+        })
+    },
+    calculateProgress: function () {
+      var data = {
+        accord: 0,
+        notAccord: 0,
+        notConcern: 0,
+        inprogress: 0
+      }
+      this.categories.forEach(function (category) {
+        category.accords.forEach(function (accord) {
+          if (accord.accorded === 'ACCORDED') {
+            data.accord = data.accord + 1
+          } else if (accord.accorded === 'NOT_ACCORDED') {
+            data.notAccord = data.notAccord + 1
+          } else if (accord.accorded === 'NOT_CONCERN') {
+            data.notConcern = data.notConcern + 1
+          } else {
+            data.inprogress = data.inprogress + 1
+          }
+        })
+      })
+      this.$set(this, 'progress', data)
     }
   }
 }
