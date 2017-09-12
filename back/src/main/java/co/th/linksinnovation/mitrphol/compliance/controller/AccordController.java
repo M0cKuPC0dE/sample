@@ -38,19 +38,39 @@ public class AccordController {
 
     @GetMapping("/{legalCategory}/{compliance}")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public Accord get(@PathVariable("legalCategory") Long legalCategory,@PathVariable("compliance") Long compliance) {
+    public Accord get(@PathVariable("legalCategory") Long legalCategory, @PathVariable("compliance") Long compliance) {
         LegalCategory lc = legalcategoryRepository.findOne(legalCategory);
         LegalDuty c = legalDutyRepository.findOne(compliance);
         return accordRepository.findByLegalCategoryAndLegalDuty(lc, c);
     }
-    
+
     @PostMapping
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public Accord post(@RequestBody Accord accord){
+    public Accord post(@RequestBody Accord accord) {
         Accord ac = accordRepository.save(accord);
         LegalCategory legalCategory = ac.getLegalCategory();
-        legalCategory.setApproved(Boolean.FALSE);
         legalcategoryRepository.save(legalCategory);
         return ac;
+    }
+
+    @GetMapping("/accept/{id}")
+    public void accept(@PathVariable("id") Long id) {
+        Accord findOne = accordRepository.findOne(id);
+        findOne.setAccept(Boolean.TRUE);
+        accordRepository.save(findOne);
+    }
+
+    @GetMapping("/notaccept/{id}")
+    public void notAccept(@PathVariable("id") Long id) {
+        Accord findOne = accordRepository.findOne(id);
+        findOne.setAccept(Boolean.FALSE);
+        accordRepository.save(findOne);
+    }
+
+    @GetMapping("/approve/{id}")
+    public void approve(@PathVariable("id") Long id) {
+        Accord findOne = accordRepository.findOne(id);
+        findOne.setApprove(Boolean.TRUE);
+        accordRepository.save(findOne);
     }
 }

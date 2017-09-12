@@ -139,7 +139,7 @@ export default {
       self.legalcategory.legalGroup = self.legalgroup
       http.post('/api/legalcategory', self.legalcategory, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
-          self.$router.push({ path: '/checklist/category/list' })
+          self.$router.push({ path: '/checklist/category' })
         })
         .catch((e) => {
           self.$router.replace('/checklist/login')

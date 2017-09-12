@@ -50,4 +50,6 @@ public class Accord {
     private List<LicenseFile> licenseFiles;
     @OneToMany(cascade = CascadeType.MERGE)
     private List<EvidenceFile> evidenceFiles;
+    private Boolean accept;
+    private Boolean approve;
 }

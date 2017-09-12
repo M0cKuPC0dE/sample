@@ -13,6 +13,96 @@
           </ol>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="white-box">
+            <div class="row row-in">
+              <div class="col-lg-6 col-sm-12 row-in-br">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-success">
+                      <i class="ti-clipboard"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">23</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>สอดคล้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12 b-0">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-warning">
+                      <i class="ti-wallet"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">76</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ไม่สอดคล้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12 row-in-br  b-r-none">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-danger">
+                      <i class="ti-wallet"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">76</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ไม่เกี่ยวข้อง</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-sm-12  b-0">
+                <ul class="col-in">
+                  <li>
+                    <span class="circle circle-md bg-info">
+                      <i class="fa fa-dollar"></i>
+                    </span>
+                  </li>
+                  <li class="col-last">
+                    <h3 class="counter text-right m-t-15">83</h3>
+                  </li>
+                  <li class="col-middle">
+                    <h4>ยังไม่ดำเนินการ</h4>
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                        <span class="sr-only">40% Complete (success)</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-12">
           <div class="white-box">
@@ -36,8 +126,12 @@
                     </thead>
                     <tbody>
                       <tr :key="index" v-for="(category,index) in categories">
-                        <td>{{category.party}}</td>
-                        <td>{{category.department}}</td>
+                        <td>
+                          <nuxt-link :to="'/checklist/category/accord/'+category.id">{{category.party}}</nuxt-link>
+                        </td>
+                        <td>
+                          <nuxt-link :to="'/checklist/category/accord/'+category.id">{{category.department}}</nuxt-link>
+                        </td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/category/edit/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
@@ -91,7 +185,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/api/legalcategory/legalgroup/' + context.params.category, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
         return { categories: response.data }
       })
@@ -111,7 +205,7 @@ export default {
     onLoad: function () {
       var self = this
       http
-        .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/api/legalcategory/legalgroup/' + this.$route.params.category, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
           self.$set(self, 'categories', response.data)
         })

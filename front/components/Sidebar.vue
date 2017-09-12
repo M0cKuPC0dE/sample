@@ -40,12 +40,6 @@
             <span class="hide-menu">จัดหมวดหมู่กฎหมาย</span>
           </nuxt-link>
         </li>
-        <li v-if="authority === 'Coordinator'">
-          <nuxt-link to="/checklist/category/list" class="waves-effect">
-            <i class="zmdi zmdi-collection-bookmark fa-fw"></i>
-            <span class="hide-menu">หมวดหมู่กฎหมาย</span>
-          </nuxt-link>
-        </li>
         <li v-if="authority === 'Owner'">
           <nuxt-link to="/checklist/accord" class="waves-effect">
             <i class="zmdi zmdi-check-all fa-fw"></i>

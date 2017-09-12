@@ -109,28 +109,33 @@
 
             <div class="row">
               <div class="col-md-4">
-                <h3 class="box-title">จัดหมวดหมู่กฎหมาย</h3>
+                <h3 class="box-title">ประเมินความสอดคล้อง</h3>
               </div>
             </div>
 
             <div class="row">
               <div class="col-md-12">
-                <div class="table-responsive">
-                  <table class="table">
+                <div>
+                  <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th class="col-xs-10">หน่วยงาน</th>
-                        <th class="text-center">จัดการ</th>
+                        <th>ชื่อกฎหมาย</th>
+                        <th>หน้าที่ตามกฎหมาย</th>
+                        <th>ประเภท</th>
+                        <th class="text-center">ประเมิน</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="index" v-for="(legalgroup,index) in groups">
+                      <tr :key="accord.id" v-for="accord in category.accords">
+                        <td>{{accord.legalDuty.compliance.legalName}}</td>
+                        <td>{{accord.legalDuty.name}}</td>
                         <td>
-                          <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
+                          <span class="" v-if="accord.accordType === 'LICENSE'">ใบอนุญาต</span>
+                          <span class="" v-if="accord.accordType === 'EVIDENCE'">กฎหมายทั่วไป</span>
                         </td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/category/manage/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="จัดหมวดหมู่">
-                            <i class="ti-direction-alt"></i>
+                          <nuxt-link :to="'/checklist/category/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">
+                            <i class="ti-marker-alt"></i>
                           </nuxt-link>
                         </td>
                       </tr>
@@ -146,24 +151,6 @@
 
     </div>
 
-    <div id="group-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title">ยืนยันการลบ</h4>
-          </div>
-          <div class="modal-body">
-            ต้องการลบใช่หรือไม่
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -175,9 +162,9 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function (context) {
     return http
-      .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .get('/api/legalcategory/view/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
       .then((response) => {
-        return { groups: response.data }
+        return { category: response.data }
       })
       .catch((e) => {
         context.redirect('/checklist/login')
@@ -186,38 +173,17 @@ export default {
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
   },
-  data: function () {
-    return {
-      deleteGroup: {}
-    }
-  },
   methods: {
     onLoad: function () {
       var self = this
       http
-        .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {
-          self.$set(self, 'groups', response.data)
+          self.$set(self, 'categories', response.data)
         })
         .catch((e) => {
           self.$router.replace('/checklist/login')
         })
-    },
-    onDelete: function () {
-      var self = this
-      $('#group-remove-modal').modal('hide')
-      return http
-        .delete('/api/legalgroup/' + this.deleteGroup.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          self.onLoad(self.selected)
-        })
-        .catch((e) => {
-          self.$router.replace('/checklist/login')
-        })
-    },
-    onConfirmDelete: function (legalgroup) {
-      $('#group-remove-modal').modal('show')
-      this.$set(this, 'deleteGroup', legalgroup)
     }
   }
 }
