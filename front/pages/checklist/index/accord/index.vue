@@ -26,7 +26,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">23</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.accord}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>สอดคล้อง</h4>
@@ -46,7 +46,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">76</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.notAccord}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่สอดคล้อง</h4>
@@ -66,7 +66,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">76</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.notConcern}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่เกี่ยวข้อง</h4>
@@ -86,7 +86,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">83</h3>
+                    <h3 class="counter text-right m-t-15">{{progress.inprogress}}</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ยังไม่ดำเนินการ</h4>
@@ -113,7 +113,7 @@
               </div>
             </div>
 
-            <div class="row" :key="index" v-for="(category,index) in categories">
+            <div class="row">
               <div class="col-md-12">
                 <div>
                   <table class="table table-hover">
@@ -125,7 +125,7 @@
                         <th class="text-center">ประเมิน</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody :key="index" v-for="(category,index) in categories">
                       <tr :key="accord.id" v-for="accord in category.accords">
                         <td>{{accord.legalDuty.compliance.legalName}}</td>
                         <td>{{accord.legalDuty.name}}</td>
@@ -172,6 +172,12 @@ export default {
   },
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
+    this.calculateProgress()
+  },
+  data: function () {
+    return {
+      progress: {}
+    }
   },
   methods: {
     onLoad: function () {
@@ -184,6 +190,28 @@ export default {
         .catch((e) => {
           self.$router.replace('/checklist/login')
         })
+    },
+    calculateProgress: function () {
+      var data = {
+        accord: 0,
+        notAccord: 0,
+        notConcern: 0,
+        inprogress: 0
+      }
+      this.categories.forEach(function (category) {
+        category.accords.forEach(function (accord) {
+          if (accord.accorded === 'ACCORDED') {
+            data.accord = data.accord + 1
+          } else if (accord.accorded === 'NOT_ACCORDED') {
+            data.notAccord = data.notAccord + 1
+          } else if (accord.accorded === 'NOT_CONCERN') {
+            data.notConcern = data.notConcern + 1
+          } else {
+            data.inprogress = data.inprogress + 1
+          }
+        })
+      })
+      this.$set(this, 'progress', data)
     }
   }
 }

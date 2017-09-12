@@ -26,7 +26,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">23</h3>
+                    <h3 class="counter text-right m-t-15">0</h3>
                   </li>
                   <li class="col-middle">
                     <h4>สอดคล้อง</h4>
@@ -46,7 +46,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">76</h3>
+                    <h3 class="counter text-right m-t-15">0</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่สอดคล้อง</h4>
@@ -66,7 +66,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">76</h3>
+                    <h3 class="counter text-right m-t-15">0</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ไม่เกี่ยวข้อง</h4>
@@ -86,7 +86,7 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">83</h3>
+                    <h3 class="counter text-right m-t-15">0</h3>
                   </li>
                   <li class="col-middle">
                     <h4>ยังไม่ดำเนินการ</h4>
@@ -141,9 +141,9 @@
                         <td>
                           <nuxt-link :to="'/checklist/group/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
                         </td>
-                        <td class="text-center">{{legalgroup.legalDuties.length}}</td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">0</td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/manage/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="จัดหมวดหมู่">
                             <i class="ti-direction-alt"></i>
