@@ -25,7 +25,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="@id")
 public class LegalCategory {
     @Id
     @GeneratedValue
