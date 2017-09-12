@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="table-responsive">
+      <div>
         <table class="table">
           <thead>
             <tr>

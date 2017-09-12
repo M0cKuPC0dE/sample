@@ -148,7 +148,7 @@
                   <strong>หน้าที่ตามกฎหมาย</strong>
                 </label>
                 <div class="col-md-12">
-                  <div class="table-responsive">
+                  <div>
                     <table class="table">
                       <tbody>
                         <tr :key="index" v-for="(legalDuty,index) in compliance.legalDuties">
@@ -162,7 +162,7 @@
 
               <div class="form-group">
                 <div class="col-md-12">
-                  <div class="table-responsive">
+                  <div>
                     <table class="table">
                       <tbody>
                         <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">

@@ -96,7 +96,7 @@
 
               <div class="form-group m-t-20" v-if="accord.accordType === 'LICENSE'">
                 <div class="col-md-12">
-                  <div class="table-responsive">
+                  <div>
                     <table class="table">
                       <thead>
                         <tr>
@@ -130,7 +130,7 @@
 
               <div class="form-group m-t-20" v-if="accord.accordType === 'EVIDENCE'">
                 <div class="col-md-12">
-                  <div class="table-responsive">
+                  <div>
                     <table class="table">
                       <thead>
                         <tr>
@@ -263,7 +263,7 @@
 
                     <div class="form-group">
                       <div class="col-md-12">
-                        <div class="table-responsive">
+                        <div>
                           <table class="table">
                             <tbody>
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">

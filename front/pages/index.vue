@@ -68,7 +68,7 @@ export default {
 .module-select {
   margin-left: 30%;
   margin-top: 10%;
-  width: 800px;
+  width: 600px;
 
   .border-black {
     border: 1px solid #666;

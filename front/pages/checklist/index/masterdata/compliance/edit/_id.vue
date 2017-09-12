@@ -86,7 +86,7 @@
     </div>
     <div class="form-group">
       <div class="col-md-12">
-        <div class="table-responsive">
+        <div>
           <table class="table">
             <thead>
               <tr>

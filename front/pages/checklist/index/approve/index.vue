@@ -115,7 +115,7 @@
 
             <div class="row" :key="index" v-for="(category,index) in categories">
               <div class="col-md-12">
-                <div class="table-responsive">
+                <div>
                   <table class="table table-hover manage-u-table">
                     <thead>
                       <tr>
