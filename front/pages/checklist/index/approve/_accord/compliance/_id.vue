@@ -269,7 +269,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
