@@ -54,16 +54,12 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <strong>ประเภท</strong>
-                  <div>
-                    <div class="radio radio-success">
-                      <input type="radio" name="type" id="type1" value="LICENSE" v-model="accord.accordType" required>
-                      <label for="type1"> ใบอนุญาต </label>
-                    </div>
-                    <div class="radio radio-danger">
-                      <input type="radio" name="type" id="type2" value="EVIDENCE" v-model="accord.accordType" required>
-                      <label for="type2"> กฎหมายทั่วไป </label>
-                    </div>
+                  <label class="col-md-12">
+                    <strong>ประเภท</strong>
+                  </label>
+                  <div class="col-md-12">
+                    <p class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</p>
+                    <p class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</p>
                   </div>
                 </div>
               </div>
@@ -112,7 +108,7 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'LICENSE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
@@ -155,30 +151,56 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.accordType === 'LICENSE'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าใบอนุญาติ
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/licenseupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'EVIDENCE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>หลักฐาน</th>
+                          <th>วันแจ้งเตือน</th>
+                          <th>วันหมดอายุ</th>
+                          <th>เอกสาร</th>
+                          <th>มีวันหมดอายุ</th>
                           <th class="text-center">จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr :key="file.index" v-for="(file,index) in accord.evidenceFiles">
+                          <td class="col-md-3">
+                            <div class="input-group">
+                              <input v-if="file.expired" type="text" class="form-control" :id="'warningDate-'+index" v-model="file.warningDate" required></input>
+                              <input v-if="!file.expired" type="text" class="form-control" :id="'warningDate-'+index" v-model="file.warningDate" disabled></input>
+                              <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                              </span>
+                            </div>
+                          </td>
+                          <td class="col-md-3">
+                            <div class="input-group">
+                              <input v-if="file.expired" type="text" class="form-control" :id="'expireDate-'+index" v-model="file.expireDate" required></input>
+                              <input v-if="!file.expired" type="text" class="form-control" :id="'expireDate-'+index" v-model="file.expireDate" disabled></input>
+                              <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                              </span>
+                            </div>
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td>
+                            <div class="checkbox checkbox-success">
+                              <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
+                              <label :for="'checkbox'+index"> มีวันหมดอายุ </label>
+                            </div>
+                          </td>
                           <td style="vertical-align: middle;" class="text-center">
                             <a href="javascript:void(0)" v-on:click="onConfirmDelete('evidence',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="ti-trash"></i>
@@ -190,12 +212,12 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.accordType === 'EVIDENCE'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/evidenceupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -315,7 +337,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

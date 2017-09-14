@@ -119,8 +119,8 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th class="col-xs-5">ฝ่าย</th>
-                        <th class="col-xs-5">แผนก</th>
+                        <th class="col-xs-5">ฝ่าย/แผนก</th>
+                        <th class="col-xs-5 text-center">สถานะการดำนเนินการ</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
                     </thead>
@@ -129,8 +129,8 @@
                         <td>
                           <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.party}}</nuxt-link>
                         </td>
-                        <td>
-                          <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.department}}</nuxt-link>
+                        <td class="text-center">
+                          {{categoryProgress(category)}}
                         </td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/category/edit/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
@@ -252,6 +252,19 @@ export default {
         })
       })
       this.$set(this, 'progress', data)
+    },
+    categoryProgress: function (category) {
+      var data = {
+        complete: 0,
+        incomplete: 0
+      }
+      category.accords.forEach(function (accord) {
+        if (accord.accorded) {
+          data.complete = data.complete + 1
+        }
+        data.incomplete = data.incomplete + 1
+      })
+      return data.complete + '/' + data.incomplete
     }
   }
 }

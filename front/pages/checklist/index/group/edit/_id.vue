@@ -28,7 +28,7 @@
                 <label class="col-md-12">หน่วยงาน</label>
                 <div class="col-md-12">
                   <select class="form-control" v-model="selLegalGroup" required>
-                    <option :key="lg.id" v-for="lg in legalgroups" :value="lg" v-if="lg.legalDuties.length === 0 || legalgroup.id === lg.id">{{lg.buName}}</option>
+                    <option :key="lg.id" v-for="lg in legalgroups" v-bind:value="lg" v-if="lg.legalDuties.length === 0 || legalgroup.id === lg.id">{{lg.buName}}</option>
                   </select>
                 </div>
               </div>
@@ -102,14 +102,18 @@ export default {
           self.$router.replace('/checklist/login')
         })
 
-      this.legalgroup.legalDuties = []
-      http.post('/api/legalgroup', self.legalgroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then(response => {
-          self.$router.push({ path: '/checklist/group' })
-        })
-        .catch((e) => {
-          self.$router.replace('/checklist/login')
-        })
+      if (this.legalgroup.id !== this.selLegalGroup.id) {
+        this.legalgroup.legalDuties = []
+        http.post('/api/legalgroup', self.legalgroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+          .then(response => {
+            self.$router.push({ path: '/checklist/group' })
+          })
+          .catch((e) => {
+            self.$router.replace('/checklist/login')
+          })
+      } else {
+        self.$router.push({ path: '/checklist/group' })
+      }
     },
     allview: function (categories) {
       var self = this

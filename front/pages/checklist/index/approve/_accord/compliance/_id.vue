@@ -161,7 +161,7 @@
               </div>
 
               <div class="form-actions text-center m-t-20">
-                <nuxt-link to="/checklist/category" class="btn btn-info">
+                <nuxt-link to="/checklist/approve" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
                 <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded">อนุมัติ</button>
@@ -269,7 +269,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

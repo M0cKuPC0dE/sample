@@ -139,8 +139,8 @@
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                         </td>
                         <td class="text-center">
-                          <span class="label label-success" v-if="accord.approve">อนุมัติ</span>
-                          <span class="label label-danger" v-if="!accord.approve">ไม่อนุมัตื</span>
+                          <span class="label label-success" v-if="accord.approve === true">อนุมัติ</span>
+                          <span class="label label-danger" v-if="accord.approve === false">ไม่อนุมัตื</span>
                         </td>
                       </tr>
                     </tbody>

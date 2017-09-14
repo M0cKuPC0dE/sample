@@ -9,6 +9,6 @@ package co.th.linksinnovation.mitrphol.compliance.model;
  *
  * @author jirawong
  */
-public enum AccordType {
+public enum LegalType {
     EVIDENCE,LICENSE
 }

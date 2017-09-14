@@ -54,16 +54,12 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <strong>ประเภท</strong>
-                  <div>
-                    <div class="radio radio-success">
-                      <input type="radio" name="type" id="type1" value="LICENSE" v-model="accord.accordType" disabled>
-                      <label for="type1"> ใบอนุญาต </label>
-                    </div>
-                    <div class="radio radio-danger">
-                      <input type="radio" name="type" id="type2" value="EVIDENCE" v-model="accord.accordType" disabled>
-                      <label for="type2"> กฎหมายทั่วไป </label>
-                    </div>
+                  <label class="col-md-12">
+                    <strong>ประเภท</strong>
+                  </label>
+                  <div class="col-md-12">
+                    <p class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</p>
+                    <p class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</p>
                   </div>
                 </div>
               </div>
@@ -94,7 +90,7 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'LICENSE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
@@ -128,18 +124,25 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'EVIDENCE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
                       <thead>
                         <tr>
+                          <th>วันแจ้งเตือน</th>
+                          <th>วันหมดอายุ</th>
                           <th>หลักฐาน</th>
                           <th class="text-center col-md-1">จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr :key="file.index" v-for="(file,index) in accord.evidenceFiles">
+                          <td class="col-md-3">
+                            {{file.warningDate}}
+                          </td>
+                          <td class="col-md-3">
+                            {{file.expireDate}}
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
@@ -164,8 +167,8 @@
                 <nuxt-link to="/checklist/category" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded">อนุมัติ</button>
-                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded">ไม่อนุมัติ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept">อนุมัติ</button>
+                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่อนุมัติ</button>
               </div>
 
             </form>
@@ -269,7 +272,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

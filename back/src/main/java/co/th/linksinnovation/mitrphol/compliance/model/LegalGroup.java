@@ -23,7 +23,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="@id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id",scope = LegalGroup.class)
 public class LegalGroup {
 
     @Id

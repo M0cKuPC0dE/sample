@@ -14,6 +14,19 @@
         <textarea class="form-control" rows="5" v-model="legalDuty.name" required></textarea>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-sm-12">ประเภท</label>
+      <div class="col-md-12">
+        <div class="radio radio-success">
+          <input type="radio" name="type" id="type1" value="LICENSE" v-model="legalDuty.legalType" required>
+          <label for="type1"> ใบอนุญาต </label>
+        </div>
+        <div class="radio radio-danger">
+          <input type="radio" name="type" id="type2" value="EVIDENCE" v-model="legalDuty.legalType" required>
+          <label for="type2"> กฎหมายทั่วไป </label>
+        </div>
+      </div>
+    </div>
     <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">บันทึก</button>
     <nuxt-link to="/checklist/legalduty" class="btn btn-info">
       <i class="fa fa-chevron-left"></i> ย้อนกลับ
@@ -23,6 +36,7 @@
 </template>
 
 <script>
+/* global $ */
 import { mapGetters } from 'vuex'
 import http from '~/utils/http'
 import cookie from '~/utils/cookie'
@@ -58,6 +72,9 @@ export default {
   }),
   mounted: function () {
     this.$set(this, 'compliance', this.initCompliance)
+    $('.readonly').on('keydown paste', function (e) {
+      e.preventDefault()
+    })
   },
   methods: {
     onSave: function () {

@@ -80,7 +80,7 @@ public class LegalgroupController {
 
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public LegalGroup post(@RequestBody LegalGroup legalGroup) {
+    public LegalGroup post(@RequestBody LegalGroup legalGroup,@AuthenticationPrincipal String username) {
         List<UserDetails> fillDetails = new ArrayList<>();
         if (!legalGroup.getCoordinates().isEmpty()) {
             for (UserDetails u : legalGroup.getCoordinates()) {
@@ -107,7 +107,9 @@ public class LegalgroupController {
             }
         }
         legalGroup.setCoordinates(fillDetails);
-//        mailService.send2Coordinator(fillDetails);
+        if (legalGroup.getLegalDuties().size() != 0) {
+            mailService.send2Coordinator(legalGroup,username);
+        }
         return legalgroupRepository.save(legalGroup);
     }
 

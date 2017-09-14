@@ -8,6 +8,8 @@ package co.th.linksinnovation.mitrphol.compliance.model;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -25,6 +27,8 @@ public class LegalDuty {
     private Long id;
     @Column(length = 4000)
     private String name;
+    @Enumerated(EnumType.STRING)
+    private LegalType legalType;
     private Boolean deleted = false;
     @ManyToOne
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)

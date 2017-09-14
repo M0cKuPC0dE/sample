@@ -12,8 +12,10 @@ import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
+import co.th.linksinnovation.mitrphol.compliance.service.MailService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +37,8 @@ public class AccordController {
     private LegalcategoryRepository legalcategoryRepository;
     @Autowired
     private LegalDutyRepository legalDutyRepository;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/{legalCategory}/{compliance}")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
@@ -46,10 +50,11 @@ public class AccordController {
 
     @PostMapping
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public Accord post(@RequestBody Accord accord) {
+    public Accord post(@RequestBody Accord accord,@AuthenticationPrincipal String username) {
         Accord ac = accordRepository.save(accord);
         LegalCategory legalCategory = ac.getLegalCategory();
         legalcategoryRepository.save(legalCategory);
+        mailService.compliance(accord, username);
         return ac;
     }
 

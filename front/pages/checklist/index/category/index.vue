@@ -119,7 +119,8 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th class="col-xs-10">หน่วยงาน</th>
+                        <th class="col-xs-8">หน่วยงาน</th>
+                        <th class="text-center">จำนวนหน้าที่ตามกฎหมาย</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
                     </thead>
@@ -128,9 +129,10 @@
                         <td>
                           <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
                         </td>
-                        <td class="text-center">
-                          <nuxt-link :to="'/checklist/category/manage/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="จัดหมวดหมู่">
-                            <i class="ti-direction-alt"></i>
+                        <td class="text-center">{{legalgroup.legalDuties.length}}</td>
+                        <td class=" text-center ">
+                          <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="text-inverse p-r-10 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
+                            <i class="ti-direction-alt "></i>
                           </nuxt-link>
                         </td>
                       </tr>
@@ -146,19 +148,19 @@
 
     </div>
 
-    <div id="group-remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title">ยืนยันการลบ</h4>
+    <div id="group-remove-modal " class="modal fade " tabindex="-1 " role="dialog " aria-labelledby="myModalLabel " aria-hidden="true " style="display: none; ">
+      <div class="modal-dialog ">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <button type="button " class="close " data-dismiss="modal " aria-hidden="true ">×</button>
+            <h4 class="modal-title ">ยืนยันการลบ</h4>
           </div>
-          <div class="modal-body">
+          <div class="modal-body ">
             ต้องการลบใช่หรือไม่
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light" v-on:click="onDelete">ลบ</button>
+          <div class="modal-footer ">
+            <button type="button " class="btn btn-default waves-effect " data-dismiss="modal ">ปิด</button>
+            <button type="button " class="btn btn-danger waves-effect waves-light " v-on:click="onDelete ">ลบ</button>
           </div>
         </div>
       </div>

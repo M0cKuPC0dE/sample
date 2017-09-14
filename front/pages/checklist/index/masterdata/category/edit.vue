@@ -50,19 +50,19 @@ export default {
   props: ['selected', 'categories'],
   data: function () {
     return {
-      category: { id: 'null' }
+      category: { id: 'null', name: '' }
     }
   },
   watch: {
     selected: function (val) {
-      this.$set(this, 'category', val)
+      this.$set(this, 'category', $.extend({}, val))
     }
   },
   computed: mapGetters({
     initCategory: 'category/category'
   }),
   mounted: function () {
-    this.$set(this, 'category', this.initCategory)
+    this.$set(this, 'category', $.extend({}, this.initCategory))
   },
   methods: {
     onSave: function () {
@@ -72,7 +72,7 @@ export default {
           self.$router.push({ path: '/checklist/masterdata' })
         })
         .catch((e) => {
-          self.$router.replace('/checklist/login')
+          self.$router.replace('/login')
         })
     },
     onDelete: function () {

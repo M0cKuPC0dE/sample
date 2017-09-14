@@ -19,6 +19,7 @@ import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
+import co.th.linksinnovation.mitrphol.compliance.service.MailService;
 import co.th.linksinnovation.mitrphol.compliance.service.RestService;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class LegalcategoryController {
     private AccordRepository accordRepository;
     @Autowired
     private RestService restService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
@@ -128,7 +131,7 @@ public class LegalcategoryController {
 
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public LegalCategory post(@RequestBody LegalCategory legalCategory) {
+    public LegalCategory post(@RequestBody LegalCategory legalCategory,@AuthenticationPrincipal String username) {
         Set<UserDetails> owners = new HashSet<>();
         Set<UserDetails> approvers = new HashSet<>();
 
@@ -198,6 +201,8 @@ public class LegalcategoryController {
                 }
             }
         }
+        
+        mailService.send2Owner(legalCategory,username);
 
         return legalcategoryRepository.save(legalCategory);
     }

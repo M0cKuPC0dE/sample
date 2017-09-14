@@ -122,6 +122,7 @@
                         <th>ชื่อกฎหมาย</th>
                         <th>หน้าที่ตามกฎหมาย</th>
                         <th>ประเภท</th>
+                        <th class="col-md-2 text-center">สถานะ</th>
                         <th class="text-center">ประเมิน</th>
                       </tr>
                     </thead>
@@ -130,8 +131,14 @@
                         <td>{{accord.legalDuty.compliance.legalName}}</td>
                         <td>{{accord.legalDuty.name}}</td>
                         <td>
-                          <span class="" v-if="accord.accordType === 'LICENSE'">ใบอนุญาต</span>
-                          <span class="" v-if="accord.accordType === 'EVIDENCE'">กฎหมายทั่วไป</span>
+                          <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
+                          <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
+                          <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
+                          <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
+                          <span class="label label-primary" v-if="!accord.accorded">ยังไม่ดำเนินการ</span>
                         </td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">

@@ -37,8 +37,6 @@ public class Accord {
     private String remark;
     @Enumerated(EnumType.STRING)
     private Accorded accorded;
-    @Enumerated(EnumType.STRING)
-    private AccordType accordType;
     @Temporal(TemporalType.TIMESTAMP)
     private Date completeDate;
     @ManyToOne

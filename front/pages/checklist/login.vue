@@ -3,7 +3,7 @@
     <div class="lg-info-panel"></div>
     <div class="new-login-box">
       <div class="white-box">
-        <h3 class="box-title m-b-0">Sign In to Admin</h3>
+        <h3 class="box-title m-b-0">Sign In to Compliance System</h3>
         <small>Enter your details below</small>
         <form class="form-horizontal new-lg-form" role="form" v-on:submit.prevent="onSubmit" autocomplete="off">
           <div id="errmsg" class="alert alert-danger alert-light alert-dismissible" role="alert" v-if="error != ''">
