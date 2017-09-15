@@ -125,7 +125,7 @@ public class ProgressUploadController {
                     }
                     
 
-                    final Compliance compliance = new Compliance();
+                    Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
                     compliance.setYear(year.intValue());
                     compliance.setPublicDate(publicDate);
@@ -143,6 +143,7 @@ public class ProgressUploadController {
                         newLegalDuty.setName(legalDuty);
                         newLegalDuty.setLegalType(legalType);
                         newLegalDuty.setCompliance(compliance);
+                        compliance = complianceRepository.save(compliance);
                         LegalDuty save = legalDutyRepository.save(newLegalDuty);
                         compliance.addLegalDuties(save);
                         complianceRepository.save(compliance);
