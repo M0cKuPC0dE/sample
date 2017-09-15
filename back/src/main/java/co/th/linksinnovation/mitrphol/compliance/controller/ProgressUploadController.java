@@ -8,12 +8,15 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.EvidenceFile;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalFile;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalType;
 import co.th.linksinnovation.mitrphol.compliance.model.LicenseFile;
 import co.th.linksinnovation.mitrphol.compliance.model.Status;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.EvidenceFileRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LicenseFileRepository;
 import java.io.BufferedInputStream;
@@ -33,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -59,8 +63,7 @@ public class ProgressUploadController {
 
     private static final SimpleDateFormat FD = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
-    private static final int PARENT_CATEGORY_COLUMN = 0;
-    private static final int CHILD_CATEGORY_COLUMN = 1;
+    private static final int CATEGORY_LAST_COLUMN = 4;
 
     @Autowired
     private ComplianceRepository complianceRepository;
@@ -72,6 +75,8 @@ public class ProgressUploadController {
     private LicenseFileRepository licenseFileRepository;
     @Autowired
     private EvidenceFileRepository evidenceFileRepository;
+    @Autowired
+    private LegalDutyRepository legalDutyRepository;
 
     @RequestMapping(value = "/templateupload", method = RequestMethod.PUT)
     public void templateUpload(@RequestBody byte[] file, HttpServletRequest request)
@@ -79,13 +84,10 @@ public class ProgressUploadController {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk,
-                new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
 
-        if (request.getHeader("Content-End") != null
-                && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
-            try (FileInputStream inputStream = new FileInputStream(
-                    new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
+        if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            try (FileInputStream inputStream = new FileInputStream(new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename))) {
 
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 Sheet firstSheet = workbook.getSheetAt(0);
@@ -96,27 +98,32 @@ public class ProgressUploadController {
                     System.out.println("RowNum: " + nextRow.getRowNum());
                     if (nextRow.getRowNum() == 0) {
                         continue;
-                    } else if (getCellValue(nextRow.getCell(10)) == null
-                            || getCellValue(nextRow.getCell(10)).equals("")) {
+                    } else if (getCellValue(nextRow.getCell(13)) == null || getCellValue(nextRow.getCell(13)).equals("")) {
                         break;
                     }
 
-                    final Category parent = saveCategory(nextRow, PARENT_CATEGORY_COLUMN, null);
-                    final Category child = saveCategory(nextRow, CHILD_CATEGORY_COLUMN, parent);
+                    final Category category = saveCategory(nextRow, CATEGORY_LAST_COLUMN, null);
 
                     // get compliance
-                    final String legalname = getCellValue(nextRow.getCell(2));
-                    final Double year = Double.parseDouble(getCellValue(nextRow.getCell(3)));
+                    final String legalname = getCellValue(nextRow.getCell(5));
+                    final Double year = Double.parseDouble(getCellValue(nextRow.getCell(6)));
 
-                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(4)));
-                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(5)));
+                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(7)));
+                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(8)));
 
-                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(6)).toUpperCase());
+                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(9)).toUpperCase());
 
-                    final String department = getCellValue(nextRow.getCell(7));
-                    final String ministry = getCellValue(nextRow.getCell(8));
-                    final String important = getCellValue(nextRow.getCell(9));
-                    final String legalDuty = getCellValue(nextRow.getCell(10));
+                    final String department = getCellValue(nextRow.getCell(10));
+                    final String ministry = getCellValue(nextRow.getCell(11));
+                    final String important = getCellValue(nextRow.getCell(12));
+                    final String legalDuty = getCellValue(nextRow.getCell(13));
+                    final LegalType legalType;
+                    if("ใบอนุญาต".equals(getCellValue(nextRow.getCell(14)))){
+                        legalType = LegalType.LICENSE;
+                    }else{
+                        legalType = LegalType.EVIDENCE;
+                    }
+                    
 
                     final Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
@@ -127,26 +134,63 @@ public class ProgressUploadController {
                     compliance.setDepartment(department);
                     compliance.setMinistry(ministry);
                     compliance.setImportant(important);
-//                    compliance.setLegalDuty(legalDuty);
-
-                    compliance.setCategory(child);
-
-                    complianceRepository.save(compliance);
-
+                    
+                    compliance.setCategory(category);
+                    
+                    Compliance c = complianceRepository.findByLegalNameAndCategory(legalname,category);
+                    if(c == null){
+                        LegalDuty newLegalDuty = new LegalDuty();
+                        newLegalDuty.setName(legalDuty);
+                        newLegalDuty.setLegalType(legalType);
+                        newLegalDuty.setCompliance(compliance);
+                        LegalDuty save = legalDutyRepository.save(newLegalDuty);
+                        compliance.addLegalDuties(save);
+                        complianceRepository.save(compliance);
+                    }else{
+                        LegalDuty newLegalDuty = new LegalDuty();
+                        newLegalDuty.setName(legalDuty);
+                        newLegalDuty.setLegalType(legalType);
+                        newLegalDuty.setCompliance(c);
+                        LegalDuty save = legalDutyRepository.save(newLegalDuty);
+                        c.addLegalDuties(save);
+                        complianceRepository.save(c);
+                    }
                 }
                 workbook.close();
             }
+        }
+    }
 
+    private Category saveCategory(Row nextRow, int col, Category child) {
+        if (col == -1) {
+            return null;
+        }
+
+        String categoryName = nextRow.getCell(col).getStringCellValue();
+        if (categoryName == null || "".equals(categoryName)) {
+            return saveCategory(nextRow, col - 1, child);
+        }
+        Category category = categoryRepository.findByNameAndDeletedIsFalse(categoryName);
+        
+        if (category == null) {
+            category = new Category();
+            category.setName(categoryName);
+            if (child != null) {
+                category.addChild(child);
+            }
+            category.setParent(saveCategory(nextRow, col - 1, category));
+            return categoryRepository.save(category);
+        } else {
+            category.setParent(saveCategory(nextRow, col - 1, category));
+            return categoryRepository.save(category);
         }
     }
 
     @RequestMapping(value = "/fileupload", method = RequestMethod.PUT)
     public void pdfUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
-
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/"
-                + request.getHeader("Content-Name") + "-" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + request.getHeader("Content-Name") + "-" + filename));
     }
 
     @RequestMapping(value = "/localeupload/{name}", method = RequestMethod.PUT)
@@ -234,30 +278,6 @@ public class ProgressUploadController {
                 System.out.println(ex);
             }
         }
-    }
-
-    private Category saveCategory(Row nextRow, int col, Category parent) {
-        String categoryName = nextRow.getCell(col).getStringCellValue();
-        if (categoryName == null || "".equals(categoryName)) {
-            return parent;
-        }
-        Category category = null;
-        if (parent == null) {
-            category = categoryRepository.findByNameAndParentIsNullAndDeletedIsFalse(categoryName);
-        } else {
-            category = categoryRepository.findByNameAndParentAndDeletedIsFalse(categoryName, parent);
-        }
-
-        if (category != null) {
-            return category;
-        }
-
-        category = new Category();
-        category.setName(categoryName);
-        category.setParent(parent);
-        categoryRepository.save(category);
-        return category;
-
     }
 
     private String getCellValue(Cell cell) {

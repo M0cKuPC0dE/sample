@@ -27,4 +27,6 @@ public interface ComplianceRepository extends JpaRepository<Compliance, Long>{
     @Query(value = "SELECT c FROM Compliance c JOIN c.legalDuties l WHERE (c.legalName LIKE ?1 OR l.name LIKE ?2) AND c.deleted = false")
     public List<Compliance> searchWithoutCategory(String get, String get0);
 
+    public Compliance findByLegalNameAndCategory(String legalname, Category category);
+
 }

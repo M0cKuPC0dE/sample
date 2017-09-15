@@ -7,6 +7,7 @@ package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -60,4 +61,12 @@ public class Compliance {
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     private Category category;
     private Boolean deleted = false;
+    
+    public List<LegalDuty> addLegalDuties(LegalDuty legalDuty){
+        if(this.legalDuties == null){
+            this.legalDuties = new ArrayList<>();
+        }
+        this.legalDuties.add(legalDuty);
+        return this.legalDuties;
+    }
 }
