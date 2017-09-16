@@ -83,12 +83,8 @@ public class ComplianceController {
             ld.setCompliance(save);
             legalDutyRepository.save(ld);
         }
-
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, 543);
-        Date now = c.getTime();
         
-        if (compliance.getEffectiveDate().after(now)) {
+        if (compliance.getEffectiveDate().after(new Date())) {
             compliance.setStatus(Status.INACTIVE);
         } else {
             compliance.setStatus(Status.ACTIVE);

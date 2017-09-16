@@ -11,7 +11,7 @@
 
       <ul class="nav navbar-top-links navbar-right pull-right active">
         <li>
-          <nuxt-link to="/login" class="waves-effect waves-light">
+          <nuxt-link to="/checklist/login" class="waves-effect waves-light">
             <i class="ti-menu"></i> เข้าสู่ระบบ
           </nuxt-link>
         </li>

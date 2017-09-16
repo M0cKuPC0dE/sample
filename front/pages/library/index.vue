@@ -8,7 +8,7 @@
             <form>
               <div class="form-group">
                 <div class="input-group bootstrap-touchspin">
-                  <input id="search-tree" type="text" class="form-control" style="display: block" autocomplete="off">
+                  <input id="search-tree" type="text" class="form-control" style="display: block" autocomplete="off" placeholder="ค้นหา">
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default btn-outline">
                       <i class="fa fa-search"></i>
