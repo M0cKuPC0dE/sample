@@ -42,7 +42,7 @@ public class LegalCategory {
     @OneToOne
     @JsonIdentityReference(alwaysAsId = false)
     private LegalGroup legalGroup;
-    @OneToMany(mappedBy = "legalCategory",orphanRemoval = true)
+    @OneToMany(mappedBy = "legalCategory")
     @JsonManagedReference
     private List<Accord> accords = new ArrayList<>();
 }

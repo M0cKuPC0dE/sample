@@ -117,7 +117,7 @@ public class LegalcategoryController {
     public LegalCategory get(@PathVariable("id") Long id) {
         return legalcategoryRepository.findOne(id);
     }
-    
+
     @GetMapping("/view/{id}")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public LegalCategory getView(@PathVariable("id") Long id) {
@@ -131,7 +131,7 @@ public class LegalcategoryController {
 
     @PostMapping
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public LegalCategory post(@RequestBody LegalCategory legalCategory,@AuthenticationPrincipal String username) {
+    public LegalCategory post(@RequestBody LegalCategory legalCategory, @AuthenticationPrincipal String username) {
         Set<UserDetails> owners = new HashSet<>();
         Set<UserDetails> approvers = new HashSet<>();
 
@@ -187,9 +187,23 @@ public class LegalcategoryController {
 
         legalCategory.setOwners(owners);
         legalCategory.setApprovers(approvers);
-        legalCategory = legalcategoryRepository.save(legalCategory);
+
+        if (legalCategory.getId() != null) {
+            LegalCategory findOne = legalcategoryRepository.findOne(legalCategory.getId());
+            List<LegalDuty> legalDuties = findOne.getLegalDuties();
+            legalDuties.removeAll(legalCategory.getLegalDuties());
+            for (LegalDuty l : legalDuties) {
+                Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, l);
+                if (ac != null) {
+                    System.out.println("-----> "+ac.getId());
+                    accordRepository.delete(ac);
+                }
+            }
+        }
+//        legalCategory = legalcategoryRepository.save(legalCategory);
 
         if (!legalCategory.getLegalDuties().isEmpty()) {
+            List<Accord> accords = new ArrayList<>();
             for (LegalDuty ld : legalCategory.getLegalDuties()) {
                 Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, ld);
                 if (ac == null) {
@@ -197,12 +211,14 @@ public class LegalcategoryController {
                     ac.setLegalCategory(legalCategory);
                     ac.setLegalDuty(ld);
                     ac = accordRepository.save(ac);
-                    legalCategory.getAccords().add(ac);
+                    accords.add(ac);
                 }
             }
+            legalCategory.getAccords().clear();
+            legalCategory.setAccords(accords);
         }
-        
-        mailService.send2Owner(legalCategory,username);
+
+        mailService.send2Owner(legalCategory, username);
 
         return legalcategoryRepository.save(legalCategory);
     }
