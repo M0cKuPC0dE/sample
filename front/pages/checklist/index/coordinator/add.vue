@@ -121,7 +121,7 @@ export default {
               keyword: request.term
             },
             success: function (data) {
-              response(self.searchTransform(data))
+              response(self.searchTransform(data, request.term))
             }
           })
         },
@@ -140,9 +140,9 @@ export default {
         }
       })
     },
-    searchTransform: function (data) {
+    searchTransform: function (data, term) {
       var nodes = []
-      if (data.success.code === 200) {
+      if (data.success) {
         data.success.data.forEach(function (user) {
           var node = {
             userId: user.user_info.id,
@@ -152,6 +152,18 @@ export default {
           nodes.push(node)
         })
       }
+
+      var ust = [
+        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', value: 'วิจะยะ กลิ่นเกษร' },
+        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', value: 'กิตติยา คล้ายสังข์' },
+        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', value: 'อชิรวิชย์ สุวรรณโรจน์' }
+      ]
+
+      let ustNode = ust.find(o => o.label.search(term) !== -1)
+      if (ustNode) {
+        nodes.push(ustNode)
+      }
+
       return nodes
     },
     removeCoordinate: function (val) {
