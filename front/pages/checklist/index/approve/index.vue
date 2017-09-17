@@ -18,7 +18,7 @@
         <div class="col-sm-12">
           <div class="white-box">
             <div class="row row-in">
-              <div class="col-lg-6 col-sm-12 row-in-br">
+              <div class="col-lg-6 col-sm-12 row-in-br filter-info" v-on:click="onFilter('ACCORDED')">
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-success">
@@ -26,10 +26,20 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">{{progress.accord}}</h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter === 'ACCORDED'">
+                      <strong>{{progress.accord}}</strong>
+                    </h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter !== 'ACCORDED'">
+                      {{progress.accord}}
+                    </h3>
                   </li>
                   <li class="col-middle">
-                    <h4>สอดคล้อง</h4>
+                    <h4 v-if="filter === 'ACCORDED'">
+                      <strong>สอดคล้อง</strong>
+                    </h4>
+                    <h4 v-if="filter !== 'ACCORDED'">
+                      สอดคล้อง
+                    </h4>
                     <div class="progress">
                       <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                         <span class="sr-only">40% Complete (success)</span>
@@ -38,7 +48,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-lg-6 col-sm-12 b-0">
+              <div class="col-lg-6 col-sm-12 b-0  filter-info" v-on:click="onFilter('NOT_ACCORDED')">
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-warning">
@@ -46,10 +56,16 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">{{progress.notAccord}}</h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter === 'NOT_ACCORDED'">
+                      <strong>{{progress.notAccord}}</strong>
+                    </h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter !== 'NOT_ACCORDED'">{{progress.notAccord}}</h3>
                   </li>
                   <li class="col-middle">
-                    <h4>ไม่สอดคล้อง</h4>
+                    <h4 v-if="filter === 'NOT_ACCORDED'">
+                      <strong>ไม่สอดคล้อง</strong>
+                    </h4>
+                    <h4 v-if="filter !== 'NOT_ACCORDED'">ไม่สอดคล้อง</h4>
                     <div class="progress">
                       <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                         <span class="sr-only">40% Complete (success)</span>
@@ -58,7 +74,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-lg-6 col-sm-12 row-in-br  b-r-none">
+              <div class="col-lg-6 col-sm-12 row-in-br b-r-none  filter-info" v-on:click="onFilter('NOT_CONCERN')">
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-danger">
@@ -66,10 +82,16 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">{{progress.notConcern}}</h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter === 'NOT_CONCERN'">
+                      <strong>{{progress.notConcern}}</strong>
+                    </h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter !== 'NOT_CONCERN'">{{progress.notConcern}}</h3>
                   </li>
                   <li class="col-middle">
-                    <h4>ไม่เกี่ยวข้อง</h4>
+                    <h4 v-if="filter === 'NOT_CONCERN'">
+                      <strong>ไม่เกี่ยวข้อง</strong>
+                    </h4>
+                    <h4 v-if="filter !== 'NOT_CONCERN'">ไม่เกี่ยวข้อง</h4>
                     <div class="progress">
                       <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                         <span class="sr-only">40% Complete (success)</span>
@@ -78,7 +100,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-lg-6 col-sm-12  b-0">
+              <div class="col-lg-6 col-sm-12  b-0  filter-info" v-on:click="onFilter(null)">
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-info">
@@ -86,10 +108,16 @@
                     </span>
                   </li>
                   <li class="col-last">
-                    <h3 class="counter text-right m-t-15">{{progress.inprogress}}</h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter === null">
+                      <strong>{{progress.inprogress}}</strong>
+                    </h3>
+                    <h3 class="counter text-right m-t-15" v-if="filter !== null">{{progress.inprogress}}</h3>
                   </li>
                   <li class="col-middle">
-                    <h4>ยังไม่ดำเนินการ</h4>
+                    <h4 v-if="filter === null">
+                      <strong>ยังไม่ดำเนินการ</strong>
+                    </h4>
+                    <h4 v-if="filter !== null">ยังไม่ดำเนินการ</h4>
                     <div class="progress">
                       <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                         <span class="sr-only">40% Complete (success)</span>
@@ -126,7 +154,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="accord.id" v-for="accord in category.accords" v-if="accord.accept === true">
+                      <tr :key="accord.id" v-for="accord in category.accords" v-if="accord.accept === true && (filter === '' || filter === accord.accorded)">
                         <td>{{accord.legalDuty.compliance.legalName}}</td>
                         <td>
                           <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
@@ -181,7 +209,8 @@ export default {
   data: function () {
     return {
       approve: {},
-      progress: {}
+      progress: {},
+      filter: ''
     }
   },
   mounted: function () {
@@ -245,7 +274,21 @@ export default {
         })
       })
       this.$set(this, 'progress', data)
+    },
+    onFilter: function (accorded) {
+      if (accorded === this.filter) {
+        this.$set(this, 'filter', '')
+      } else {
+        this.$set(this, 'filter', accorded)
+      }
     }
   }
 }
 </script>
+
+<style lang="scss">
+.filter-info {
+  cursor: pointer;
+}
+</style>
+
