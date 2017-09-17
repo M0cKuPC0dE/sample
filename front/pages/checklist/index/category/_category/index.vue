@@ -120,7 +120,8 @@
                     <thead>
                       <tr>
                         <th class="col-xs-5">ฝ่าย/แผนก</th>
-                        <th class="col-xs-5 text-center">สถานะการดำนเนินการ</th>
+                        <th>ผู้ดูแล</th>
+                        <th class="text-center">สถานะการดำนเนินการ</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
                     </thead>
@@ -129,6 +130,9 @@
                         <td>
                           <nuxt-link :to="'/checklist/category/accord/'+category.id">{{category.party}}</nuxt-link>
                         </td>
+                        <td>
+                          {{category.owners[0].nameTh}}
+                        </td>
                         <td class="text-center">
                           {{categoryProgress(category)}}
                         </td>
@@ -136,7 +140,7 @@
                           <nuxt-link :to="'/checklist/category/edit/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <nuxt-link :to="'/checklist/category/copy/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
+                          <nuxt-link v-if="false" :to="'/checklist/category/copy/'+category.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
                             <i class="ti-stamp"></i>
                           </nuxt-link>
                           <a href="javascript:void(0)" v-on:click="onConfirmDelete(category)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
@@ -259,7 +263,7 @@ export default {
         incomplete: 0
       }
       category.accords.forEach(function (accord) {
-        if (accord.accorded) {
+        if (accord.approve === true) {
           data.complete = data.complete + 1
         }
         data.incomplete = data.incomplete + 1

@@ -273,6 +273,7 @@ export default {
           var checker = $.grep(self.legalcategory.owners, function (obj) {
             return obj.userId === ui.item.userId
           })
+          self.legalcategory.owners = []
           if (checker.length === 0) {
             self.legalcategory.owners.push(ui.item)
             self.$set(self.legalgroup, 'owners', self.legalgroup.owners)

@@ -115,19 +115,25 @@
 
             <div class="row">
               <div class="col-md-12">
-                <div>
+                <div :key="index" v-for="(category,index) in categories">
+                  <strong :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
+                    {{coIndex===0?'Coordinator ':''}} {{coordinator.nameTh + ' '}}
+                  </strong>
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th>ชื่อกฎหมาย</th>
+                        <th>#</th>
+                        <th class="col-md-2">ชื่อกฎหมาย</th>
                         <th>หน้าที่ตามกฎหมาย</th>
                         <th>ประเภท</th>
+                        <th class="text-center">Process</th>
                         <th class="col-md-2 text-center">สถานะ</th>
                         <th class="text-center">ประเมิน</th>
                       </tr>
                     </thead>
-                    <tbody :key="index" v-for="(category,index) in categories">
-                      <tr :key="accord.id" v-for="accord in category.accords">
+                    <tbody>
+                      <tr :key="accord.id" v-for="(accord,acIndex) in category.accords">
+                        <td>{{acIndex+1}}</td>
                         <td>{{accord.legalDuty.compliance.legalName}}</td>
                         <td>
                           <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">{{accord.legalDuty.name}}</nuxt-link>
@@ -136,6 +142,7 @@
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
                           <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
                         </td>
+                        <td class="text-center">{{calculatePosition(accord)}}</td>
                         <td class="text-center">
                           <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                           <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
@@ -182,10 +189,12 @@ export default {
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
+    this.calculatePosition()
   },
   data: function () {
     return {
-      progress: {}
+      progress: {},
+      position: ''
     }
   },
   methods: {
@@ -221,6 +230,20 @@ export default {
         })
       })
       this.$set(this, 'progress', data)
+    },
+    calculatePosition: function (accord) {
+      if (!accord) return
+      var data = 'Completed'
+      if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+        data = 'Owner'
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+        data = 'Coordinator'
+      } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+        data = 'Approver'
+      } else if (accord.accept === false) {
+        data = 'Owner'
+      }
+      return data
     }
   }
 }

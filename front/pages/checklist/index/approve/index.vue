@@ -116,7 +116,7 @@
             <div class="row" :key="index" v-for="(category,index) in categories">
               <div class="col-md-12">
                 <div>
-                  <table class="table table-hover manage-u-table">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>ชื่อกฎหมาย</th>
@@ -149,8 +149,8 @@
               </div>
 
               <div class="col-md-12 text-right">
-                <button class="btn btn-success" v-on:click="onApprove(category)">อณุมัติทั้งหมด</button>
-                <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อณุมัติทั้งหมด</button>
+                <button class="btn btn-success" v-on:click="onApprove(category)">อนุมัติทั้งหมด</button>
+                <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อนุมัติทั้งหมด</button>
               </div>
 
             </div>

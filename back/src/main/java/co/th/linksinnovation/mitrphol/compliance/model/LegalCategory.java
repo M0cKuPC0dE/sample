@@ -6,6 +6,7 @@
 package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id",scope = LegalCategory.class)
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class LegalCategory {
     @Id
     @GeneratedValue
@@ -39,6 +40,7 @@ public class LegalCategory {
     @ManyToMany
     private List<LegalDuty> legalDuties;
     @OneToOne
+    @JsonIdentityReference(alwaysAsId = false)
     private LegalGroup legalGroup;
     @OneToMany(mappedBy = "legalCategory",orphanRemoval = true)
     @JsonManagedReference

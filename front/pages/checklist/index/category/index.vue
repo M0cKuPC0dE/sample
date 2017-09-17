@@ -119,7 +119,10 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th class="col-xs-8">หน่วยงาน</th>
+                        <th class="col-xs-4">หน่วยงาน</th>
+                        <th class="text-center">Owner</th>
+                        <th class="text-center">Coordinator</th>
+                        <th class="text-center">Approver</th>
                         <th class="text-center">จำนวนหน้าที่ตามกฎหมาย</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
@@ -129,7 +132,10 @@
                         <td>
                           <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
                         </td>
-                        <td class="text-center">{{legalgroup.legalDuties.length}}</td>
+                        <td class="text-center">{{position.owner === 0?'-':position.owner}}</td>
+                        <td class="text-center">{{position.coordinator === 0?'-':position.coordinator}}</td>
+                        <td class="text-center">{{position.approver === 0?'-':position.approver}}</td>
+                        <td class="text-center">{{progress.total}}</td>
                         <td class=" text-center ">
                           <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="text-inverse p-r-10 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
                             <i class="ti-direction-alt "></i>
@@ -188,11 +194,13 @@ export default {
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
+    this.calculatePosition()
   },
   data: function () {
     return {
       deleteGroup: {},
-      progress: {}
+      progress: {},
+      position: {}
     }
   },
   methods: {
@@ -228,7 +236,8 @@ export default {
         accord: 0,
         notAccord: 0,
         notConcern: 0,
-        inprogress: 0
+        inprogress: 0,
+        total: 0
       }
       this.groups.forEach(function (group) {
         group.legalCategories.forEach(function (category) {
@@ -242,10 +251,34 @@ export default {
             } else {
               data.inprogress = data.inprogress + 1
             }
+            data.total = data.total + 1
           })
         })
       })
       this.$set(this, 'progress', data)
+    },
+    calculatePosition: function () {
+      var data = {
+        owner: 0,
+        coordinator: 0,
+        approver: 0
+      }
+      this.groups.forEach(function (group) {
+        group.legalCategories.forEach(function (category) {
+          category.accords.forEach(function (accord) {
+            if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+              data.owner = data.owner + 1
+            } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+              data.coordinator = data.coordinator + 1
+            } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+              data.approver = data.approver + 1
+            } else if (accord.accept === false) {
+              data.owner = data.owner + 1
+            }
+          })
+        })
+      })
+      this.$set(this, 'position', data)
     }
   }
 }

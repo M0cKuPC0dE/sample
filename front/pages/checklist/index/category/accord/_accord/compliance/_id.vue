@@ -98,7 +98,7 @@
                         <tr>
                           <th>วันแจ้งเตือน</th>
                           <th>วันหมดอายุ</th>
-                          <th>ใบอนุญาติ</th>
+                          <th>ใบอนุญาต</th>
                           <th class="text-center">จัดการ</th>
                         </tr>
                       </thead>
@@ -167,8 +167,8 @@
                 <nuxt-link to="/checklist/category" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept">อนุมัติ</button>
-                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่อนุมัติ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept">เห็นชอบ</button>
+                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่เห็นชอบ</button>
               </div>
 
             </form>
@@ -272,7 +272,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

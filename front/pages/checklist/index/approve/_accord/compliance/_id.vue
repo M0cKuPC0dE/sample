@@ -102,7 +102,7 @@
                         <tr>
                           <th>วันแจ้งเตือน</th>
                           <th>วันหมดอายุ</th>
-                          <th>ใบอนุญาติ</th>
+                          <th>ใบอนุญาต</th>
                           <th class="text-center">จัดการ</th>
                         </tr>
                       </thead>
@@ -269,7 +269,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -364,6 +364,7 @@ export default {
   methods: {
     onSave: function () {
       var self = this
+      self.accord.accept = null
       self.accord.completeDate = self.accord.accorded === 'NOT_ACCORDED' ? self.date.publicDate + '/' + self.date.publicMonth + '/' + self.date.publicYear : ''
       self.accord.legalCategory = {}
       self.accord.legalCategory.id = this.$route.params.accord

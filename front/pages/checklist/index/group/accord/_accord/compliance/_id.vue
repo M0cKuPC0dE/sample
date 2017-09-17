@@ -116,7 +116,7 @@
                         <tr>
                           <th>วันแจ้งเตือน</th>
                           <th>วันหมดอายุ</th>
-                          <th>ใบอนุญาติ</th>
+                          <th>ใบอนุญาต</th>
                           <th class="text-center">จัดการ</th>
                         </tr>
                       </thead>
@@ -155,8 +155,8 @@
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
-                    นำเข้าใบอนุญาติ
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
+                    นำเข้าใบอนุญาต
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
@@ -217,7 +217,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -337,7 +337,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

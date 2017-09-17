@@ -50,7 +50,7 @@ public class AccordController {
 
     @PostMapping
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public Accord post(@RequestBody Accord accord,@AuthenticationPrincipal String username) {
+    public Accord post(@RequestBody Accord accord, @AuthenticationPrincipal String username) {
         Accord ac = accordRepository.save(accord);
         LegalCategory legalCategory = ac.getLegalCategory();
         legalcategoryRepository.save(legalCategory);
@@ -61,6 +61,7 @@ public class AccordController {
     @GetMapping("/accept/{id}")
     public void accept(@PathVariable("id") Long id) {
         Accord findOne = accordRepository.findOne(id);
+        findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
         accordRepository.save(findOne);
     }
@@ -68,6 +69,7 @@ public class AccordController {
     @GetMapping("/notaccept/{id}")
     public void notAccept(@PathVariable("id") Long id) {
         Accord findOne = accordRepository.findOne(id);
+        findOne.setApprove(null);
         findOne.setAccept(Boolean.FALSE);
         accordRepository.save(findOne);
     }
@@ -82,6 +84,7 @@ public class AccordController {
     @GetMapping("/reject/{id}")
     public void reject(@PathVariable("id") Long id) {
         Accord findOne = accordRepository.findOne(id);
+        findOne.setAccept(null);
         findOne.setApprove(Boolean.FALSE);
         accordRepository.save(findOne);
     }
@@ -102,6 +105,7 @@ public class AccordController {
         LegalCategory findOne = legalcategoryRepository.findOne(id);
         for (Accord accord : findOne.getAccords()) {
             if (accord.getAccept() != null && accord.getAccept() == true) {
+                accord.setAccept(null);
                 accord.setApprove(Boolean.FALSE);
                 accordRepository.save(accord);
             }
