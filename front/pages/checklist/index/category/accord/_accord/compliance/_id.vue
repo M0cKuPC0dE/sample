@@ -164,9 +164,13 @@
               </div>
 
               <div class="form-actions text-center m-t-20">
-                <nuxt-link to="/checklist/category" class="btn btn-info">
+                <nuxt-link :to="'/checklist/category/accord/'+$route.params.accord" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
+                <button type="button" class="btn btn-info m-l-10" v-on:click="nextPage" v-if="isNext()">
+                  ถัดไป
+                  <i class="fa fa-chevron-right"></i>
+                </button>
                 <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept">เห็นชอบ</button>
                 <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่เห็นชอบ</button>
               </div>
@@ -272,7 +276,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -317,6 +321,12 @@ export default {
         context.redirect('/checklist/login')
       })
 
+    let legalCategory = await http
+      .get('/api/legalcategory/' + context.params.accord, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+
     var date = {
       publicDate: accord.data.completeDate ? accord.data.completeDate.split('/')[0].replace(/^0+/, '') : '',
       publicMonth: accord.data.completeDate ? accord.data.completeDate.split('/')[1].replace(/^0+/, '') : '',
@@ -325,6 +335,7 @@ export default {
 
     return {
       accord: accord.data,
+      legalCategory: legalCategory.data,
       date: date
     }
   },
@@ -438,6 +449,20 @@ export default {
         .catch((e) => {
           self.$router.replace('/checklist/login')
         })
+    },
+    nextPage: function () {
+      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+      if (index < this.legalCategory.accords.length - 1) {
+        this.$router.push('/checklist/category/accord/' + this.$route.params.accord + '/compliance/' + this.legalCategory.accords[index + 1].legalDuty.id)
+      }
+    },
+    isNext: function () {
+      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+      if (index < this.legalCategory.accords.length - 1) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

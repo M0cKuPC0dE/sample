@@ -41,15 +41,15 @@
                 <div class="col-md-6">
                   <strong>ประเมินความสอดคล้อง</strong>
                   <div class="radio radio-success">
-                    <input type="radio" name="radio" id="radio1" value="ACCORDED" v-model="accord.accorded" required>
+                    <input type="radio" name="radio" id="radio1" value="ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner'">
                     <label for="radio1"> สอดคล้อง </label>
                   </div>
                   <div class="radio radio-danger">
-                    <input type="radio" name="radio" id="radio2" value="NOT_ACCORDED" v-model="accord.accorded" required>
+                    <input type="radio" name="radio" id="radio2" value="NOT_ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner'">
                     <label for="radio2"> ไม่สอดคล้อง </label>
                   </div>
                   <div class="radio">
-                    <input type="radio" name="radio" id="radio3" value="NOT_CONCERN" v-model="accord.accorded" required>
+                    <input type="radio" name="radio" id="radio3" value="NOT_CONCERN" v-model="accord.accorded" required :disabled="position !== 'Owner'">
                     <label for="radio3"> ไม่เกี่ยวข้อง </label>
                   </div>
                 </div>
@@ -119,6 +119,7 @@
                           <th>วันแจ้งเตือน</th>
                           <th>วันหมดอายุ</th>
                           <th>ใบอนุญาต</th>
+                          <th>มีวันหมดอายุ</th>
                           <th class="text-center">จัดการ</th>
                         </tr>
                       </thead>
@@ -126,7 +127,8 @@
                         <tr :key="file.index" v-for="(file,index) in accord.licenseFiles">
                           <td class="col-md-3">
                             <div class="input-group">
-                              <input type="text" class="form-control" :id="'warningDate-'+index" v-model="file.warningDate" required></input>
+                              <input v-if="file.expired" type="text" class="form-control" :id="'warningDate-'+index" v-model="file.warningDate" required></input>
+                              <input v-if="!file.expired" type="text" class="form-control" :id="'warningDate-'+index" v-model="file.warningDate" disabled></input>
                               <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-calendar"></i>
                               </span>
@@ -134,14 +136,20 @@
                           </td>
                           <td class="col-md-3">
                             <div class="input-group">
-                              <input type="text" class="form-control" :id="'expireDate-'+index" v-model="file.expireDate" required></input>
+                              <input v-if="file.expired" type="text" class="form-control" :id="'expireDate-'+index" v-model="file.expireDate" required></input>
+                              <input v-if="!file.expired" type="text" class="form-control" :id="'expireDate-'+index" v-model="file.expireDate" disabled></input>
                               <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-calendar"></i>
                               </span>
                             </div>
                           </td>
-                          </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td>
+                            <div class="checkbox checkbox-success">
+                              <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
+                              <label :for="'checkbox'+index"> มีวันหมดอายุ </label>
+                            </div>
+                          </td>
                           <td style="vertical-align: middle;" class="text-center">
                             <a href="javascript:void(0)" v-on:click="onConfirmDelete('license',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="ti-trash"></i>
@@ -153,12 +161,12 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'LICENSE'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'LICENSE' && position === 'Owner'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าใบอนุญาต
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/licenseupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
@@ -214,12 +222,12 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'EVIDENCE'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'EVIDENCE' && position === 'Owner'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/evidenceupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -231,11 +239,15 @@
               </div>
 
               <div class="form-actions text-center m-t-20">
-                <button type="submit" class="btn btn-success m-r-10">
-                  <i class="fa fa-check"></i> บันทึก</button>
-                <nuxt-link to="/checklist/accord" class="btn btn-info">
+                <nuxt-link to="/checklist/accord" class="btn btn-info m-r-10">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
+                <button type="submit" class="btn btn-success m-r-10" v-if="position === 'Owner'">
+                  <i class="fa fa-check"></i> บันทึก</button>
+                <button type="button" class="btn btn-info" v-on:click="nextPage" v-if="isNext()">
+                  ถัดไป
+                  <i class="fa fa-chevron-right"></i>
+                </button>
               </div>
 
             </form>
@@ -339,7 +351,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -384,6 +396,12 @@ export default {
         context.redirect('/checklist/login')
       })
 
+    let legalCategory = await http
+      .get('/api/legalcategory/' + context.params.accord, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+
     var date = {
       publicDate: accord.data.completeDate ? accord.data.completeDate.split('/')[0].replace(/^0+/, '') : '',
       publicMonth: accord.data.completeDate ? accord.data.completeDate.split('/')[1].replace(/^0+/, '') : '',
@@ -392,6 +410,7 @@ export default {
 
     return {
       accord: accord.data,
+      legalCategory: legalCategory.data,
       date: date
     }
   },
@@ -404,7 +423,8 @@ export default {
         publicDate: '',
         publicMonth: '',
         publicYear: ''
-      }
+      },
+      position: ''
     }
   },
   created: function () {
@@ -412,7 +432,7 @@ export default {
       var obj = {}
       obj['file'] = undefined
       this.$set(this, 'files', obj)
-      if ('expired' in JSON.parse(json)) {
+      if (this.accord.accordType === 'EVIDENCE') {
         this.accord.evidenceFiles.push(JSON.parse(json))
         this.$set(this.accord, 'evidenceFiles', this.accord.evidenceFiles)
       } else {
@@ -426,6 +446,7 @@ export default {
     for (var i = 0; i < files.length; i++) {
       this.showCalendar(i, files[i])
     }
+    this.calculatePosition(this.accord)
   },
   updated: function () {
     var files = this.accord.legalDuty.legalType === 'LICENSE' ? this.accord.licenseFiles : this.accord.evidenceFiles
@@ -456,10 +477,10 @@ export default {
     },
     showCalendar: function (index, file) {
       $('#warningDate-' + index)
-        .datepicker({ language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
+        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
         .on('changeDate', () => { file.warningDate = $('#warningDate-' + index).val() })
       $('#expireDate-' + index)
-        .datepicker({ language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
+        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
         .on('changeDate', () => { file.expireDate = $('#expireDate-' + index).val() })
       return true
     },
@@ -488,6 +509,34 @@ export default {
     },
     getMonth: function () {
       return ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+    },
+    calculatePosition: function (accord) {
+      if (!accord) return
+      var data = 'Completed'
+      if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+        data = 'Owner'
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+        data = 'Coordinator'
+      } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+        data = 'Approver'
+      } else if (accord.accept === false) {
+        data = 'Owner'
+      }
+      this.$set(this, 'position', data)
+    },
+    nextPage: function () {
+      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+      if (index < this.legalCategory.accords.length - 1) {
+        this.$router.push('/checklist/accord/' + this.$route.params.accord + '/compliance/' + this.legalCategory.accords[index + 1].legalDuty.id)
+      }
+    },
+    isNext: function () {
+      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+      if (index < this.legalCategory.accords.length - 1) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

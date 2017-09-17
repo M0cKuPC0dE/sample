@@ -28,5 +28,6 @@ public class LicenseFile {
     private Date warningDate;
     @Temporal(TemporalType.TIMESTAMP)
     private Date expireDate;
+    private Boolean expired = true;
     private String name;
 }
