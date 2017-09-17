@@ -35,6 +35,10 @@ public class Accord {
     private Long id;
     @Column(length = 4000)
     private String remark;
+    @Column(length = 4000)
+    private String remarkCoordinator;
+    @Column(length = 4000)
+    private String remarkApprover;
     @Enumerated(EnumType.STRING)
     private Accorded accorded;
     @Temporal(TemporalType.TIMESTAMP)

@@ -58,33 +58,37 @@ public class AccordController {
         return ac;
     }
 
-    @GetMapping("/accept/{id}")
-    public void accept(@PathVariable("id") Long id) {
+    @PostMapping("/accept/{id}")
+    public void accept(@PathVariable("id") Long id,@RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setApprove(null);
+        findOne.setRemarkCoordinator(accord.getRemarkCoordinator());
         findOne.setAccept(Boolean.TRUE);
         accordRepository.save(findOne);
     }
 
-    @GetMapping("/notaccept/{id}")
-    public void notAccept(@PathVariable("id") Long id) {
+    @PostMapping("/notaccept/{id}")
+    public void notAccept(@PathVariable("id") Long id,@RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setApprove(null);
+        findOne.setRemarkCoordinator(accord.getRemarkCoordinator());
         findOne.setAccept(Boolean.FALSE);
         accordRepository.save(findOne);
     }
 
-    @GetMapping("/approve/{id}")
-    public void approve(@PathVariable("id") Long id) {
+    @PostMapping("/approve/{id}")
+    public void approve(@PathVariable("id") Long id,@RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
+        findOne.setRemarkApprover(accord.getRemarkApprover());
         findOne.setApprove(Boolean.TRUE);
         accordRepository.save(findOne);
     }
 
-    @GetMapping("/reject/{id}")
-    public void reject(@PathVariable("id") Long id) {
+    @PostMapping("/reject/{id}")
+    public void reject(@PathVariable("id") Long id,@RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setAccept(null);
+        findOne.setRemarkApprover(accord.getRemarkApprover());
         findOne.setApprove(Boolean.FALSE);
         accordRepository.save(findOne);
     }

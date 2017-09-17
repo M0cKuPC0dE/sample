@@ -74,7 +74,9 @@
 
               <div class="form-group">
                 <label class="col-md-12">
-                  <strong>หมายเหตุ</strong>
+                  <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                  <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                  <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
                 </label>
                 <div class="col-md-12">
                   {{accord.remark}}
@@ -87,6 +89,24 @@
                 </label>
                 <div class="col-md-6">
                   {{date.publicDate}} {{getMonth()[date.publicMonth-1]}} {{(parseInt(date.publicYear) + 543)}}
+                </div>
+              </div>
+
+              <div class="form-group" v-if="accord.remarkApprover">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ Approver</strong>
+                </label>
+                <div class="col-md-12">
+                  <span>{{accord.remarkApprover}}</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ</strong>
+                </label>
+                <div class="col-md-12">
+                  <textarea class="form-control" rows="5" v-model="accord.remarkCoordinator" required></textarea>
                 </div>
               </div>
 
@@ -432,7 +452,7 @@ export default {
     },
     approve: function () {
       var self = this
-      http.get('/api/accord/accept/' + this.accord.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http.post('/api/accord/accept/' + this.accord.id, this.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/checklist/category/accord/' + self.$route.params.accord })
         })
@@ -442,7 +462,7 @@ export default {
     },
     notApprove: function () {
       var self = this
-      http.get('/api/accord/notaccept/' + this.accord.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http.post('/api/accord/notaccept/' + this.accord.id, this.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/checklist/category/accord/' + self.$route.params.accord })
         })

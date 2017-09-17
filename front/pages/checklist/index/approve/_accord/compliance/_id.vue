@@ -56,14 +56,8 @@
                 <div class="col-md-6">
                   <strong>ประเภท</strong>
                   <div>
-                    <div class="radio radio-success">
-                      <input type="radio" name="type" id="type1" value="LICENSE" v-model="accord.accordType" disabled>
-                      <label for="type1"> ใบอนุญาต </label>
-                    </div>
-                    <div class="radio radio-danger">
-                      <input type="radio" name="type" id="type2" value="EVIDENCE" v-model="accord.accordType" disabled>
-                      <label for="type2"> กฎหมายทั่วไป </label>
-                    </div>
+                    <p class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</p>
+                    <p class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</p>
                   </div>
                 </div>
               </div>
@@ -78,7 +72,9 @@
 
               <div class="form-group">
                 <label class="col-md-12">
-                  <strong>หมายเหตุ</strong>
+                  <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                  <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                  <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
                 </label>
                 <div class="col-md-12">
                   {{accord.remark}}
@@ -91,6 +87,24 @@
                 </label>
                 <div class="col-md-6">
                   {{date.publicDate}} {{getMonth()[date.publicMonth-1]}} {{(parseInt(date.publicYear) + 543)}}
+                </div>
+              </div>
+
+              <div class="form-group" v-if="accord.remarkCoordinator">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ Coordinator</strong>
+                </label>
+                <div class="col-md-12">
+                  <span>{{accord.remarkCoordinator}}</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ</strong>
+                </label>
+                <div class="col-md-12">
+                  <textarea class="form-control" rows="5" v-model="accord.remarkApprover" required></textarea>
                 </div>
               </div>
 
@@ -419,7 +433,7 @@ export default {
     },
     approve: function () {
       var self = this
-      http.get('/api/accord/approve/' + this.accord.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http.post('/api/accord/approve/' + this.accord.id, this.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/checklist/approve' })
         })
@@ -429,7 +443,7 @@ export default {
     },
     notApprove: function () {
       var self = this
-      http.get('/api/accord/reject/' + this.accord.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http.post('/api/accord/reject/' + this.accord.id, this.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/checklist/approve' })
         })

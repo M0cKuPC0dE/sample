@@ -110,6 +110,24 @@
                 </div>
               </div>
 
+              <div class="form-group" v-if="accord.remarkCoordinator">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ Coordinator</strong>
+                </label>
+                <div class="col-md-12">
+                  <span>{{accord.remarkCoordinator}}</span>
+                </div>
+              </div>
+
+              <div class="form-group" v-if="accord.remarkApprover">
+                <label class="col-md-12">
+                  <strong>หมายเหตุ Approver</strong>
+                </label>
+                <div class="col-md-12">
+                  <span>{{accord.remarkApprover}}</span>
+                </div>
+              </div>
+
               <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12">
                   <div>
