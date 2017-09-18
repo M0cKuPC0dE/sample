@@ -7,7 +7,6 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
 import co.th.linksinnovation.mitrphol.compliance.model.Authority;
-import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;

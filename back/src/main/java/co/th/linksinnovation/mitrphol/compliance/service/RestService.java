@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestService {
 
     public Authenticate findUserInfo(String id) {
-        if(Arrays.asList(new String[] {"99999999","99999998","99999997"}).contains(id)){
+        if(Arrays.asList(new String[] {"99999999","99999998","99999997","99999996","99999995","99999994","99999993"}).contains(id)){
             Authenticate authenticate = new Authenticate();
             Success success = new Success();
             success.setCode(200L);
@@ -54,6 +54,30 @@ public class RestService {
                 userInfo.setEmail("achiravichs@ust.co.th");
                 fullname.setEn("Achiravich SUVARNAROJ");
                 fullname.setTh("อชิรวิชย์ สุวรรณโรจน์");
+            }else if("99999996".equals(id)){
+                userInfo.setId(id);
+                userInfo.setUsername("aporns");
+                userInfo.setEmail("aporns@ust.co.th");
+                fullname.setEn("Aporn Singto");
+                fullname.setTh("อาภรณ์  สิงห์โต");
+            }else if("99999995".equals(id)){
+                userInfo.setId(id);
+                userInfo.setUsername("kamontips");
+                userInfo.setEmail("kamontips@ust.co.th");
+                fullname.setEn("Kamontip Srirod");
+                fullname.setTh("กมลทิพย์ ศรีรอด");
+            }else if("99999994".equals(id)){
+                userInfo.setId(id);
+                userInfo.setUsername("arunthipp");
+                userInfo.setEmail("arunthipp@ust.co.th");
+                fullname.setEn("Arunthip Kwawthong");
+                fullname.setTh("อรุณทิพย์ กวาวทอง");
+            }else if("99999993".equals(id)){
+                userInfo.setId(id);
+                userInfo.setUsername("warangkanas");
+                userInfo.setEmail("warangkanas@ust.co.th");
+                fullname.setEn("Warangkana Sirim");
+                fullname.setTh("วรางคณา ศิริม");
             }
             userInfo.setFullname(fullname);
             data.setUserInfo(userInfo);
