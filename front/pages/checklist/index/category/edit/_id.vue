@@ -326,16 +326,16 @@ export default {
           var node = {
             userId: user.user_info.id,
             label: user.user_info.fullname.th,
-            value: user.user_info.fullname.th
+            nameTh: user.user_info.fullname.th
           }
           nodes.push(node)
         })
       }
 
       var ust = [
-        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', value: 'วิจะยะ กลิ่นเกษร' },
-        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', value: 'กิตติยา คล้ายสังข์' },
-        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', value: 'อชิรวิชย์ สุวรรณโรจน์' }
+        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', nameTh: 'วิจะยะ กลิ่นเกษร' },
+        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', nameTh: 'กิตติยา คล้ายสังข์' },
+        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', nameTh: 'อชิรวิชย์ สุวรรณโรจน์' }
       ]
 
       let ustNode = ust.find(o => o.label.search(term) !== -1)
