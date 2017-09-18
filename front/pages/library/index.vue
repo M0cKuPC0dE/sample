@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row m-t-10 p-t-20">
           <div class="col-md-12">
-            <form>
+            <form v-on:submit.prevent="onSearch">
               <div class="form-group">
                 <div class="input-group bootstrap-touchspin">
                   <input id="search-tree" type="text" class="form-control" style="display: block" autocomplete="off" placeholder="ค้นหา">
@@ -202,6 +202,9 @@ export default {
     $('#search-tree').on('keyup', this.search)
   },
   methods: {
+    onSearch: function () {
+      return false
+    },
     allview: function (categories) {
       var self = this
       $('#allview').treeview({
