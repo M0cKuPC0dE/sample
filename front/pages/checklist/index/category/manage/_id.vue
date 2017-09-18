@@ -47,6 +47,7 @@
                 </div>
                 <div class="col-md-12 p-t-20 p-l-20 p-r-20">
                   <ul class="list-group list-group-full">
+
                     <li class="list-group-item" :key="owner.userId" v-for="owner in legalcategory.owners">
                       <span class="badge badge-danger" v-on:click="removeOwner(owner)">
                         <i class="fa fa-times"></i>
@@ -276,7 +277,8 @@ export default {
           self.legalcategory.owners = []
           if (checker.length === 0) {
             self.legalcategory.owners.push(ui.item)
-            self.$set(self.legalgroup, 'owners', self.legalgroup.owners)
+            console.log(self.legalcategory.owners)
+            self.$set(self.legalcategory, 'owners', self.legalcategory.owners)
           }
         },
         close: function (el) {
@@ -311,7 +313,7 @@ export default {
           })
           if (checker.length === 0) {
             self.legalcategory.approvers.push(ui.item)
-            self.$set(self.legalgroup, 'approvers', self.legalgroup.approvers)
+            self.$set(self.legalcategory, 'approvers', self.legalcategory.approvers)
           }
         },
         close: function (el) {
@@ -325,20 +327,20 @@ export default {
         data.success.data.forEach(function (user) {
           var node = {
             userId: user.user_info.id,
-            label: user.user_info.fullname.th,
-            value: user.user_info.fullname.th
+            nameTh: user.user_info.fullname.th,
+            label: user.user_info.fullname.th
           }
           nodes.push(node)
         })
       }
 
       var ust = [
-        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', value: 'วิจะยะ กลิ่นเกษร' },
-        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', value: 'กิตติยา คล้ายสังข์' },
-        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', value: 'อชิรวิชย์ สุวรรณโรจน์' }
+        { userId: '99999999', nameTh: 'วิจะยะ กลิ่นเกษร', label: 'วิจะยะ กลิ่นเกษร' },
+        { userId: '99999998', nameTh: 'กิตติยา คล้ายสังข์', label: 'กิตติยา คล้ายสังข์' },
+        { userId: '99999997', nameTh: 'อชิรวิชย์ สุวรรณโรจน์', label: 'อชิรวิชย์ สุวรรณโรจน์' }
       ]
 
-      let ustNode = ust.find(o => o.label.search(term) !== -1)
+      let ustNode = ust.find(o => o.nameTh.search(term) !== -1)
       if (ustNode) {
         nodes.push(ustNode)
       }

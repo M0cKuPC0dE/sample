@@ -133,7 +133,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -166,7 +166,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -191,7 +191,7 @@
                   ถัดไป
                   <i class="fa fa-chevron-right"></i>
                 </button>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept">เห็นชอบ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept && accord.accorded !== 'NOT_CONCERN'">เห็นชอบ</button>
                 <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่เห็นชอบ</button>
               </div>
 

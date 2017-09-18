@@ -39,13 +39,13 @@ public class MailService {
     @Autowired
     private LegalgroupRepository legalgroupRepository;
     private final TemplateEngine templateEngine;
- 
+
     @Autowired
     public MailService(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
- 
-    public String build(String title,String message) {
+
+    public String build(String title, String message) {
         Context context = new Context();
         context.setVariable("title", title);
         context.setVariable("message", message);
@@ -53,7 +53,7 @@ public class MailService {
     }
 
     @Async
-    public void send2Coordinator(LegalGroup legalGroup,String username) {
+    public void send2Coordinator(LegalGroup legalGroup, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalGroup.getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -68,7 +68,7 @@ public class MailService {
                 sb.append(user.getNameTh());
                 sb.append(" ได้กำหนดให้คุณเป็น Coordinator ของระบบ Compliance System ");
                 sb.append(" สามารถเข้าใช้งานระบบได้ที่ https://compliance.mitrphol.com");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()));
+                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
             } catch (MessagingException e) {
             } finally {
                 javaMailSender.send(mail);
@@ -76,9 +76,9 @@ public class MailService {
         }
 
     }
-    
+
     @Async
-    public void send2Owner(LegalCategory legalCategory,String username) {
+    public void send2Owner(LegalCategory legalCategory, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalCategory.getOwners()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -92,7 +92,7 @@ public class MailService {
                 sb.append("คุณ ");
                 sb.append(user.getNameTh());
                 sb.append(" ได้กำหนดให้คุณเป็น Owner ของระบบ Compliance System ");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()));
+                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
                 helper.setText(sb.toString());
             } catch (MessagingException e) {
             } finally {
@@ -100,10 +100,10 @@ public class MailService {
             }
         }
     }
-    
+
     @Async
     @Transactional
-    public void compliance(Accord accord,String username) {
+    public void compliance(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : findOne.getLegalCategory().getLegalGroup().getCoordinates()) {
@@ -119,7 +119,7 @@ public class MailService {
                 sb.append(user.getNameTh());
                 sb.append(" ได้บันทึกผลการดำเนินงานตามกฎหมายในระบบ Compliance System แล้ว ");
                 sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()),true);
+                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
             } catch (MessagingException e) {
             } finally {
                 javaMailSender.send(mail);

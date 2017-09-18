@@ -108,7 +108,7 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'LICENSE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
@@ -131,7 +131,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -142,22 +142,29 @@
                 </div>
               </div>
 
-              <div class="form-group m-t-20" v-if="accord.accordType === 'EVIDENCE'">
+              <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12">
                   <div>
                     <table class="table">
                       <thead>
                         <tr>
+                          <th>วันแจ้งเตือน</th>
+                          <th>วันหมดอายุ</th>
                           <th>หลักฐาน</th>
                           <th class="text-center col-md-1">จัดการ</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr :key="file.index" v-for="(file,index) in accord.evidenceFiles">
+                          <td class="col-md-3">
+                            {{file.warningDate}}
+                          </td>
+                          <td class="col-md-3">
+                            {{file.expireDate}}
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>

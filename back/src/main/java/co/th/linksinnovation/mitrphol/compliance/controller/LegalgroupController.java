@@ -107,7 +107,7 @@ public class LegalgroupController {
             }
         }
         legalGroup.setCoordinates(fillDetails);
-        if (legalGroup.getLegalDuties().size() != 0) {
+        if (legalGroup.getLegalDuties().size() != 0 && legalGroup.getId() == null) {
             mailService.send2Coordinator(legalGroup,username);
         }
         return legalgroupRepository.save(legalGroup);

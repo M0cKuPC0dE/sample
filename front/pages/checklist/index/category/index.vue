@@ -132,10 +132,10 @@
                         <td>
                           <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
                         </td>
-                        <td class="text-center">{{position.owner === 0?'-':position.owner}}</td>
-                        <td class="text-center">{{position.coordinator === 0?'-':position.coordinator}}</td>
-                        <td class="text-center">{{position.approver === 0?'-':position.approver}}</td>
-                        <td class="text-center">{{progress.total}}</td>
+                        <td class="text-center">{{calculatePosition(legalgroup).owner === 0?'-':calculatePosition(legalgroup).owner}}</td>
+                        <td class="text-center">{{calculatePosition(legalgroup).coordinator === 0?'-':calculatePosition(legalgroup).coordinator}}</td>
+                        <td class="text-center">{{calculatePosition(legalgroup).approver === 0?'-':calculatePosition(legalgroup).approver}}</td>
+                        <td class="text-center">{{calculatePosition(legalgroup).total}}</td>
                         <td class=" text-center ">
                           <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="text-inverse p-r-10 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
                             <i class="ti-direction-alt "></i>
@@ -194,7 +194,6 @@ export default {
   mounted: function () {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
-    this.calculatePosition()
   },
   data: function () {
     return {
@@ -257,28 +256,28 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    calculatePosition: function () {
+    calculatePosition: function (group) {
       var data = {
         owner: 0,
         coordinator: 0,
-        approver: 0
+        approver: 0,
+        total: 0
       }
-      this.groups.forEach(function (group) {
-        group.legalCategories.forEach(function (category) {
-          category.accords.forEach(function (accord) {
-            if (accord.accept === null && accord.accorded === null && accord.approve === null) {
-              data.owner = data.owner + 1
-            } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
-              data.coordinator = data.coordinator + 1
-            } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
-              data.approver = data.approver + 1
-            } else if (accord.accept === false) {
-              data.owner = data.owner + 1
-            }
-          })
+      group.legalCategories.forEach(function (category) {
+        category.accords.forEach(function (accord) {
+          if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+            data.owner = data.owner + 1
+          } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+            data.coordinator = data.coordinator + 1
+          } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+            data.approver = data.approver + 1
+          } else if (accord.accept === false) {
+            data.owner = data.owner + 1
+          }
+          data.total = data.total + 1
         })
       })
-      this.$set(this, 'position', data)
+      return data
     }
   }
 }

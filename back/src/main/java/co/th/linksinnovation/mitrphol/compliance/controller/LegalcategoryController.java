@@ -195,7 +195,7 @@ public class LegalcategoryController {
             for (LegalDuty l : legalDuties) {
                 Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, l);
                 if (ac != null) {
-                    System.out.println("-----> "+ac.getId());
+                    System.out.println("-----> " + ac.getId());
                     accordRepository.delete(ac);
                 }
             }
@@ -218,7 +218,9 @@ public class LegalcategoryController {
             legalCategory.setAccords(accords);
         }
 
-        mailService.send2Owner(legalCategory, username);
+        if (legalCategory.getId() == null) {
+            mailService.send2Owner(legalCategory, username);
+        }
 
         return legalcategoryRepository.save(legalCategory);
     }
