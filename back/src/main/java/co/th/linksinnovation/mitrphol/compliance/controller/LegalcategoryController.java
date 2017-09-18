@@ -196,11 +196,15 @@ public class LegalcategoryController {
                 Accord ac = accordRepository.findByLegalCategoryAndLegalDuty(legalCategory, l);
                 if (ac != null) {
                     System.out.println("-----> " + ac.getId());
+                    legalCategory.getAccords().removeIf(a -> a.getId().equals(ac.getId()));
+                    System.out.println(legalCategory.getAccords().size());
                     accordRepository.delete(ac);
                 }
             }
+            System.out.println("in --------------> "+legalCategory.getAccords().size());
         }
-//        legalCategory = legalcategoryRepository.save(legalCategory);
+        System.out.println("--------------> "+legalCategory.getAccords().size());
+        legalcategoryRepository.save(legalCategory);
 
         if (!legalCategory.getLegalDuties().isEmpty()) {
             List<Accord> accords = new ArrayList<>();
