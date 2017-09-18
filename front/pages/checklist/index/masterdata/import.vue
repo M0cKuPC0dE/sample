@@ -6,7 +6,7 @@
         <span class="btn btn-info btn-file m-r-10">
           <i class="zmdi zmdi-swap-vertical"></i>
           {{ $t('buttons.upload.template') }}
-          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('https://compliance.mitrphol.com/api/templateupload',$event)">
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('http://localhost:8080/api/templateupload',$event)">
         </span>
         <nuxt-link to="/checklist/masterdata" class="btn btn-info" style="height:35px">
           <i class="fa fa-chevron-left"></i> {{ $t('buttons.back') }}
