@@ -5,7 +5,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="control-label">{{ $t('category.name') }}</label>
-            <input v-model="name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required oninvalid="this.setCustomValidity('กรุณากรอกข้อมูล')">
+            <input v-model="name" type="text" class="form-control" placeholder="ชื่อหมวดหมู่" required>
           </div>
         </div>
       </div>
