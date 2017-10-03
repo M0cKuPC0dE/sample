@@ -113,7 +113,7 @@
               <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12">
                   <div>
-                    <table class="table">
+                    <table class="table table-striped table-hover">
                       <thead>
                         <tr>
                           <th>วันแจ้งเตือน</th>
@@ -174,7 +174,7 @@
               <div class="form-group m-t-20" v-if="accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12">
                   <div>
-                    <table class="table">
+                    <table class="table table-striped table-hover">
                       <thead>
                         <tr>
                           <th>วันแจ้งเตือน</th>
@@ -346,7 +346,7 @@
                     <div class="form-group">
                       <div class="col-md-12">
                         <div>
-                          <table class="table">
+                          <table class="table table-striped table-hover">
                             <tbody>
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>

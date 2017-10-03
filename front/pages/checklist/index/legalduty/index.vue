@@ -9,7 +9,7 @@
     </div>
     <div class="row">
       <div>
-        <table class="table">
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
               <th>หน้าที่ตามกฎหมาย</th>

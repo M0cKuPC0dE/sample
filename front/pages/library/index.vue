@@ -132,7 +132,7 @@
                     <div class="form-group">
                       <div class="col-md-12">
                         <div>
-                          <table class="table">
+                          <table class="table table-striped table-hover">
                             <tbody>
                               <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                                 <td>{{file.name}}</td>
