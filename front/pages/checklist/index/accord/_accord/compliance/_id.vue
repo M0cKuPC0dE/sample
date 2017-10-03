@@ -450,7 +450,7 @@ export default {
       var obj = {}
       obj['file'] = undefined
       this.$set(this, 'files', obj)
-      if (this.accord.accordType === 'EVIDENCE') {
+      if (this.accord.legalDuty.legalType === 'EVIDENCE') {
         this.accord.evidenceFiles.push(JSON.parse(json))
         this.$set(this.accord, 'evidenceFiles', this.accord.evidenceFiles)
       } else {

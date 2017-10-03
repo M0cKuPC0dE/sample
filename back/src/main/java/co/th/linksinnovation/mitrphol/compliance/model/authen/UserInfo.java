@@ -23,6 +23,6 @@ public class UserInfo {
     private String nickname;
     private String photo;
     private String description;
-    private Boolean line;
+    private String line;
     private Telephone telephone;
 }
