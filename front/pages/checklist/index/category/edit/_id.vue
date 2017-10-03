@@ -34,7 +34,7 @@
               <div class="form-group">
                 <label class="col-md-12">แผนก</label>
                 <div class="col-md-12">
-                  <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department" required>
+                  <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department">
                 </div>
               </div>
 
