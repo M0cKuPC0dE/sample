@@ -79,7 +79,7 @@
     </div>
 
     <div class="form-group">
-      <label class="col-md-12">แท็ก</label>
+      <label class="col-md-12">แท็ก {{compliance.tags}}</label>
       <div class="col-md-12">
         <input type="text" :value="compliance.tags" class="form-control" id="tags" placeholder="เพิ่มแท็ก"></input>
       </div>
@@ -228,8 +228,12 @@ export default {
     })
   },
   mounted: function () {
+    var self = this
     this.$set(this, 'category', this.compliance.category)
     $('#tags').tagsinput()
+    $('#tags').on('itemAdded', (e) => {
+      self.$set(self.compliance, 'tags', $('#tags').val())
+    })
     $('#publicdate')
       .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
       .on('changeDate', () => { this.compliance.publicDate = $('#publicdate').val() })
