@@ -48,7 +48,7 @@ export const actions = {
       } else if (data.response.status === 401) {
         context.commit('authen', { status: false, error: 'Username หรือ Password ไม่ถูกต้อง' })
       } else {
-        context.commit('authen', { status: false, error: 'เกิดความผิดพลาดในการเข้าสู่ระบบ กรุณาลองอีกครั้ง' })
+        context.commit('authen', { status: false, error: 'ไม่มีสิทธิ์ในระบบ' })
       }
     })
   },

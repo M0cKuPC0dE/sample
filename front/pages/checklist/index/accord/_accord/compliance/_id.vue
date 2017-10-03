@@ -169,7 +169,7 @@
                             </div>
                           </td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" v-on:click="onConfirmDelete('license',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a href="javascript:void(0)" v-on:click="onConfirmDelete('license',index)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="ti-trash"></i>
                             </a>
                           </td>
@@ -230,7 +230,7 @@
                             </div>
                           </td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a href="javascript:void(0)" v-on:click="onConfirmDelete('evidence',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                            <a href="javascript:void(0)" v-on:click="onConfirmDelete('evidence',index)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="ti-trash"></i>
                             </a>
                           </td>
@@ -369,7 +369,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

@@ -49,10 +49,10 @@
                         <td>{{locale.code}}</td>
                         <td>{{locale.fullName}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/language/edit/'+locale.code" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/language/edit/'+locale.code" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(locale)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(locale)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                             <i class="ti-trash"></i>
                           </a>
                         </td>

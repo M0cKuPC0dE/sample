@@ -97,7 +97,7 @@
               <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                 <td>{{file.name}}</td>
                 <td class="text-center">
-                  <a href="javascript:void(0)" v-on:click="onConfirmDelete('file',index)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                  <a href="javascript:void(0)" v-on:click="onConfirmDelete('file',index)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                     <i class="ti-trash"></i>
                   </a>
                 </td>

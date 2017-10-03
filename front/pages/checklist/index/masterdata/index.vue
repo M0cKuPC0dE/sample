@@ -34,7 +34,7 @@
             <tr>
               <th>ข้อกฎหมาย</th>
               <th class="text-center">สถานะ</th>
-              <th class="text-center">จัดการ</th>
+              <th class="col-md-3 text-center">จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -45,13 +45,13 @@
                 <span class="label label-warning" v-if="compliance.status === 'INACTIVE'">{{compliance.status}}</span>
               </td>
               <td class="text-center">
-                <nuxt-link :to="'/checklist/compliance/'+compliance.id" class="text-inverse p-r-10" title="" data-toggle="tooltip" title="เปิด">
+                <nuxt-link :to="'/checklist/compliance/'+compliance.id" class="btn btn-sm btn-info m-r-5" title="" data-toggle="tooltip" title="เปิด">
                   <i class="ti-search"></i>
                 </nuxt-link>
-                <nuxt-link :to="'/checklist/masterdata/compliance/edit/'+compliance.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                <nuxt-link :to="'/checklist/masterdata/compliance/edit/'+compliance.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
                 </nuxt-link>
-                <a href="javascript:void(0)" v-on:click="onConfirmDelete(compliance)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                <a href="javascript:void(0)" v-on:click="onConfirmDelete(compliance)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                   <i class="ti-trash"></i>
                 </a>
               </td>

@@ -144,10 +144,11 @@
             <div class="row">
               <div class="col-md-12">
                 <div :key="index" v-for="(category,index) in categories">
-                  <strong>{{category.party}}/{{category.department}}</strong>
-                  <strong :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
+                  <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.party}}/{{category.department}},
+                  <strong>ผู้ประสานงาน:</strong>
+                  <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                     {{coordinator.nameTh + ' '}}
-                  </strong>
+                  </span>
                   <table class="table table-hover">
                     <thead>
                       <tr>

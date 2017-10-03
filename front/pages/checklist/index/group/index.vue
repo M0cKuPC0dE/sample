@@ -145,16 +145,16 @@
                         <td class="text-center">{{countDuty(legalgroup).total}}</td>
                         <td class="text-center">{{countDuty(legalgroup).process}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/group/manage/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="จัดหมวดหมู่">
+                          <nuxt-link :to="'/checklist/group/manage/'+legalgroup.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="จัดหมวดหมู่">
                             <i class="ti-direction-alt"></i>
                           </nuxt-link>
-                          <nuxt-link :to="'/checklist/group/edit/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/group/edit/'+legalgroup.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <nuxt-link :to="'/checklist/group/copy/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="คัดลอก">
+                          <nuxt-link :to="'/checklist/group/copy/'+legalgroup.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="คัดลอก">
                             <i class="ti-stamp"></i>
                           </nuxt-link>
-                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalgroup)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalgroup)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                             <i class="ti-trash"></i>
                           </a>
                         </td>

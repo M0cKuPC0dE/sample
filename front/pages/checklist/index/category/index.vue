@@ -137,7 +137,7 @@
                         <td class="text-center">{{calculatePosition(legalgroup).approver === 0?'-':calculatePosition(legalgroup).approver}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).total}}</td>
                         <td class=" text-center ">
-                          <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="text-inverse p-r-10 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
+                          <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="btn btn-sm btn-info m-r-5 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
                             <i class="ti-direction-alt "></i>
                           </nuxt-link>
                         </td>

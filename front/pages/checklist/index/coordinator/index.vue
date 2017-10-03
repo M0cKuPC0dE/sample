@@ -47,10 +47,10 @@
                       <tr :key="index" v-for="(legalgroup,index) in groups">
                         <td>{{legalgroup.buName}}</td>
                         <td class="text-center">
-                          <nuxt-link :to="'/checklist/coordinator/edit/'+legalgroup.id" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="แก้ไข">
+                          <nuxt-link :to="'/checklist/coordinator/edit/'+legalgroup.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="แก้ไข">
                             <i class="ti-marker-alt"></i>
                           </nuxt-link>
-                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalgroup)" class="text-inverse p-r-10" data-toggle="tooltip" title="" title="ลบ">
+                          <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalgroup)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                             <i class="ti-trash"></i>
                           </a>
                         </td>
