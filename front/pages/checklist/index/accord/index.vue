@@ -151,13 +151,13 @@
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th>#</th>
+                        <th class="col-md-1">#</th>
                         <th class="col-md-2">ชื่อกฎหมาย</th>
-                        <th>หน้าที่ตามกฎหมาย</th>
-                        <th>ประเภท</th>
-                        <th class="text-center">Process</th>
+                        <th class="col-md-4">หน้าที่ตามกฎหมาย</th>
+                        <th class="col-md-1">ประเภท</th>
+                        <th class="col-md-1 text-center">Process</th>
                         <th class="col-md-2 text-center">สถานะ</th>
-                        <th class="text-center">ประเมิน</th>
+                        <th class="col-md-1 text-center">ประเมิน</th>
                       </tr>
                     </thead>
                     <tbody>
