@@ -22,7 +22,7 @@
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-success">
-                      <i class="ti-clipboard"></i>
+                      <i class="ti-check-box"></i>
                     </span>
                   </li>
                   <li class="col-last">
@@ -51,8 +51,8 @@
               <div class="col-lg-6 col-sm-12 b-0  filter-info" v-on:click="onFilter('NOT_ACCORDED')">
                 <ul class="col-in">
                   <li>
-                    <span class="circle circle-md bg-warning">
-                      <i class="ti-wallet"></i>
+                    <span class="circle circle-md bg-danger">
+                      <i class="ti-close"></i>
                     </span>
                   </li>
                   <li class="col-last">
@@ -77,8 +77,8 @@
               <div class="col-lg-6 col-sm-12 row-in-br b-r-none  filter-info" v-on:click="onFilter('NOT_CONCERN')">
                 <ul class="col-in">
                   <li>
-                    <span class="circle circle-md bg-danger">
-                      <i class="ti-wallet"></i>
+                    <span class="circle circle-md bg-warning">
+                      <i class="ti-share-alt"></i>
                     </span>
                   </li>
                   <li class="col-last">
@@ -104,7 +104,7 @@
                 <ul class="col-in">
                   <li>
                     <span class="circle circle-md bg-info">
-                      <i class="fa fa-dollar"></i>
+                      <i class="ti-new-window"></i>
                     </span>
                   </li>
                   <li class="col-last">
