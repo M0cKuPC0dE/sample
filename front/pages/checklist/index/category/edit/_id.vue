@@ -31,18 +31,18 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="col-md-12">แผนก</label>
-                <div class="col-md-12">
-                  <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department">
-                </div>
-              </div>
+              <!-- <div class="form-group">
+                      <label class="col-md-12">แผนก</label>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department">
+                      </div>
+                    </div> -->
 
               <div class="form-group">
                 <label class="col-md-12">ผู้ดูแล</label>
                 <div class="col-md-12">
                   <div class="ui-widget">
-                    <input id="search-owner" type="text" class="form-control" placeholder="ผู้ดูแล">
+                    <input id="search-owner" type="text" class="form-control" placeholder="ผู้ดูแล" :required="legalcategory.owners.length === 0">
                   </div>
                 </div>
                 <div class="col-md-12 p-t-20 p-l-20 p-r-20">
@@ -59,7 +59,7 @@
                 <label class="col-md-12">ผู้อนุมัติ</label>
                 <div class="col-md-12">
                   <div class="ui-widget">
-                    <input id="search-approver" type="text" class="form-control" placeholder="ผู้อนุมัติ">
+                    <input id="search-approver" type="text" class="form-control" placeholder="ผู้อนุมัติ" :required="legalcategory.approvers.length === 0">
                   </div>
                 </div>
                 <div class="col-md-12 p-t-20 p-l-20 p-r-20">

@@ -261,11 +261,11 @@ export default {
       var data = 'Completed'
       if (accord.accept === null && accord.accorded === null && accord.approve === null) {
         data = 'Owner'
-      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
         data = 'Coordinator'
       } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
         data = 'Approver'
-      } else if (accord.accept === false) {
+      } else if (accord.accept === false || accord.approve === false) {
         data = 'Owner'
       }
       return data

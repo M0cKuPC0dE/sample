@@ -184,7 +184,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าใบอนุญาต
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
+                    <input :required="checkValid()" data-toggle="tooltip" title="hahaha" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
@@ -245,7 +245,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
+                    <input :required="checkValid()" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -473,6 +473,14 @@ export default {
     }
   },
   methods: {
+    checkValid: function () {
+      var files = this.accord.legalDuty.legalType === 'LICENSE' ? this.accord.licenseFiles : this.accord.evidenceFiles
+      if (this.accord.accorded === 'ACCORDED' && files.length === 0) {
+        return true
+      } else {
+        return false
+      }
+    },
     onSave: function () {
       var self = this
       self.accord.accept = null
@@ -495,10 +503,12 @@ export default {
     },
     showCalendar: function (index, file) {
       $('#warningDate-' + index)
-        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
-        .on('changeDate', () => { file.warningDate = $('#warningDate-' + index).val() })
+        .datepicker({ startDate: '+1d', clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0 })
+        .on('changeDate', () => {
+          file.warningDate = $('#warningDate-' + index).val()
+        })
       $('#expireDate-' + index)
-        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
+        .datepicker({ startDate: '+1d', clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0 })
         .on('changeDate', () => { file.expireDate = $('#expireDate-' + index).val() })
       return true
     },
@@ -533,11 +543,11 @@ export default {
       var data = 'Completed'
       if (accord.accept === null && accord.accorded === null && accord.approve === null) {
         data = 'Owner'
-      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
         data = 'Coordinator'
       } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
         data = 'Approver'
-      } else if (accord.accept === false) {
+      } else if (accord.accept === false || accord.approve === false) {
         data = 'Owner'
       }
       this.$set(this, 'position', data)

@@ -267,11 +267,11 @@ export default {
         category.accords.forEach(function (accord) {
           if (accord.accept === null && accord.accorded === null && accord.approve === null) {
             data.owner = data.owner + 1
-          } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+          } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
             data.coordinator = data.coordinator + 1
           } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
             data.approver = data.approver + 1
-          } else if (accord.accept === false) {
+          } else if (accord.accept === false || accord.approve === false) {
             data.owner = data.owner + 1
           }
           data.total = data.total + 1

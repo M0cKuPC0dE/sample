@@ -144,7 +144,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div :key="index" v-for="(category,index) in categories">
-                  <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.party}}/{{category.department}},
+                  <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.party}},
                   <strong>ผู้ประสานงาน:</strong>
                   <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                     {{coordinator.nameTh + ' '}}
@@ -267,11 +267,11 @@ export default {
       var data = 'Completed'
       if (accord.accept === null && accord.accorded === null && accord.approve === null) {
         data = 'Owner'
-      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null || accord.approve === false)) {
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
         data = 'Coordinator'
       } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
         data = 'Approver'
-      } else if (accord.accept === false) {
+      } else if (accord.accept === false || accord.approve === false) {
         data = 'Owner'
       }
       return data
