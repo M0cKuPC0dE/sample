@@ -133,7 +133,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'https://compliance.mitrphol.com/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -166,7 +166,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'https://compliance.mitrphol.com/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -296,7 +296,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
