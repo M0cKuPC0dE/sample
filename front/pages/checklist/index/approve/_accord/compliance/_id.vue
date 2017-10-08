@@ -131,7 +131,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a :href="'https://compliance.mitrphol.com/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -164,7 +164,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a :href="'https://compliance.mitrphol.com/public/download/evidence/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'http://localhost:8080/public/download/evidence/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -185,8 +185,8 @@
                 <nuxt-link to="/checklist/approve" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded">อนุมัติ</button>
-                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded">ไม่อนุมัติ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && accord.approve === false">อนุมัติ</button>
+                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && accord.approve === false">ไม่อนุมัติ</button>
               </div>
 
             </form>
@@ -290,7 +290,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>

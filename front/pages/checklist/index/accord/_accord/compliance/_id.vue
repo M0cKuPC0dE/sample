@@ -184,7 +184,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าใบอนุญาต
-                    <input :required="checkValid()" data-toggle="tooltip" title="hahaha" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/licenseupload',$event)">
+                    <input :required="checkValid()" data-toggle="tooltip" title="hahaha" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
@@ -245,7 +245,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input :required="checkValid()" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/evidenceupload',$event)">
+                    <input :required="checkValid()" style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('http://localhost:8080/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -369,7 +369,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -440,7 +440,9 @@ export default {
       date: {
         publicDate: '',
         publicMonth: '',
-        publicYear: ''
+        publicYear: '',
+        warnDate: '',
+        expDate: ''
       },
       position: ''
     }
@@ -502,14 +504,36 @@ export default {
       this.$set(this, 'files', obj)
     },
     showCalendar: function (index, file) {
+      var _self = this
       $('#warningDate-' + index)
-        .datepicker({ startDate: '+1d', clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0 })
-        .on('changeDate', () => {
+        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0 })
+        .on('changeDate', (selected) => {
           file.warningDate = $('#warningDate-' + index).val()
+          _self.date.warnDate = new Date(selected.date.valueOf())
         })
       $('#expireDate-' + index)
-        .datepicker({ startDate: '+1d', clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0 })
-        .on('changeDate', () => { file.expireDate = $('#expireDate-' + index).val() })
+        .datepicker({
+          startDate: '+1d',
+          clearBtn: true,
+          language: 'th',
+          thaiyear: true,
+          format: 'dd/mm/yyyy',
+          orientation: 'bottom left',
+          autoclose: !0
+        })
+        .on('changeDate', (selected) => {
+          file.expireDate = $('#expireDate-' + index).val()
+          var endDate = new Date(selected.date.valueOf())
+          endDate.setDate(endDate.getDate(new Date(selected.date.valueOf())))
+          $('#warningDate-' + index).datepicker('setEndDate', endDate)
+          if (!_self.date.warnDate) {
+            $('#warningDate-' + index).datepicker('setDate', endDate)
+          }
+          if (_self.date.warnDate.getTime() > endDate.getTime()) {
+            $('#warningDate-' + index).datepicker('setDate', endDate)
+            file.warningDate = $('#warningDate-' + index).val()
+          }
+        })
       return true
     },
     onConfirmDelete: function (type, index) {

@@ -25,18 +25,18 @@
 
             <form class="form-horizontal" v-on:submit.prevent="onSave">
               <div class="form-group">
-                <label class="col-md-12">ผ่าย</label>
+                <label class="col-md-12">ฝ่าย/แผนก</label>
                 <div class="col-md-12">
                   <input type="text" class="form-control" placeholder="ผ่าย" v-model="legalcategory.party" required>
                 </div>
               </div>
 
               <!-- <div class="form-group">
-                            <label class="col-md-12">แผนก</label>
-                            <div class="col-md-12">
-                              <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department">
-                            </div>
-                          </div> -->
+                                <label class="col-md-12">แผนก</label>
+                                <div class="col-md-12">
+                                  <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department">
+                                </div>
+                              </div> -->
 
               <div class="form-group">
                 <label class="col-md-12">ผู้ดูแล</label>

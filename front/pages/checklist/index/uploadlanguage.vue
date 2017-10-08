@@ -20,7 +20,7 @@
             <label v-if="error != ''" class="alert">{{error}}</label>
           </div>
           <div class="col-md-6">
-            <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('https://compliance.mitrphol.com/api/localeupload/' + filename,$event)">
+            <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('http://localhost:8080/api/localeupload/' + filename,$event)">
           </div>
         </div>
         <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">
