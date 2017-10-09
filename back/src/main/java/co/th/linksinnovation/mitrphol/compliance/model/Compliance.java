@@ -16,6 +16,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -46,7 +47,7 @@ public class Compliance {
     private String department;
     @Column(length = 1000)
     private String ministry;
-    @Column(length = 4000)
+    @Lob
     private String important;
     @OneToMany(mappedBy = "compliance")
     @Where(clause = "deleted = 0")
