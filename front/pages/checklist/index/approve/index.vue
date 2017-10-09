@@ -141,47 +141,66 @@
               </div>
             </div>
 
-            <div class="row" :key="index" v-for="(category,index) in categories">
-              <div class="col-md-12">
-                <div>
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>ชื่อกฎหมาย</th>
-                        <th>หน้าที่ตามกฎหมาย</th>
-                        <th>การประเมินจากผู้ดูแล</th>
-                        <th class="text-center">การพิจารณา</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr :key="accord.id" v-for="accord in category.accords" v-if="accord.accept === true && (filter === '' || filter === accord.accorded)">
-                        <td>{{accord.legalDuty.compliance.legalName}}</td>
-                        <td>
-                          <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
-                            {{accord.legalDuty.name}}
-                          </nuxt-link>
-                        </td>
-                        <td>
-                          <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
-                          <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
-                          <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
-                        </td>
-                        <td class="text-center">
-                          <span class="label label-success" v-if="accord.approve === true">อนุมัติ</span>
-                          <span class="label label-danger" v-if="accord.approve === false">ไม่อนุมัตื</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="panel-group" id="accordion">
+
+              <div class="panel panel-default" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                      ผู้ดูแล(ฝ่าย/แผนก): {{category.party}},
+                      ผู้ประสานงาน:
+                      <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
+                        {{coordinator.nameTh + ' '}}
+                      </span>
+                    </a>
+                  </h4>
+                </div>
+                <div :id="'collapse'+index" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>ชื่อกฎหมาย</th>
+                          <th>หน้าที่ตามกฎหมาย</th>
+                          <th>การประเมินจากผู้ดูแล</th>
+                          <th class="text-center">การพิจารณา</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr :key="accord.id" v-for="accord in category.accords" v-if="(filter === '' || filter === accord.accorded)">
+                          <td>{{accord.legalDuty.compliance.legalName}}</td>
+                          <td>
+                            <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
+                              {{accord.legalDuty.name}}
+                            </nuxt-link>
+                          </td>
+                          <td>
+                            <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
+                            <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
+                            <span class="label label-warning" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
+                            <span class="label label-info" v-if="accord.accorded === null">ยังไม่ดำเนินการ</span>
+                          </td>
+                          <td class="text-center">
+                            <span class="label label-success" v-if="accord.approve === true">อนุมัติ</span>
+                            <span class="label label-danger" v-if="accord.approve === false">ไม่อนุมัตื</span>
+                            <span class="label label-info" v-if="accord.accept === true && accord.approve === null">รอการพิจารณา</span>
+                            <span class="label label-warning" v-if="accord.accept !== true && accord.approve === null">อยู่ระหว่างดำเนินการ</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="col-md-12 text-right">
+                      <button class="btn btn-success" v-on:click="onApprove(category)">อนุมัติทั้งหมด</button>
+                      <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อนุมัติทั้งหมด</button>
+                    </div>
+
+                  </div>
                 </div>
               </div>
 
-              <div class="col-md-12 text-right">
-                <button class="btn btn-success" v-on:click="onApprove(category)">อนุมัติทั้งหมด</button>
-                <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อนุมัติทั้งหมด</button>
-              </div>
-
             </div>
+
           </div>
         </div>
       </div>
@@ -232,26 +251,34 @@ export default {
     onApprove: function (category) {
       var self = this
       $('#approve-modal').modal('hide')
-      return http
-        .get('/api/accord/approveall/' + category.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          self.onLoad()
-        })
-        .catch((e) => {
-          self.$router.replace('/checklist/login')
-        })
+      for (var index in category.accords) {
+        var accord = category.accords[index]
+        if (accord.accorded === self.filter && (accord.accept === true && accord.approve === null)) {
+          http.post('/api/accord/approve/' + accord.id, accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+            .then(response => {
+              self.onLoad()
+            })
+            .catch((e) => {
+              self.$router.replace('/checklist/login')
+            })
+        }
+      }
     },
     onReject: function (category) {
       var self = this
       $('#approve-modal').modal('hide')
-      return http
-        .get('/api/accord/rejectall/' + category.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
-          self.onLoad()
-        })
-        .catch((e) => {
-          self.$router.replace('/checklist/login')
-        })
+      for (var index in category.accords) {
+        var accord = category.accords[index]
+        if (accord.accorded === self.filter && (accord.accept === true && accord.approve === null)) {
+          http.post('/api/accord/reject/' + accord.id, accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+            .then(response => {
+              self.onLoad()
+            })
+            .catch((e) => {
+              self.$router.replace('/checklist/login')
+            })
+        }
+      }
     },
     calculateProgress: function () {
       var data = {
@@ -281,6 +308,15 @@ export default {
       } else {
         this.$set(this, 'filter', accorded)
       }
+    },
+    isInFilter: function (filter, category) {
+      var num = 0
+      for (var accord in category.accords) {
+        if (category.accords[accord].accorded === filter) {
+          num++
+        }
+      }
+      return num !== 0
     }
   }
 }

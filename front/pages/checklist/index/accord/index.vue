@@ -141,9 +141,9 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
               <div class="col-md-12">
-                <div :key="index" v-for="(category,index) in categories">
+                <div>
                   <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.party}},
                   <strong>ผู้ประสานงาน:</strong>
                   <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
@@ -282,6 +282,15 @@ export default {
       } else {
         this.$set(this, 'filter', accorded)
       }
+    },
+    isInFilter: function (filter, category) {
+      var num = 0
+      for (var accord in category.accords) {
+        if (category.accords[accord].accorded === filter) {
+          num++
+        }
+      }
+      return num !== 0
     }
   }
 }

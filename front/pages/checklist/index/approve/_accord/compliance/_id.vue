@@ -185,8 +185,8 @@
                 <nuxt-link to="/checklist/approve" class="btn btn-info">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && accord.approve === false">อนุมัติ</button>
-                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && accord.approve === false">ไม่อนุมัติ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && (accord.approve === false || accord.approve === null)">อนุมัติ</button>
+                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && (accord.approve === false || accord.approve === null)">ไม่อนุมัติ</button>
               </div>
 
             </form>

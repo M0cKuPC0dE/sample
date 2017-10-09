@@ -86,40 +86,6 @@
                       </div>
                     </div>
 
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>หน่วยงานที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>ฝ่ายที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                          <label class="col-md-12">
-                            <strong>แผนกที่เกี่ยวข้อง</strong>
-                          </label>
-                          <div class="col-md-12">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                     <div class="form-group">
                       <label class="col-md-12">
                         <strong>{{ $t('compliance.important') }}</strong>

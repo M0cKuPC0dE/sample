@@ -120,6 +120,7 @@
                     <thead>
                       <tr>
                         <th class="col-xs-5">ฝ่าย/แผนก</th>
+                        <th>ผู้ดูแล</th>
                         <th class="col-xs-5 text-center">สถานะการดำนเนินการ</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
@@ -128,6 +129,9 @@
                       <tr :key="index" v-for="(category,index) in categories">
                         <td>
                           <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.party}}</nuxt-link>
+                        </td>
+                        <td>
+                          {{category.owners[0].nameTh}}
                         </td>
                         <td class="text-center">
                           {{categoryProgress(category)}}

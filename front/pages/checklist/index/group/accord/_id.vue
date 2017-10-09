@@ -150,7 +150,9 @@
                         <th>ชื่อกฎหมาย</th>
                         <th>หน้าที่ตามกฎหมาย</th>
                         <th>ประเภท</th>
-                        <th class="col-md-2 text-center">สถานะ</th>
+                        <th class="text-center">Process</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">เห็นชอบ</th>
                         <th class="text-center">ประเมิน</th>
                       </tr>
                     </thead>
@@ -162,11 +164,17 @@
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
                           <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
                         </td>
+                        <th class="text-center">{{calculatePosition(accord)}}</th>
                         <td class="text-center">
                           <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                           <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
                           <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
                           <span class="label label-primary" v-if="!accord.accorded">ยังไม่ดำเนินการ</span>
+                        </td>
+                        <td class="text-center">
+                          <span class="label label-info" v-if="accord.accept === null">รอเห็นชอบ</span>
+                          <span class="label label-success" v-if="accord.accept === true">เห็นชอบ</span>
+                          <span class="label label-danger" v-if="accord.accept === false">ไม่เห็นชอบ</span>
                         </td>
                         <td class="text-center">
                           <nuxt-link :to="'/checklist/group/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">
@@ -253,6 +261,19 @@ export default {
       } else {
         this.$set(this, 'filter', accorded)
       }
+    },
+    calculatePosition: function (accord) {
+      var data = 'Completed'
+      if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+        data = 'Owner'
+      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
+        data = 'Coordinator'
+      } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+        data = 'Approver'
+      } else if (accord.accept === false || accord.approve === false) {
+        data = 'Owner'
+      }
+      return data
     }
   }
 }
