@@ -57,10 +57,10 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalGroup.getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
+	    System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setReplyTo("MitrpholServices@mitrphol.com");
                 helper.setFrom("MitrpholServices@mitrphol.com");
                 helper.setSubject("Compliance System Coordinator");
                 StringBuilder sb = new StringBuilder();
@@ -82,10 +82,10 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalCategory.getOwners()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
+System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setReplyTo("MitrpholServices@mitrphol.com");
                 helper.setFrom("MitrpholServices@mitrphol.com");
                 helper.setSubject("Compliance System Owner");
                 StringBuilder sb = new StringBuilder();
@@ -108,10 +108,10 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : findOne.getLegalCategory().getLegalGroup().getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
+System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setReplyTo("MitrpholServices@mitrphol.com");
                 helper.setFrom("MitrpholServices@mitrphol.com");
                 helper.setSubject("Compliance System");
                 StringBuilder sb = new StringBuilder();

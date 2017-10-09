@@ -164,7 +164,7 @@
                           </td>
                           <td style="vertical-align: middle;">{{file.name}}</td>
                           <td style="vertical-align: middle;" class="text-center">
-                            <a :href="'https://compliance.mitrphol.com/public/download/license/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                            <a :href="'https://compliance.mitrphol.com/public/download/evidence/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
