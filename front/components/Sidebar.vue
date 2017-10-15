@@ -58,6 +58,12 @@
             <span class="hide-menu">{{ $t('menu.languageupload') }}</span>
           </nuxt-link>
         </li>
+        <li v-if="authority === 'Administrator'">
+          <nuxt-link to="/checklist/usermanage" class="waves-effect">
+            <i class="fa fa-user fa-fw"></i>
+            <span class="hide-menu">จัดการผู้ใช้งาน</span>
+          </nuxt-link>
+        </li>
         <li v-if="false">
           <nuxt-link to="/checklist/uploaddocument" class="waves-effect">
             <i class="zmdi zmdi-text-format fa-fw"></i>

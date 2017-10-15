@@ -5,9 +5,12 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.repository;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -16,5 +19,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserDetailsRepository extends JpaRepository<UserDetails, String>{
 
     public List<UserDetails> findByUserId(String userId);
+    
+    @Query( "select u from UserDetails u inner join u.authorities r where r.authority in :roles" )
+    public List<UserDetails> findUserByRole(@Param("roles") List<String> roles);
     
 }

@@ -48,6 +48,12 @@ public class UserDetails implements org.springframework.security.core.userdetail
         this.authorities.add(authority);
     }
     
+    public void removeAuthority(Authority authority){
+        if(this.authorities.contains(authority)){
+            this.authorities.remove(authority);
+        }
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;
