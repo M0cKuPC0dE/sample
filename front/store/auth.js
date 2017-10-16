@@ -32,6 +32,9 @@ export const mutations = {
     state.name = payload.name
     state.authority = payload.authority
     state.error = payload.error
+  },
+  authority: (state, payload) => {
+    state.authority = payload.authority
   }
 }
 
@@ -40,8 +43,13 @@ export const actions = {
     auth.login(vc).then((data) => {
       Cookies.set('AT', data.data.access_token, { expires: 1, secure: false })
       Cookies.set('RT', data.data.refresh_token, { expires: 1, secure: false })
-      context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities[0] })
-      vc.$router.push('/checklist')
+      if (jwt(data.data.access_token).authorities.length > 1) {
+        context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities })
+      } else {
+        Cookies.set('AU', jwt(data.data.access_token).authorities[0], { expires: 1, secure: false })
+        context.commit('authen', { status: true, error: '', name: jwt(data.data.access_token).name, authority: jwt(data.data.access_token).authorities[0] })
+        vc.$router.push('/checklist')
+      }
     }, (data) => {
       if (data.response.status === 500) {
         context.commit('authen', { status: false, error: 'เกิดความผิดพลาดจากการเชื่อมต่อ Mirtphol API' })
@@ -57,6 +65,11 @@ export const actions = {
     Cookies.remove('RT', { secure: false })
     context.commit('authen', { status: false, error: '' })
     vc.$router.replace('/checklist/login')
+  },
+  authority: (context, vc) => {
+    Cookies.set('AU', vc.authority, { expires: 1, secure: false })
+    context.commit('authority', { authority: vc.authority })
+    vc.vc.$router.push('/checklist')
   },
   clearerror: (context, vc) => {
     context.commit('authen', { status: false, error: '' })
