@@ -6,6 +6,7 @@
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
+import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
@@ -60,7 +61,7 @@ public class AccordController {
     }
 
     @PostMapping("/accept/{id}")
-    public void accept(@PathVariable("id") Long id,@RequestBody Accord accord) {
+    public void accept(@PathVariable("id") Long id, @RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setApprove(null);
         findOne.setRemarkCoordinator(accord.getRemarkCoordinator());
@@ -69,7 +70,7 @@ public class AccordController {
     }
 
     @PostMapping("/notaccept/{id}")
-    public void notAccept(@PathVariable("id") Long id,@RequestBody Accord accord) {
+    public void notAccept(@PathVariable("id") Long id, @RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setApprove(null);
         findOne.setRemarkCoordinator(accord.getRemarkCoordinator());
@@ -78,15 +79,20 @@ public class AccordController {
     }
 
     @PostMapping("/approve/{id}")
-    public void approve(@PathVariable("id") Long id,@RequestBody Accord accord) {
+    public void approve(@PathVariable("id") Long id, @RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setRemarkApprover(accord.getRemarkApprover());
-        findOne.setApprove(Boolean.TRUE);
+        if (findOne.getAccorded().equals(Accorded.NOT_ACCORDED)) {
+            findOne.setAccept(Boolean.FALSE);
+            findOne.setApprove(null);
+        } else {
+            findOne.setApprove(Boolean.TRUE);
+        }
         accordRepository.save(findOne);
     }
 
     @PostMapping("/reject/{id}")
-    public void reject(@PathVariable("id") Long id,@RequestBody Accord accord) {
+    public void reject(@PathVariable("id") Long id, @RequestBody Accord accord) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setAccept(null);
         findOne.setRemarkApprover(accord.getRemarkApprover());

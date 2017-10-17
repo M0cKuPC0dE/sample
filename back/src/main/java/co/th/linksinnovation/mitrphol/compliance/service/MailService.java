@@ -57,11 +57,10 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalGroup.getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
-	    System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setFrom("MitrpholServices@mitrphol.com");
+                helper.setFrom("mpcompliance@mitrphol.com");
                 helper.setSubject("Compliance System Coordinator");
                 StringBuilder sb = new StringBuilder();
                 sb.append("คุณ ");
@@ -70,6 +69,7 @@ public class MailService {
                 sb.append(" สามารถเข้าใช้งานระบบได้ที่ https://compliance.mitrphol.com");
                 helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
             } catch (MessagingException e) {
+                e.printStackTrace();
             } finally {
                 javaMailSender.send(mail);
             }
@@ -82,11 +82,10 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalCategory.getOwners()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
-System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setFrom("MitrpholServices@mitrphol.com");
+                helper.setFrom("mpcompliance@mitrphol.com");
                 helper.setSubject("Compliance System Owner");
                 StringBuilder sb = new StringBuilder();
                 sb.append("คุณ ");
@@ -95,6 +94,7 @@ System.out.println("Sent mail to "+u.getEmail());
                 helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
                 helper.setText(sb.toString());
             } catch (MessagingException e) {
+                e.printStackTrace();
             } finally {
                 javaMailSender.send(mail);
             }
@@ -108,11 +108,10 @@ System.out.println("Sent mail to "+u.getEmail());
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : findOne.getLegalCategory().getLegalGroup().getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
-System.out.println("Sent mail to "+u.getEmail());
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
-                helper.setFrom("MitrpholServices@mitrphol.com");
+                helper.setFrom("mpcompliance@mitrphol.com");
                 helper.setSubject("Compliance System");
                 StringBuilder sb = new StringBuilder();
                 sb.append("คุณ ");
@@ -121,6 +120,7 @@ System.out.println("Sent mail to "+u.getEmail());
                 sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
                 helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
             } catch (MessagingException e) {
+                e.printStackTrace();
             } finally {
                 javaMailSender.send(mail);
             }
