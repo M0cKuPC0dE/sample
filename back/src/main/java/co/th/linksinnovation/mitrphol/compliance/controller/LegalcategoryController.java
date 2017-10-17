@@ -200,9 +200,9 @@ public class LegalcategoryController {
                     accordRepository.delete(ac);
                 }
             }
-            System.out.println("in --------------> "+legalCategory.getAccords().size());
+            System.out.println("in --------------> " + legalCategory.getAccords().size());
         }
-        System.out.println("--------------> "+legalCategory.getAccords().size());
+        System.out.println("--------------> " + legalCategory.getAccords().size());
         legalcategoryRepository.save(legalCategory);
 
         if (!legalCategory.getLegalDuties().isEmpty()) {
@@ -221,9 +221,7 @@ public class LegalcategoryController {
             legalCategory.setAccords(accords);
         }
 
-        if (legalCategory.getId() == null) {
-            mailService.send2Owner(legalCategory, username);
-        }
+        mailService.send2Owner(legalCategory, username);
 
         return legalcategoryRepository.save(legalCategory);
     }

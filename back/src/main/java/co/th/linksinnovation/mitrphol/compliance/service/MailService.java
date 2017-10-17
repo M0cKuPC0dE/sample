@@ -92,7 +92,6 @@ public class MailService {
                 sb.append(user.getNameTh());
                 sb.append(" ได้กำหนดให้คุณเป็น Owner ของระบบ Compliance System ");
                 helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
-                helper.setText(sb.toString());
             } catch (MessagingException e) {
                 e.printStackTrace();
             } finally {
@@ -112,11 +111,37 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("Compliance System");
+                helper.setSubject("Compliance System Notification");
                 StringBuilder sb = new StringBuilder();
                 sb.append("คุณ ");
                 sb.append(user.getNameTh());
                 sb.append(" ได้บันทึกผลการดำเนินงานตามกฎหมายในระบบ Compliance System แล้ว ");
+                sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
+                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } finally {
+                javaMailSender.send(mail);
+            }
+        }
+    }
+    
+    @Async
+    @Transactional
+    public void acceptNotification(Accord accord, String username) {
+        Accord findOne = accordRepository.findOne(accord.getId());
+        UserDetails user = userDetailsRepository.findOne(username);
+        for (UserDetails u : findOne.getLegalCategory().getApprovers()) {
+            MimeMessage mail = javaMailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+                helper.setTo(u.getEmail());
+                helper.setFrom("mpcompliance@mitrphol.com");
+                helper.setSubject("Compliance System Notification");
+                StringBuilder sb = new StringBuilder();
+                sb.append("คุณ ");
+                sb.append(user.getNameTh());
+                sb.append(" ได้บันทึกผลเห็นชอบการดำเนินงานตามกฎหมายในระบบ Compliance System แล้ว ");
                 sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
                 helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
             } catch (MessagingException e) {

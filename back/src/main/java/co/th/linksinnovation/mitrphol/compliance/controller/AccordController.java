@@ -61,11 +61,12 @@ public class AccordController {
     }
 
     @PostMapping("/accept/{id}")
-    public void accept(@PathVariable("id") Long id, @RequestBody Accord accord) {
+    public void accept(@PathVariable("id") Long id, @RequestBody Accord accord,@AuthenticationPrincipal String username) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setApprove(null);
         findOne.setRemarkCoordinator(accord.getRemarkCoordinator());
         findOne.setAccept(Boolean.TRUE);
+        mailService.acceptNotification(findOne, username);
         accordRepository.save(findOne);
     }
 
