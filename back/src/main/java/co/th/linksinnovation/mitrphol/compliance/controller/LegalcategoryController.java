@@ -154,7 +154,14 @@ public class LegalcategoryController {
                         owners.add(save);
                     }
                 } else {
-                    owners.add(userdetails.get(0));
+                    UserDetails get = userdetails.get(0);
+                    Authority authority = new Authority();
+                    authority.setAuthority("Owner");
+                    if (!get.getAuthorities().contains(authority)) {
+                        get.addAuthority(authority);
+                        get = userDetailsRepository.save(get);
+                    }
+                    owners.add(get);
                 }
             }
         }
@@ -179,7 +186,14 @@ public class LegalcategoryController {
                         approvers.add(save);
                     }
                 } else {
-                    approvers.add(userdetails.get(0));
+                    UserDetails get = userdetails.get(0);
+                    Authority authority = new Authority();
+                    authority.setAuthority("Approver");
+                    if (!get.getAuthorities().contains(authority)) {
+                        get.addAuthority(authority);
+                        get = userDetailsRepository.save(get);
+                    }
+                    approvers.add(get);
                 }
             }
         }

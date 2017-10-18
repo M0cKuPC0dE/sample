@@ -102,7 +102,14 @@ public class LegalgroupController {
                         fillDetails.add(save);
                     }
                 } else {
-                    fillDetails.add(userdetails.get(0));
+                    UserDetails get = userdetails.get(0);
+                    Authority authority = new Authority();
+                    authority.setAuthority("Coordinator");
+                    if (!get.getAuthorities().contains(authority)) {
+                        get.addAuthority(authority);
+                        get = userDetailsRepository.save(get);
+                    }
+                    fillDetails.add(get);
                 }
             }
         }
