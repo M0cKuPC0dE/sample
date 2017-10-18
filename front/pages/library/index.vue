@@ -103,7 +103,7 @@
                               <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="ดาวน์โหลด">
+                                  <a :href="'http://localhost:8080/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
