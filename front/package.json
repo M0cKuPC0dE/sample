@@ -40,6 +40,7 @@
     "metismenu": "^2.7.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
+    "select2": "^4.0.4",
     "vue-i18n": "^7.0.5"
   }
 }

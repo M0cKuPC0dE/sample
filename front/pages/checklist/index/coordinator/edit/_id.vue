@@ -24,6 +24,36 @@
             </div>
 
             <form class="form-horizontal" v-on:submit.prevent="onSave">
+
+              <div class="form-group">
+                <label class="col-md-12">บริษัท</label>
+                <div class="col-md-12">
+                  <select id="company" class="form-control">
+                    <option :value="company.id" v-for="company in companies" :key="company.id" :selected="legalgroup.company.id === company.id">{{company.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">พื้นที่</label>
+                <div class="col-md-12">
+                  <select id="location" class="form-control">
+                    <option></option>
+                    <option :value="location.id" v-for="location in locations" :key="location.id" :selected="legalgroup.location.id === location.id">{{location.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">กลุ่มธุรกิจ</label>
+                <div class="col-md-12">
+                  <select id="businessunit" class="form-control">
+                    <option></option>
+                    <option :value="businessunit.id" v-for="businessunit in businessunits" :key="businessunit.id" :selected="legalgroup.businessUnit.id === businessunit.id">{{businessunit.name}}</option>
+                  </select>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-md-12">หน่วยงาน</label>
                 <div class="col-md-12">
@@ -77,21 +107,66 @@ export default {
       .catch((e) => {
         context.redirect('/checklist/login')
       })
+    let company = await http
+      .get('/api/lookup/company', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    let location = await http
+      .get('/api/lookup/location', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    let businessunit = await http
+      .get('/api/lookup/businessunit', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
     return {
-      legalgroup: legalgroup.data
+      legalgroup: legalgroup.data,
+      companies: company.data,
+      locations: location.data,
+      businessunits: businessunit.data,
+      temp: {
+        company: legalgroup.data.company,
+        location: legalgroup.data.location,
+        businessUnit: legalgroup.data.businessUnit
+      }
     }
   },
   data: function () {
     return {
-      category: { id: 'null' }
+      category: { id: 'null' },
+      temp: {
+        company: { id: '' },
+        location: { id: '' },
+        businessUnit: { id: '' }
+      }
     }
   },
   mounted: function () {
+    var self = this
     this.initSuggestion()
+    $('#company').select2({ placeholder: 'เลือกบริษัท' })
+    $('#location').select2({ placeholder: 'เลือกพื้นที่' })
+    $('#businessunit').select2({ placeholder: 'เลือกกลุ่มธุรกิจ' })
+
+    $('#company').on('select2:select', function (e) {
+      self.$set(self.temp.company, 'id', $(this).val())
+    })
+    $('#location').on('select2:select', function (e) {
+      self.$set(self.temp.location, 'id', $(this).val())
+    })
+    $('#businessunit').on('select2:select', function (e) {
+      self.$set(self.temp.businessUnit, 'id', $(this).val())
+    })
   },
   methods: {
     onSave: function () {
       var self = this
+      self.legalgroup.company = self.temp.company
+      self.legalgroup.location = self.temp.location
+      self.legalgroup.businessUnit = self.temp.businessUnit
       http.post('/api/legalgroup', self.legalgroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then(response => {
           self.$router.push({ path: '/checklist/coordinator' })

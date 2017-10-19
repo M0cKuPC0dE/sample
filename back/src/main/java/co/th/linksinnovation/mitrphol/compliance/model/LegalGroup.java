@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import lombok.Data;
 
@@ -30,6 +31,12 @@ public class LegalGroup {
     @Id
     @GeneratedValue
     private Long id;
+    @ManyToOne
+    private Company company;
+    @ManyToOne
+    private Location location;
+    @ManyToOne
+    private BusinessUnit businessUnit;
     private String buName;
     @ManyToMany
     private List<UserDetails> coordinates;

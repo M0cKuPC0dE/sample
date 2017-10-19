@@ -31,6 +31,7 @@ module.exports = {
     { src: 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css' },
     { src: 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' },
     { src: 'jquery-ui-dist/jquery-ui.css' },
+    { src: 'select2/dist/css/select2.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
     { src: '~assets/less/colors/megna.less', lang: 'less' }
@@ -62,6 +63,7 @@ module.exports = {
       '~/assets/js/bootstrap-datepicker-custom.js',
       'bootstrap-datepicker/dist/locales/bootstrap-datepicker.th.min.js',
       'bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
+      'select2/dist/js/select2.full.js',
       'vue-i18n'
     ],
     plugins: [

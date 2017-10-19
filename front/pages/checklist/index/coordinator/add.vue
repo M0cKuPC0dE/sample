@@ -24,6 +24,37 @@
             </div>
 
             <form class="form-horizontal" v-on:submit.prevent="onSave">
+
+              <div class="form-group">
+                <label class="col-md-12">บริษัท</label>
+                <div class="col-md-12">
+                  <select id="company" class="form-control" required>
+                    <option></option>
+                    <option :value="company.id" v-for="company in companies" :key="company.id">{{company.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">พื้นที่</label>
+                <div class="col-md-12">
+                  <select id="location" class="form-control" required>
+                    <option></option>
+                    <option :value="location.id" v-for="location in locations" :key="location.id">{{location.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-12">กลุ่มธุรกิจ</label>
+                <div class="col-md-12">
+                  <select id="businessunit" class="form-control">
+                    <option></option>
+                    <option :value="businessunit.id" v-for="businessunit in businessunits" :key="businessunit.id">{{businessunit.name}}</option>
+                  </select>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-md-12">หน่วยงาน</label>
                 <div class="col-md-12">
@@ -71,20 +102,41 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
-    return http
+  async asyncData (context) {
+    let categories = await http
       .get('/api/category/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
-        return { categories: response.data }
-      })
       .catch((e) => {
         context.redirect('/checklist/login')
       })
+    let company = await http
+      .get('/api/lookup/company', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    let location = await http
+      .get('/api/lookup/location', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    let businessunit = await http
+      .get('/api/lookup/businessunit', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
+      .catch((e) => {
+        context.redirect('/checklist/login')
+      })
+    return {
+      categories: categories.data,
+      companies: company.data,
+      locations: location.data,
+      businessunits: businessunit.data
+    }
   },
   data: function () {
     return {
       category: { id: 'null' },
       legalgroup: {
+        company: { id: '' },
+        location: { id: '' },
+        businessUnit: { id: '' },
         buName: '',
         coordinates: [],
         legalDuties: []
@@ -92,7 +144,21 @@ export default {
     }
   },
   mounted: function () {
+    var self = this
     this.initSuggestion()
+    $('#company').select2({ placeholder: 'เลือกบริษัท' })
+    $('#location').select2({ placeholder: 'เลือกพื้นที่' })
+    $('#businessunit').select2({ placeholder: 'เลือกกลุ่มธุรกิจ' })
+
+    $('#company').on('select2:select', function (e) {
+      self.$set(self.legalgroup.company, 'id', $(this).val())
+    })
+    $('#location').on('select2:select', function (e) {
+      self.$set(self.legalgroup.location, 'id', $(this).val())
+    })
+    $('#businessunit').on('select2:select', function (e) {
+      self.$set(self.legalgroup.businessUnit, 'id', $(this).val())
+    })
   },
   methods: {
     onSave: function () {

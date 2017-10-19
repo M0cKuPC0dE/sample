@@ -162,6 +162,7 @@ public class ProgressUploadController {
         }
     }
 
+    @Transactional
     private Category saveCategory(Row nextRow, int col, Category child) {
         if (col == -1) {
             return null;
@@ -180,10 +181,10 @@ public class ProgressUploadController {
                 category.addChild(child);
             }
             category.setParent(saveCategory(nextRow, col - 1, category));
-            return categoryRepository.save(category);
+            return categoryRepository.saveAndFlush(category);
         } else {
             category.setParent(saveCategory(nextRow, col - 1, category));
-            return categoryRepository.save(category);
+            return categoryRepository.saveAndFlush(category);
         }
     }
 
