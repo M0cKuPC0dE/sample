@@ -25,18 +25,18 @@
 
             <form class="form-horizontal" v-on:submit.prevent="onSave">
               <div class="form-group">
-                <label class="col-md-12">ผ่าย</label>
+                <label class="col-md-12">ผ่าย/แผนก</label>
                 <div class="col-md-12">
                   <input type="text" class="form-control" placeholder="ผ่าย" v-model="legalcategory.party" required>
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="col-md-12">แผนก</label>
-                <div class="col-md-12">
-                  <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department" required>
-                </div>
-              </div>
+              <!-- <div class="form-group">
+                    <label class="col-md-12">แผนก</label>
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" placeholder="แผนก" v-model="legalcategory.department" required>
+                    </div>
+                  </div> -->
 
               <div class="form-group">
                 <label class="col-md-12">ผู้ดูแล</label>
@@ -326,20 +326,20 @@ export default {
           var node = {
             userId: user.user_info.id,
             label: user.user_info.fullname.th,
-            value: user.user_info.fullname.th
+            nameTh: user.user_info.fullname.th
           }
           nodes.push(node)
         })
       }
 
       var ust = [
-        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', value: 'วิจะยะ กลิ่นเกษร' },
-        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', value: 'กิตติยา คล้ายสังข์' },
-        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', value: 'อชิรวิชย์ สุวรรณโรจน์' },
-        { userId: '99999996', label: 'อาภรณ์ สิงห์โต', value: 'อาภรณ์ สิงห์โต' },
-        { userId: '99999995', label: 'กมลทิพย์ ศรีรอด', value: 'กมลทิพย์ ศรีรอด' },
-        { userId: '99999994', label: 'อรุณทิพย์ กวาวทอง', value: 'อรุณทิพย์ กวาวทอง' },
-        { userId: '99999993', label: 'วรางคณา ศิริมา', value: 'วรางคณา ศิริมา' }
+        { userId: '99999999', label: 'วิจะยะ กลิ่นเกษร', nameTh: 'วิจะยะ กลิ่นเกษร' },
+        { userId: '99999998', label: 'กิตติยา คล้ายสังข์', nameTh: 'กิตติยา คล้ายสังข์' },
+        { userId: '99999997', label: 'อชิรวิชย์ สุวรรณโรจน์', nameTh: 'อชิรวิชย์ สุวรรณโรจน์' },
+        { userId: '99999996', label: 'อาภรณ์ สิงห์โต', nameTh: 'อาภรณ์ สิงห์โต' },
+        { userId: '99999995', label: 'กมลทิพย์ ศรีรอด', nameTh: 'กมลทิพย์ ศรีรอด' },
+        { userId: '99999994', label: 'อรุณทิพย์ กวาวทอง', nameTh: 'อรุณทิพย์ กวาวทอง' },
+        { userId: '99999993', label: 'วรางคณา ศิริมา', nameTh: 'วรางคณา ศิริมา' }
       ]
 
       let ustNode = ust.find(o => o.label.search(term) !== -1)
