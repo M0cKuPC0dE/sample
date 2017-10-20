@@ -113,7 +113,7 @@
         <span class="btn btn-info btn-file">
           <i class="zmdi zmdi-swap-vertical"></i>
           {{ $t('buttons.upload.file') }}
-          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/legalupload',$event)">
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse(baseUrl+'/api/legalupload',$event)">
         </span>
       </div>
     </div>
@@ -178,26 +178,37 @@ export default {
   components: {
     ProgressUpload
   },
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/compliance/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/compliance/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         var date = {
           publicDate: response.data.publicDate.split('/')[0].replace(/^0+/, ''),
-          publicMonth: response.data.publicDate.split('/')[1].replace(/^0+/, ''),
+          publicMonth: response.data.publicDate
+            .split('/')[1]
+            .replace(/^0+/, ''),
           publicYear: response.data.publicDate.split('/')[2].replace(/^0+/, ''),
-          effectiveDate: response.data.effectiveDate.split('/')[0].replace(/^0+/, ''),
-          effectiveMonth: response.data.effectiveDate.split('/')[1].replace(/^0+/, ''),
-          effectiveYear: response.data.effectiveDate.split('/')[2].replace(/^0+/, '')
+          effectiveDate: response.data.effectiveDate
+            .split('/')[0]
+            .replace(/^0+/, ''),
+          effectiveMonth: response.data.effectiveDate
+            .split('/')[1]
+            .replace(/^0+/, ''),
+          effectiveYear: response.data.effectiveDate
+            .split('/')[2]
+            .replace(/^0+/, '')
         }
         return { compliance: response.data, date: date }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       date: {
         publicDate: '',
         publicMonth: '',
@@ -214,12 +225,12 @@ export default {
     }
   },
   watch: {
-    selected: function (val) {
+    selected: function(val) {
       this.$set(this, 'category', val)
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (json) {
+  created: function() {
+    this.$on('onCompleteUpload', function(json) {
       var obj = {}
       obj['file'] = undefined
       this.$set(this, 'files', obj)
@@ -227,64 +238,95 @@ export default {
       this.$set(this.compliance, 'legalFiles', this.compliance.legalFiles)
     })
   },
-  mounted: function () {
+  mounted: function() {
     var self = this
     this.$set(this, 'category', this.compliance.category)
     $('#tags').tagsinput()
-    $('#tags').on('itemAdded', (e) => {
+    $('#tags').on('itemAdded', e => {
       self.$set(self.compliance, 'tags', $('#tags').val())
     })
     $('#publicdate')
-      .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
-      .on('changeDate', () => { this.compliance.publicDate = $('#publicdate').val() })
+      .datepicker({
+        language: 'th',
+        format: 'dd/mm/yyyy',
+        orientation: 'bottom left',
+        autoclose: !0,
+        todayHighlight: !0
+      })
+      .on('changeDate', () => {
+        this.compliance.publicDate = $('#publicdate').val()
+      })
     $('#effectivedate')
-      .datepicker({ language: 'th', format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
-      .on('changeDate', () => { this.compliance.effectiveDate = $('#effectivedate').val() })
+      .datepicker({
+        language: 'th',
+        format: 'dd/mm/yyyy',
+        orientation: 'bottom left',
+        autoclose: !0,
+        todayHighlight: !0
+      })
+      .on('changeDate', () => {
+        this.compliance.effectiveDate = $('#effectivedate').val()
+      })
   },
   methods: {
-    onSave: function () {
+    onSave: function() {
       var self = this
-      self.compliance.publicDate = self.date.publicDate + '/' + self.date.publicMonth + '/' + self.date.publicYear
-      self.compliance.effectiveDate = self.date.effectiveDate + '/' + self.date.effectiveMonth + '/' + self.date.effectiveYear
+      self.compliance.publicDate =
+        self.date.publicDate +
+        '/' +
+        self.date.publicMonth +
+        '/' +
+        self.date.publicYear
+      self.compliance.effectiveDate =
+        self.date.effectiveDate +
+        '/' +
+        self.date.effectiveMonth +
+        '/' +
+        self.date.effectiveYear
       self.compliance.category = this.category
-      http.post('/api/compliance', self.compliance, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http
+        .post('/api/compliance', self.compliance, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           self.$router.push({ path: '/checklist/masterdata' })
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url
       this.$set(this, 'files', obj)
     },
-    addLegalDuty: function () {
+    addLegalDuty: function() {
       if (this.legalDuty === '') return
       this.compliance.legalDuties.push({ name: this.legalDuty })
       this.$set(this.compliance, 'legalDuties', this.compliance.legalDuties)
       this.$set(this, 'legalDuty', '')
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#responsive-modal').modal('hide')
       return http
-        .delete('/api/compliance/' + this.$route.params.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .delete('/api/compliance/' + this.$route.params.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$router.push('/checklist/masterdata')
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (type, index) {
+    onConfirmDelete: function(type, index) {
       $('#masterdata-add-modal').modal('show')
       this.$set(this, 'deleteIndex', index)
       this.$set(this, 'deleteType', type)
     },
-    onDeleteList: function () {
+    onDeleteList: function() {
       $('#masterdata-add-modal').modal('hide')
       if (this.deleteType === 'file') {
         this.compliance.legalFiles.splice(this.deleteIndex, 1)
@@ -292,15 +334,28 @@ export default {
         this.compliance.legalDuties.splice(this.deleteIndex, 1)
       }
     },
-    getYear: function () {
+    getYear: function() {
       var year = []
       for (var i = 1900; i < new Date().getFullYear() + 2; i++) {
         year.push(i)
       }
       return year
     },
-    getMonth: function () {
-      return ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+    getMonth: function() {
+      return [
+        'มกราคม',
+        'กุมภาพันธ์',
+        'มีนาคม',
+        'เมษายน',
+        'พฤษภาคม',
+        'มิถุนายน',
+        'กรกฎาคม',
+        'สิงหาคม',
+        'กันยายน',
+        'ตุลาคม',
+        'พฤศจิกายน',
+        'ธันวาคม'
+      ]
     }
   }
 }

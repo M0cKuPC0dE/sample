@@ -20,7 +20,7 @@
             <label v-if="error != ''" class="alert">{{error}}</label>
           </div>
           <div class="col-md-6">
-            <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('https://compliance.mitrphol.com/api/localeupload/' + filename,$event)">
+            <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse(baseUrl+'/api/localeupload/' + filename,$event)">
           </div>
         </div>
         <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">
@@ -43,29 +43,30 @@ export default {
   components: {
     ProgressUpload
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       filename: '',
       error: '',
       files: {},
       objupload: {}
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (index) {
+  created: function() {
+    this.$on('onCompleteUpload', function(index) {
       var obj = {}
       obj[index] = undefined
       this.$set(this, 'files', obj)
     })
   },
   methods: {
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url
       this.objupload = obj
     },
-    onSubmit: function () {
+    onSubmit: function() {
       this.$set(this, 'files', this.objupload)
     }
   }

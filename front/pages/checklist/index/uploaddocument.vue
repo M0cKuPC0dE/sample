@@ -7,7 +7,7 @@
           <span class="btn btn-info btn-file">
             <i class="zmdi zmdi-swap-vertical"></i>
             {{ $t('buttons.upload.file') }}
-            <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/fileupload',$event)">
+            <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse(baseUrl+'/api/fileupload',$event)">
           </span>
         </div>
       </div>
@@ -39,16 +39,20 @@ export default {
   components: {
     ProgressUpload
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       files: {}
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (index) {
+  created: function() {
+    this.$on('onCompleteUpload', function(index) {
       let legalFile = {}
       legalFile['name'] = this.files.file.name
-      http.post('/api/file/', legalFile, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http
+        .post('/api/file/', legalFile, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           var obj = {}
           obj[index] = undefined
@@ -56,13 +60,13 @@ export default {
 
           this.$router.push('/checklist/masterdata')
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     })
   },
   methods: {
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url

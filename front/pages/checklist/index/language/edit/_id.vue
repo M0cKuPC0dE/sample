@@ -42,7 +42,7 @@
                   <span class="btn btn-info btn-file m-r-10">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     {{ $t('buttons.upload.template') }}
-                    <input style="display:" type="file" accept="application/json" v-on:change="onBrowse('https://compliance.mitrphol.com/api/localeupload/' + locale.code,$event)">
+                    <input style="display:" type="file" accept="application/json" v-on:change="onBrowse(baseUrl+'/api/localeupload/' + locale.code,$event)">
                   </span>
                   <span>{{displayname}}</span>
                 </div>
@@ -77,18 +77,21 @@ export default {
   components: {
     ProgressUpload
   },
-  async asyncData (context) {
+  async asyncData(context) {
     let locale = await http
-      .get('/api/locales/code/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/locales/code/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
     return {
       locale: locale.data
     }
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       displayname: '',
       error: '',
       files: {},
@@ -99,39 +102,45 @@ export default {
       }
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (index) {
+  created: function() {
+    this.$on('onCompleteUpload', function(index) {
       var obj = {}
       obj[index] = undefined
       this.$set(this, 'files', obj)
       var self = this
-      http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http
+        .post('/api/locales', self.locale, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           self.$router.push({ path: '/checklist/language' })
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     })
   },
   methods: {
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url
       this.objupload = obj
       this.displayname = e.target.files[0].name
     },
-    onSubmit: function () {
+    onSubmit: function() {
       if (this.objupload.url) {
         this.$set(this, 'files', this.objupload)
       } else {
         var self = this
-        http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        http
+          .post('/api/locales', self.locale, {
+            headers: { Authorization: 'bearer ' + cookie(this).AT }
+          })
           .then(response => {
             self.$router.push({ path: '/checklist/language' })
           })
-          .catch((e) => {
+          .catch(e => {
             self.$router.replace('/checklist/login')
           })
       }

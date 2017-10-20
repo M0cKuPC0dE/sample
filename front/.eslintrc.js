@@ -11,6 +11,9 @@ module.exports = {
     'html'
   ],
   // add your custom rules here
-  rules: {},
-  globals: {}
+  rules: {
+    'space-before-function-paren': 0
+  },
+  globals: {
+  }
 }

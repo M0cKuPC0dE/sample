@@ -42,7 +42,7 @@
                   <span class="btn btn-info btn-file m-r-10">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     {{ $t('buttons.upload.template') }}
-                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse('https://compliance.mitrphol.com/api/localeupload/' + locale.code.toUpperCase(),$event)">
+                    <input required="" style="display:" type="file" accept="application/json" v-on:change="onBrowse(baseUrl+'/api/localeupload/' + locale.code.toUpperCase(),$event)">
                   </span>
                   <span>{{displayname}}</span>
                 </div>
@@ -76,8 +76,9 @@ export default {
   components: {
     ProgressUpload
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       displayname: '',
       error: '',
       files: {},
@@ -88,31 +89,34 @@ export default {
       }
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (index) {
+  created: function() {
+    this.$on('onCompleteUpload', function(index) {
       var obj = {}
       obj[index] = undefined
       this.$set(this, 'files', obj)
       var self = this
       self.locale.code = self.locale.code.toUpperCase()
-      http.post('/api/locales', self.locale, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http
+        .post('/api/locales', self.locale, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           self.$router.push({ path: '/checklist/language' })
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     })
   },
   methods: {
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url
       this.objupload = obj
       this.displayname = e.target.files[0].name
     },
-    onSubmit: function () {
+    onSubmit: function() {
       this.$set(this, 'files', this.objupload)
     }
   }

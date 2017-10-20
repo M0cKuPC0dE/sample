@@ -6,7 +6,7 @@
         <span class="btn btn-info btn-file m-r-10">
           <i class="zmdi zmdi-swap-vertical"></i>
           {{ $t('buttons.upload.template') }}
-          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse('https://compliance.mitrphol.com/api/templateupload',$event)">
+          <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" v-on:change="onBrowse(baseUrl+'/api/templateupload',$event)">
         </span>
         <nuxt-link to="/checklist/masterdata" class="btn btn-info" style="height:35px">
           <i class="fa fa-chevron-left"></i> {{ $t('buttons.back') }}
@@ -29,13 +29,14 @@ export default {
   components: {
     ProgressUpload
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       files: {}
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (index) {
+  created: function() {
+    this.$on('onCompleteUpload', function(index) {
       var obj = {}
       obj[index] = undefined
       this.$set(this, 'files', obj)
@@ -43,7 +44,7 @@ export default {
     })
   },
   methods: {
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url

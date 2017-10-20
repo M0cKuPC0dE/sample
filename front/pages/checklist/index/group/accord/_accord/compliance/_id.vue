@@ -166,7 +166,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าใบอนุญาต
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/licenseupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse(baseUrl+'/api/licenseupload',$event)">
                   </span>
                 </div>
               </div>
@@ -227,7 +227,7 @@
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
                     นำเข้าเอกสาร
-                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse('https://compliance.mitrphol.com/api/evidenceupload',$event)">
+                    <input style="display:" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.ppf,.doc,.docx" v-on:change="onBrowse(baseUrl+'/api/evidenceupload',$event)">
                   </span>
                 </div>
               </div>
@@ -351,7 +351,7 @@
                               <tr :key="file.index" v-for="(file,index) in accord.legalDuty.compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center col-md-1">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                                  <a :href="baseUrl+'/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -389,23 +389,33 @@ export default {
   components: {
     ProgressUpload
   },
-  async asyncData (context) {
+  async asyncData(context) {
     let accord = await http
-      .get('/api/accord/' + context.params.accord + '/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/accord/' + context.params.accord + '/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
 
     let legalCategory = await http
-      .get('/api/legalcategory/' + context.params.accord, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/legalcategory/' + context.params.accord, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
 
     var date = {
-      publicDate: accord.data.completeDate ? accord.data.completeDate.split('/')[0].replace(/^0+/, '') : '',
-      publicMonth: accord.data.completeDate ? accord.data.completeDate.split('/')[1].replace(/^0+/, '') : '',
-      publicYear: accord.data.completeDate ? accord.data.completeDate.split('/')[2].replace(/^0+/, '') : ''
+      publicDate: accord.data.completeDate
+        ? accord.data.completeDate.split('/')[0].replace(/^0+/, '')
+        : '',
+      publicMonth: accord.data.completeDate
+        ? accord.data.completeDate.split('/')[1].replace(/^0+/, '')
+        : '',
+      publicYear: accord.data.completeDate
+        ? accord.data.completeDate.split('/')[2].replace(/^0+/, '')
+        : ''
     }
 
     return {
@@ -414,8 +424,9 @@ export default {
       date: date
     }
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       files: {},
       deleteIndex: {},
       deleteType: '',
@@ -426,8 +437,8 @@ export default {
       }
     }
   },
-  created: function () {
-    this.$on('onCompleteUpload', function (json) {
+  created: function() {
+    this.$on('onCompleteUpload', function(json) {
       var obj = {}
       obj['file'] = undefined
       this.$set(this, 'files', obj)
@@ -440,51 +451,81 @@ export default {
       }
     })
   },
-  mounted: function () {
+  mounted: function() {
     for (var i = 0; i < this.accord.licenseFiles.length; i++) {
       this.showCalendar(i, this.accord.licenseFiles[i])
     }
   },
-  updated: function () {
+  updated: function() {
     for (var i = 0; i < this.accord.licenseFiles.length; i++) {
       this.showCalendar(i, this.accord.licenseFiles[i])
     }
   },
   methods: {
-    onSave: function () {
+    onSave: function() {
       var self = this
-      self.accord.completeDate = self.accord.accorded === 'NOT_ACCORDED' ? self.date.publicDate + '/' + self.date.publicMonth + '/' + self.date.publicYear : ''
+      self.accord.completeDate =
+        self.accord.accorded === 'NOT_ACCORDED'
+          ? self.date.publicDate +
+            '/' +
+            self.date.publicMonth +
+            '/' +
+            self.date.publicYear
+          : ''
       self.accord.legalCategory = {}
       self.accord.legalCategory.id = this.$route.params.accord
-      http.post('/api/accord', self.accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      http
+        .post('/api/accord', self.accord, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           self.$router.push({ path: '/checklist/group' })
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onBrowse: function (url, e) {
+    onBrowse: function(url, e) {
       var obj = {}
       obj['file'] = e.target.files[0]
       obj['url'] = url
       this.$set(this, 'files', obj)
     },
-    showCalendar: function (index, file) {
+    showCalendar: function(index, file) {
       $('#warningDate-' + index)
-        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
-        .on('changeDate', () => { file.warningDate = $('#warningDate-' + index).val() })
+        .datepicker({
+          clearBtn: true,
+          language: 'th',
+          thaiyear: true,
+          format: 'dd/mm/yyyy',
+          orientation: 'bottom left',
+          autoclose: !0,
+          todayHighlight: !0
+        })
+        .on('changeDate', () => {
+          file.warningDate = $('#warningDate-' + index).val()
+        })
       $('#expireDate-' + index)
-        .datepicker({ clearBtn: true, language: 'th', thaiyear: true, format: 'dd/mm/yyyy', orientation: 'bottom left', autoclose: !0, todayHighlight: !0 })
-        .on('changeDate', () => { file.expireDate = $('#expireDate-' + index).val() })
+        .datepicker({
+          clearBtn: true,
+          language: 'th',
+          thaiyear: true,
+          format: 'dd/mm/yyyy',
+          orientation: 'bottom left',
+          autoclose: !0,
+          todayHighlight: !0
+        })
+        .on('changeDate', () => {
+          file.expireDate = $('#expireDate-' + index).val()
+        })
       return true
     },
-    onConfirmDelete: function (type, index) {
+    onConfirmDelete: function(type, index) {
       $('#masterdata-add-modal').modal('show')
       this.$set(this, 'deleteIndex', index)
       this.$set(this, 'deleteType', type)
     },
-    onDelete: function () {
+    onDelete: function() {
       $('#masterdata-add-modal').modal('hide')
       if (this.deleteType === 'license') {
         this.accord.licenseFiles.splice(this.deleteIndex, 1)
@@ -492,27 +533,53 @@ export default {
         this.accord.evidenceFiles.splice(this.deleteIndex, 1)
       }
     },
-    showModal: function () {
+    showModal: function() {
       $('.bs-example-modal-lg').modal('show')
     },
-    getYear: function () {
+    getYear: function() {
       var year = []
-      for (var i = new Date().getFullYear(); i <= new Date().getFullYear() + 2; i++) {
+      for (
+        var i = new Date().getFullYear();
+        i <= new Date().getFullYear() + 2;
+        i++
+      ) {
         year.push(i)
       }
       return year
     },
-    getMonth: function () {
-      return ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+    getMonth: function() {
+      return [
+        'มกราคม',
+        'กุมภาพันธ์',
+        'มีนาคม',
+        'เมษายน',
+        'พฤษภาคม',
+        'มิถุนายน',
+        'กรกฎาคม',
+        'สิงหาคม',
+        'กันยายน',
+        'ตุลาคม',
+        'พฤศจิกายน',
+        'ธันวาคม'
+      ]
     },
-    nextPage: function () {
-      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+    nextPage: function() {
+      var index = this.legalCategory.accords.findIndex(
+        obj => obj.id === this.accord.id
+      )
       if (index < this.legalCategory.accords.length - 1) {
-        this.$router.push('/checklist/group/accord/' + this.$route.params.accord + '/compliance/' + this.legalCategory.accords[index + 1].legalDuty.id)
+        this.$router.push(
+          '/checklist/group/accord/' +
+            this.$route.params.accord +
+            '/compliance/' +
+            this.legalCategory.accords[index + 1].legalDuty.id
+        )
       }
     },
-    isNext: function () {
-      var index = this.legalCategory.accords.findIndex(obj => obj.id === this.accord.id)
+    isNext: function() {
+      var index = this.legalCategory.accords.findIndex(
+        obj => obj.id === this.accord.id
+      )
       if (index < this.legalCategory.accords.length - 1) {
         return true
       } else {

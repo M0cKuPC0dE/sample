@@ -3,7 +3,7 @@
 const OAUTH_TOKEN = '/oauth/token'
 const OAUTH_CHECK = '/oauth/check_token?token='
 const OAUTH_HASH = 'Y2xpZW50OnNlY3JldA=='
-const DEV_LOGIN_URL = 'https://compliance.mitrphol.com/'
+const DEV_LOGIN_URL = process.env.baseUrl
 
 import axios from 'axios'
 

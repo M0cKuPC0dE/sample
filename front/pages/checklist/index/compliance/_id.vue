@@ -168,7 +168,7 @@
                         <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                           <td>{{file.name}}</td>
                           <td class="text-center">
-                            <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
+                            <a :href="baseUrl+'/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ดาวน์โหลด">
                               <i class="fa fa-download"></i>
                             </a>
                           </td>
@@ -200,15 +200,22 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/compliance/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/compliance/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { compliance: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
+  },
+  data: function() {
+    return {
+      baseUrl: process.env.baseUrl
+    }
   }
 }
 </script>

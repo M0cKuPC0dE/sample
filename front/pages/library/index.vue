@@ -103,7 +103,7 @@
                               <tr :key="file.index" v-for="(file,index) in compliance.legalFiles">
                                 <td>{{file.name}}</td>
                                 <td class="text-center">
-                                  <a :href="'https://compliance.mitrphol.com/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="ดาวน์โหลด">
+                                  <a :href="baseUrl+'/public/download/'+file.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="ดาวน์โหลด">
                                     <i class="fa fa-download"></i>
                                   </a>
                                 </td>
@@ -138,9 +138,8 @@ import LibraryNavbar from '~/components/LibraryNavbar'
 
 export default {
   layout: 'index',
-  async asyncData (context) {
-    let categories = await http
-      .get('/public/category/compliance')
+  async asyncData(context) {
+    let categories = await http.get('/public/category/compliance')
     return {
       categories: categories.data
     }
@@ -148,8 +147,9 @@ export default {
   components: {
     LibraryNavbar
   },
-  data: function () {
+  data: function() {
     return {
+      baseUrl: process.env.baseUrl,
       lastPattern: '',
       compliance: {
         legalName: '',
@@ -163,41 +163,45 @@ export default {
       }
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.allview(this.categories)
     $('#search-tree').on('keyup', this.search)
   },
   methods: {
-    onSearch: function () {
+    onSearch: function() {
       return false
     },
-    allview: function (categories) {
+    allview: function(categories) {
       var self = this
       $('#allview').treeview({
         expandIcon: 'glyphicon glyphicon-chevron-right',
         collapseIcon: 'glyphicon glyphicon-chevron-down',
         data: self.cat2node(categories),
-        onNodeSelected: function (event, data) {
+        onNodeSelected: function(event, data) {
           self.$set(self, 'compliance', data.value)
           $('.bs-example-modal-lg').modal('show')
-          $('.bs-example-modal-lg').on('hidden.bs.modal', function () {
-            $('#allview').treeview('unselectNode', [data.nodeId, { silent: true }])
+          $('.bs-example-modal-lg').on('hidden.bs.modal', function() {
+            $('#allview').treeview('unselectNode', [
+              data.nodeId,
+              { silent: true }
+            ])
           })
         }
       })
       $('#allview').treeview('collapseAll', { silent: true })
     },
-    cat2node: function (categories) {
+    cat2node: function(categories) {
       var self = this
       var nodes = []
       if (!categories) return
 
-      categories.forEach(function (category) {
+      categories.forEach(function(category) {
         var node = {
           text: category.name,
           icon: 'fa fa-folder',
           selectable: false,
-          nodes: category.childs.length === 0 ? [] : self.cat2node(category.childs)
+          nodes:
+            category.childs.length === 0 ? [] : self.cat2node(category.childs)
         }
         var compNode = self.compliance2node(category.compliances)
         node.nodes = compNode.concat(node.nodes)
@@ -208,11 +212,11 @@ export default {
       })
       return nodes
     },
-    compliance2node: function (compliances) {
+    compliance2node: function(compliances) {
       var nodes = []
       if (!compliances) return
 
-      compliances.forEach(function (compliance) {
+      compliances.forEach(function(compliance) {
         var node = {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
@@ -223,7 +227,7 @@ export default {
       })
       return nodes
     },
-    search: function (e) {
+    search: function(e) {
       var pattern = $('#search-tree').val()
       if (pattern === this.lastPattern) {
         return
@@ -241,14 +245,14 @@ export default {
         tree.disableNode(unrelated, { silent: true })
       }
     },
-    reset: function (tree) {
+    reset: function(tree) {
       tree.collapseAll()
       tree.enableAll()
     },
-    collectUnrelated: function (nodes) {
+    collectUnrelated: function(nodes) {
       var unrelated = []
       var self = this
-      $.each(nodes, function (i, n) {
+      $.each(nodes, function(i, n) {
         if (!n.searchResult && !n.state.expanded) {
           unrelated.push(n.nodeId)
         }
