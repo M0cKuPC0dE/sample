@@ -63,7 +63,7 @@ public class ProgressUploadController {
 
     private static final SimpleDateFormat FD = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
-    private static final int CATEGORY_LAST_COLUMN = 4;
+    private static final int CATEGORY_LAST_COLUMN = 7;
 
     @Autowired
     private ComplianceRepository complianceRepository;
@@ -79,8 +79,7 @@ public class ProgressUploadController {
     private LegalDutyRepository legalDutyRepository;
 
     @RequestMapping(value = "/templateupload", method = RequestMethod.PUT)
-    public void templateUpload(@RequestBody byte[] file, HttpServletRequest request)
-            throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
+    public void templateUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
@@ -98,32 +97,32 @@ public class ProgressUploadController {
                     System.out.println("RowNum: " + nextRow.getRowNum());
                     if (nextRow.getRowNum() == 0) {
                         continue;
-                    } else if (getCellValue(nextRow.getCell(13)) == null || getCellValue(nextRow.getCell(13)).equals("")) {
+                    } else if (getCellValue(nextRow.getCell(16)) == null || getCellValue(nextRow.getCell(16)).equals("")) {
                         break;
                     }
 
                     final Category category = saveCategory(nextRow, CATEGORY_LAST_COLUMN, null);
 
                     // get compliance
-                    final String legalname = getCellValue(nextRow.getCell(5));
-                    final Double year = Double.parseDouble(getCellValue(nextRow.getCell(6)));
+                    final String legalname = getCellValue(nextRow.getCell(8));
+                    final Double year = Double.parseDouble(getCellValue(nextRow.getCell(9)));
 
-                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(7)));
-                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(8)));
+                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(10)));
+                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(11)));
 
-                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(9)).toUpperCase());
+                    final Status status = Status.valueOf(getCellValue(nextRow.getCell(12)).toUpperCase());
 
-                    final String department = getCellValue(nextRow.getCell(10));
-                    final String ministry = getCellValue(nextRow.getCell(11));
-                    final String important = getCellValue(nextRow.getCell(12));
-                    final String legalDuty = getCellValue(nextRow.getCell(13));
+                    final String department = getCellValue(nextRow.getCell(13));
+                    final String ministry = getCellValue(nextRow.getCell(14));
+                    final String important = getCellValue(nextRow.getCell(15));
+                    final String legalDuty = getCellValue(nextRow.getCell(16));
                     final LegalType legalType;
-                    if("ใบอนุญาต".equals(getCellValue(nextRow.getCell(14)))){
+                    if ("ใบอนุญาต".equals(getCellValue(nextRow.getCell(17)))) {
                         legalType = LegalType.LICENSE;
-                    }else{
+                    } else {
                         legalType = LegalType.EVIDENCE;
                     }
-                    
+                    final String tag = getCellValue(nextRow.getCell(18));
 
                     Compliance compliance = new Compliance();
                     compliance.setLegalName(legalname);
@@ -134,11 +133,12 @@ public class ProgressUploadController {
                     compliance.setDepartment(department);
                     compliance.setMinistry(ministry);
                     compliance.setImportant(important);
-                    
+                    compliance.setTags(tag);
+
                     compliance.setCategory(category);
-                    
-                    Compliance c = complianceRepository.findByLegalNameAndCategory(legalname,category);
-                    if(c == null){
+
+                    Compliance c = complianceRepository.findByLegalNameAndCategory(legalname, category);
+                    if (c == null) {
                         LegalDuty newLegalDuty = new LegalDuty();
                         newLegalDuty.setName(legalDuty);
                         newLegalDuty.setLegalType(legalType);
@@ -147,7 +147,7 @@ public class ProgressUploadController {
                         LegalDuty save = legalDutyRepository.save(newLegalDuty);
                         compliance.addLegalDuties(save);
                         complianceRepository.save(compliance);
-                    }else{
+                    } else {
                         LegalDuty newLegalDuty = new LegalDuty();
                         newLegalDuty.setName(legalDuty);
                         newLegalDuty.setLegalType(legalType);
@@ -173,7 +173,7 @@ public class ProgressUploadController {
             return saveCategory(nextRow, col - 1, child);
         }
         Category category = categoryRepository.findByNameAndDeletedIsFalse(categoryName);
-        
+
         if (category == null) {
             category = new Category();
             category.setName(categoryName);
