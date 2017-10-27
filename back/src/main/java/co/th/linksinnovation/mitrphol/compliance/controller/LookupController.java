@@ -7,9 +7,11 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 
 import co.th.linksinnovation.mitrphol.compliance.model.BusinessUnit;
 import co.th.linksinnovation.mitrphol.compliance.model.Company;
+import co.th.linksinnovation.mitrphol.compliance.model.Department;
 import co.th.linksinnovation.mitrphol.compliance.model.Location;
 import co.th.linksinnovation.mitrphol.compliance.repository.BusinessUnitRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.CompanyRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.DepartmentRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LocationRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class LookupController {
     private LocationRepository locationRepository;
     @Autowired
     private BusinessUnitRepository businessUnitRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
     
     @GetMapping("/company")
     public List<Company> getCompany(){
@@ -45,5 +49,10 @@ public class LookupController {
     @GetMapping("/businessunit")
     public List<BusinessUnit> getBusinessUnit(){
         return businessUnitRepository.findAll();
+    }
+    
+    @GetMapping("/department")
+    public List<Department> getDepartment(){
+        return departmentRepository.findAll();
     }
 }

@@ -147,8 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      ผู้ดูแล(ฝ่าย/แผนก): {{category.party}},
-                      ผู้ประสานงาน:
+                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน:
                       <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                         {{coordinator.nameTh + ' '}}
                       </span>
@@ -215,80 +214,96 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalcategory/list', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalcategory/list', {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { categories: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  data: function () {
+  data: function() {
     return {
       approve: {},
       progress: {},
       filter: ''
     }
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       return http
-        .get('/api/legalcategory/list', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalcategory/list', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'categories', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onApprove: function (category) {
+    onApprove: function(category) {
       var self = this
       $('#approve-modal').modal('hide')
       for (var index in category.accords) {
         var accord = category.accords[index]
-        if (accord.accorded === self.filter && (accord.accept === true && accord.approve === null)) {
-          http.post('/api/accord/approve/' + accord.id, accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        if (
+          accord.accorded === self.filter &&
+          (accord.accept === true && accord.approve === null)
+        ) {
+          http
+            .post('/api/accord/approve/' + accord.id, accord, {
+              headers: { Authorization: 'bearer ' + cookie(this).AT }
+            })
             .then(response => {
               self.onLoad()
             })
-            .catch((e) => {
+            .catch(e => {
               self.$router.replace('/checklist/login')
             })
         }
       }
     },
-    onReject: function (category) {
+    onReject: function(category) {
       var self = this
       $('#approve-modal').modal('hide')
       for (var index in category.accords) {
         var accord = category.accords[index]
-        if (accord.accorded === self.filter && (accord.accept === true && accord.approve === null)) {
-          http.post('/api/accord/reject/' + accord.id, accord, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        if (
+          accord.accorded === self.filter &&
+          (accord.accept === true && accord.approve === null)
+        ) {
+          http
+            .post('/api/accord/reject/' + accord.id, accord, {
+              headers: { Authorization: 'bearer ' + cookie(this).AT }
+            })
             .then(response => {
               self.onLoad()
             })
-            .catch((e) => {
+            .catch(e => {
               self.$router.replace('/checklist/login')
             })
         }
       }
     },
-    calculateProgress: function () {
+    calculateProgress: function() {
       var data = {
         accord: 0,
         notAccord: 0,
         notConcern: 0,
         inprogress: 0
       }
-      this.categories.forEach(function (category) {
-        category.accords.forEach(function (accord) {
+      this.categories.forEach(function(category) {
+        category.accords.forEach(function(accord) {
           if (accord.accorded === 'ACCORDED') {
             data.accord = data.accord + 1
           } else if (accord.accorded === 'NOT_ACCORDED') {
@@ -302,14 +317,14 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    onFilter: function (accorded) {
+    onFilter: function(accorded) {
       if (accorded === this.filter) {
         this.$set(this, 'filter', '')
       } else {
         this.$set(this, 'filter', accorded)
       }
     },
-    isInFilter: function (filter, category) {
+    isInFilter: function(filter, category) {
       var num = 0
       for (var accord in category.accords) {
         if (category.accords[accord].accorded === filter) {

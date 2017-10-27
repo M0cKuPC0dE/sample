@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Data;
@@ -30,9 +31,9 @@ import lombok.Data;
 public class LegalCategory {
     @Id
     @GeneratedValue
-    public Long id;
-    public String party;
-    public String department;
+    private Long id;
+    @ManyToOne
+    private Department department;
     @ManyToMany
     private Set<UserDetails> owners;
     @ManyToMany

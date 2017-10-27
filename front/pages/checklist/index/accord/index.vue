@@ -144,7 +144,7 @@
             <div class="row" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
               <div class="col-md-12">
                 <div>
-                  <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.party}},
+                  <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.department.name}},
                   <strong>ผู้ประสานงาน:</strong>
                   <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                     {{coordinator.nameTh + ' '}}
@@ -206,22 +206,24 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalcategory/list', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalcategory/list', {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { categories: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
     this.calculatePosition()
   },
-  data: function () {
+  data: function() {
     return {
       progress: {},
       position: '',
@@ -229,26 +231,28 @@ export default {
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalcategory', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'categories', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    calculateProgress: function () {
+    calculateProgress: function() {
       var data = {
         accord: 0,
         notAccord: 0,
         notConcern: 0,
         inprogress: 0
       }
-      this.categories.forEach(function (category) {
-        category.accords.forEach(function (accord) {
+      this.categories.forEach(function(category) {
+        category.accords.forEach(function(accord) {
           if (accord.accorded === 'ACCORDED') {
             data.accord = data.accord + 1
           } else if (accord.accorded === 'NOT_ACCORDED') {
@@ -262,28 +266,41 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    calculatePosition: function (accord) {
+    calculatePosition: function(accord) {
       if (!accord) return
       var data = 'Completed'
-      if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+      if (
+        accord.accept === null &&
+        accord.accorded === null &&
+        accord.approve === null
+      ) {
         data = 'Owner'
-      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
+      } else if (
+        accord.accept === null &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
         data = 'Coordinator'
-      } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+      } else if (
+        accord.accept !== null &&
+        accord.accept !== false &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
         data = 'Approver'
       } else if (accord.accept === false || accord.approve === false) {
         data = 'Owner'
       }
       return data
     },
-    onFilter: function (accorded) {
+    onFilter: function(accorded) {
       if (accorded === this.filter) {
         this.$set(this, 'filter', '')
       } else {
         this.$set(this, 'filter', accorded)
       }
     },
-    isInFilter: function (filter, category) {
+    isInFilter: function(filter, category) {
       var num = 0
       for (var accord in category.accords) {
         if (category.accords[accord].accorded === filter) {

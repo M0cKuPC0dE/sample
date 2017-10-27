@@ -34,14 +34,14 @@
                       <tr>
                         <th class="col-xs-5">ฝ่าย/แผนก</th>
                         <th>ผู้ดูแล</th>
-                        <th class="col-xs-5 text-center">สถานะการดำนเนินการ</th>
+                        <th class="col-xs-3 text-center">สถานะการดำนเนินการ</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr :key="index" v-for="(category,index) in categories">
                         <td>
-                          <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.party}}</nuxt-link>
+                          <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.department.name}}</nuxt-link>
                         </td>
                         <td>
                           {{category.owners[0].nameTh}}
@@ -101,65 +101,71 @@ import cookie from '~/utils/cookie'
 import StateBoard from '~/components/StateBoard'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalcategory/legalgroup/' + context.params.group, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalcategory/legalgroup/' + context.params.group, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { categories: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
   components: {
     StateBoard
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
   },
-  data: function () {
+  data: function() {
     return {
       deleteCategory: {},
       progress: {}
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalcategory/legalgroup/' + this.$route.params.group, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalcategory/legalgroup/' + this.$route.params.group, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'categories', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#category-remove-modal').modal('hide')
       return http
-        .delete('/api/legalcategory/' + this.deleteCategory.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .delete('/api/legalcategory/' + this.deleteCategory.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.onLoad(self.selected)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (category) {
+    onConfirmDelete: function(category) {
       $('#category-remove-modal').modal('show')
       this.$set(this, 'deleteCategory', category)
     },
-    calculateProgress: function () {
+    calculateProgress: function() {
       var data = {
         accord: 0,
         notAccord: 0,
         notConcern: 0,
         inprogress: 0
       }
-      this.categories.forEach(function (category) {
-        category.accords.forEach(function (accord) {
+      this.categories.forEach(function(category) {
+        category.accords.forEach(function(accord) {
           if (accord.accorded === 'ACCORDED') {
             data.accord = data.accord + 1
           } else if (accord.accorded === 'NOT_ACCORDED') {
@@ -173,12 +179,12 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    categoryProgress: function (category) {
+    categoryProgress: function(category) {
       var data = {
         complete: 0,
         incomplete: 0
       }
-      category.accords.forEach(function (accord) {
+      category.accords.forEach(function(accord) {
         if (accord.accorded) {
           data.complete = data.complete + 1
         }
