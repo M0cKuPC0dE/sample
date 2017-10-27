@@ -72,16 +72,16 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="col-md-12">
-                  <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
-                  <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
-                  <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
-                </label>
-                <div class="col-md-12">
-                  {{accord.remark}}
-                </div>
-              </div>
+              <!-- <div class="form-group">
+                      <label class="col-md-12">
+                        <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                        <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                        <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
+                      </label>
+                      <div class="col-md-12">
+                        {{accord.accordRemark}}
+                      </div>
+                    </div> -->
 
               <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
                 <label class="col-md-12">
@@ -92,21 +92,38 @@
                 </div>
               </div>
 
-              <div class="form-group" v-if="accord.remarkApprover">
-                <label class="col-md-12">
-                  <strong>หมายเหตุ Approver</strong>
-                </label>
-                <div class="col-md-12">
-                  <span>{{accord.remarkApprover}}</span>
+              <div class="panel-group" id="accordion">
+                <div class="panel panel-default" :key="index" v-for="(remark,index) in accord.accordRemark">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                        {{remark.user.nameTh}} - {{remark.createDate}}
+                      </a>
+                    </h4>
+                  </div>
+                  <div :id="'collapse'+index" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      {{remark.remark}}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
+              <!-- <div class="form-group">
+                      <label class="col-md-12">
+                        <strong>หมายเหตุ Approver</strong>
+                      </label>
+                      <div class="col-md-12">
+                        <span>{{accord.remark}}</span>
+                      </div>
+                    </div> -->
+
+              <div class="form-group" v-if="accord.accorded && !accord.accept && accord.accorded !== 'NOT_CONCERN'">
                 <label class="col-md-12">
                   <strong>หมายเหตุ</strong>
                 </label>
                 <div class="col-md-12">
-                  <textarea class="form-control" rows="5" v-model="accord.remarkCoordinator" required></textarea>
+                  <textarea class="form-control" rows="5" v-model="accord.remark" required></textarea>
                 </div>
               </div>
 

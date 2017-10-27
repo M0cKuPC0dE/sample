@@ -7,6 +7,7 @@ package co.th.linksinnovation.mitrphol.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -16,6 +17,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -33,12 +35,10 @@ public class Accord {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(length = 4000)
+    @Lob
     private String remark;
-    @Column(length = 4000)
-    private String remarkCoordinator;
-    @Column(length = 4000)
-    private String remarkApprover;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<AccordRemark> accordRemark;
     @Enumerated(EnumType.STRING)
     private Accorded accorded;
     @Temporal(TemporalType.TIMESTAMP)
@@ -54,4 +54,11 @@ public class Accord {
     private List<EvidenceFile> evidenceFiles;
     private Boolean accept;
     private Boolean approve;
+    
+    public void addRemark(AccordRemark accordRemark){
+        if(this.accordRemark == null){
+            this.accordRemark = new ArrayList<>();
+        }
+        this.accordRemark.add(accordRemark);
+    }
 }

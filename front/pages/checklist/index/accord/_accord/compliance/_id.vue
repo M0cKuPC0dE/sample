@@ -72,7 +72,24 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="panel-group" id="accordion">
+                <div class="panel panel-default" :key="index" v-for="(remark,index) in accord.accordRemark">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                        {{remark.user.nameTh}} - {{remark.createDate}}
+                      </a>
+                    </h4>
+                  </div>
+                  <div :id="'collapse'+index" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      {{remark.remark}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" v-if="position === 'Owner'">
                 <label class="col-md-12">
                   <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ</strong>
                   <strong v-if="accord.accorded === 'NOT_ACCORDED'">ระบุแผนงาน</strong>
