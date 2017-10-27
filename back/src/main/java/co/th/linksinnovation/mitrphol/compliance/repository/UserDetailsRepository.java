@@ -22,5 +22,7 @@ public interface UserDetailsRepository extends JpaRepository<UserDetails, String
     
     @Query( "select u from UserDetails u inner join u.authorities r where r.authority in :roles" )
     public List<UserDetails> findUserByRole(@Param("roles") List<String> roles);
+
+    public List<UserDetails> findByUuidAndUuidNotNull(String name);
     
 }

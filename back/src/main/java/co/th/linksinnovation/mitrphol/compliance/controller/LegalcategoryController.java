@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -147,6 +148,7 @@ public class LegalcategoryController {
                         ud.setNameTh(findUserInfo.getSuccess().getData().getUserInfo().getFullname().getTh());
                         ud.setEmail(findUserInfo.getSuccess().getData().getUserInfo().getEmail());
                         ud.setPhoto(findUserInfo.getSuccess().getData().getUserInfo().getPhoto());
+                        ud.setUuid(UUID.randomUUID().toString());
                         Authority authority = new Authority();
                         authority.setAuthority("Owner");
                         ud.addAuthority(authority);

@@ -17,19 +17,19 @@
               {{error}}
             </div>
 
-            <div class="form-group  m-t-20">
+            <div class="form-group  m-t-20" v-if="!$route.query.key">
               <div class="col-xs-12">
                 <label>Username</label>
                 <input class="form-control" type="text" required="" placeholder="Username" v-model="credentials.username">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="!$route.query.key">
               <div class="col-xs-12">
                 <label>Password</label>
                 <input class="form-control" type="password" required="" placeholder="Password" v-model="credentials.password">
               </div>
             </div>
-            <div class="form-group text-center m-t-20">
+            <div class="form-group text-center m-t-20" v-if="!$route.query.key">
               <div class="col-xs-12">
                 <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">
                   Log In
@@ -67,7 +67,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   layout: 'login',
-  data: function () {
+  data: function() {
     return {
       credentials: {
         username: '',
@@ -75,10 +75,16 @@ export default {
       }
     }
   },
+  mounted: function() {
+    if (this.$route.query.key) {
+      this.credentials = { username: this.$route.query.key }
+      this.$store.dispatch('auth/login', this)
+    }
+  },
   methods: {
-    onSubmit: function () {
+    onSubmit: function() {
       if (process.BROWSER_BUILD) {
-        $(document).ready(function () {
+        $(document).ready(function() {
           $('.alert').show()
           if (!$('.alert').is(':visible')) {
             $('button[type="submit"]').prop('disabled', true)
@@ -87,20 +93,20 @@ export default {
       }
       this.$store.dispatch('auth/login', this)
     },
-    closeAlert: function () {
+    closeAlert: function() {
       $('.alert').hide()
       this.$store.dispatch('auth/clearerror', this)
     },
-    onSelectAuthority: function (authority) {
+    onSelectAuthority: function(authority) {
       $('#myModal').modal('hide')
       this.$store.dispatch('auth/authority', { vc: this, authority: authority })
     }
   },
   watch: {
-    error: function () {
+    error: function() {
       $('button[type="submit"]').prop('disabled', false)
     },
-    authority: function (val) {
+    authority: function(val) {
       if (Array.isArray(val) && val.length > 1) {
         $('#myModal').modal()
       }

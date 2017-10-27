@@ -1,8 +1,11 @@
 package co.th.linksinnovation.mitrphol.compliance.config;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,10 +35,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UserDetails findOne = userDetailsRepository.findOne(authentication.getName().toLowerCase());
-        if(findOne != null && iserviceAuthen(authentication)){
+        if (findOne != null && iserviceAuthen(authentication)) {
             Authentication auth = new UsernamePasswordAuthenticationToken(authentication.getName().toLowerCase(), authentication.getCredentials().toString(), findOne.getAuthorities());
             return auth;
-        }else{
+        } else if (findOne == null) {
+            List<UserDetails> findUuids = userDetailsRepository.findByUuidAndUuidNotNull(authentication.getName());
+            if (findUuids.size() == 1) {
+                List<Authority> authorities = new ArrayList<>();
+                authorities.add(new Authority("Owner"));
+                return new UsernamePasswordAuthenticationToken(findUuids.get(0).getUsername(), authentication.getCredentials().toString(), authorities);
+            } else {
+                return null;
+            }
+        } else {
             return null;
         }
     }
