@@ -33,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
@@ -107,8 +108,15 @@ public class ProgressUploadController {
                     final String legalname = getCellValue(nextRow.getCell(8));
                     final Double year = Double.parseDouble(getCellValue(nextRow.getCell(9)));
 
-                    final Date publicDate = FD.parse(getCellValue(nextRow.getCell(10)));
-                    final Date effectiveDate = FD.parse(getCellValue(nextRow.getCell(11)));
+                    Calendar publicCalendar = Calendar.getInstance();
+                    publicCalendar.setTime(FD.parse(getCellValue(nextRow.getCell(10))));
+                    publicCalendar.add(Calendar.YEAR, -543);
+                    final Date publicDate = publicCalendar.getTime();
+                    
+                    Calendar effectiveCalendar = Calendar.getInstance();
+                    effectiveCalendar.setTime(FD.parse(getCellValue(nextRow.getCell(11))));
+                    effectiveCalendar.add(Calendar.YEAR, -543);
+                    final Date effectiveDate = effectiveCalendar.getTime();
 
                     final Status status = Status.valueOf(getCellValue(nextRow.getCell(12)).toUpperCase());
 
