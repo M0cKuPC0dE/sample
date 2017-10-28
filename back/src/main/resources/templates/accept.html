@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>[SUBJECT]</title>
+    </head>
+    <body>
+        <p style="font-size: 16px; text-align: center;">
+            คุณ <span th:text="${name}"></span> ได้ทำการประเมินความสอดคล้องการปฏิบัติตามกฎหมายแล้ว คุณมีรายการกฎหมายที่ต้องพิจารณาในระบบ Compliance System
+        </p>
+        <p style="font-size: 16px; text-align: center;">
+            สามารถเข้าใช้งานระบบได้ที่
+            <a th:href="${url}" target="_blank">Compliance System</a>
+        </p>
+        <p></p>
+        <p style="font-size: 16px; text-align: center;">
+            รายการกฎหมายที่ต้องประเมินความสอดคล้องการปฏิบัติตามกฎหมาย
+        </p>
+        <table align="center" width="75%" style="border: 1px solid #333; border-collapse: collapse;">
+            <tr bgcolor="#ccc">
+                <td rowspan="2" width="25%" style="border: 1px solid #333; text-align: center;">จำนวน
+                    <br />(รายการกฎหมาย)</td>
+                <td colspan="4" width="75%" style="border: 1px solid #333; text-align: center;">ผลการประเมิน</td>
+            </tr>
+            <tr>
+                <td bgcolor="#00ff44" style="border: 1px solid #333; text-align: center;">สอดคล้อง</td>
+                <td bgcolor="#ff9900" style="border: 1px solid #333; text-align: center;">ไม่สอดคล้อง</td>
+                <td bgcolor="#ff9900" style="border: 1px solid #333; text-align: center;">ยังไม่ดำเนินการ</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #333; text-align: center;"><span th:text="${total}"></span></td>
+                <td style="border: 1px solid #333; text-align: center;"><span th:text="${accord}"></span></td>
+                <td style="border: 1px solid #333; text-align: center;"><span th:text="${not_accord}"></span></td>
+                <td style="border: 1px solid #333; text-align: center;"><span th:text="${nothing}"></span></td>
+            </tr>
+        </table>
+    </body>
+</html>

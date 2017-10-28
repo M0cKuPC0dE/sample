@@ -6,16 +6,23 @@
 package co.th.linksinnovation.mitrphol.compliance.service;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
+import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -61,13 +68,13 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("Compliance System Coordinator");
-                StringBuilder sb = new StringBuilder();
-                sb.append("คุณ ");
-                sb.append(user.getNameTh());
-                sb.append(" ได้กำหนดให้คุณเป็น Coordinator ของระบบ Compliance System ");
-                sb.append(" สามารถเข้าใช้งานระบบได้ที่ https://compliance.mitrphol.com");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
+                helper.setSubject("[Compliance System] มีรายการกฎหมายได้รับ Assign จาก Admin");
+
+                Context context = new Context();
+                context.setVariable("name", user.getNameTh());
+                context.setVariable("amount", legalGroup.getLegalDuties().size());
+
+                helper.setText(templateEngine.process("coordinator", context), true);
             } catch (MessagingException e) {
                 e.printStackTrace();
             } finally {
@@ -86,12 +93,14 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("Compliance System Owner");
-                StringBuilder sb = new StringBuilder();
-                sb.append("คุณ ");
-                sb.append(user.getNameTh());
-                sb.append(" ได้กำหนดให้คุณเป็น Owner ของระบบ Compliance System ");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
+                helper.setSubject("[Compliance System] มีรายการกฎหมายรอการประเมินความสอดคล้องการปฏิบัติตามกฎหมาย จาก Compliance Coordinator");
+
+                Context context = new Context();
+                context.setVariable("name", user.getNameTh());
+                context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
+                context.setVariable("amount", legalCategory.getLegalDuties().size());
+
+                helper.setText(templateEngine.process("owner", context), true);
             } catch (MessagingException e) {
                 e.printStackTrace();
             } finally {
@@ -100,24 +109,72 @@ public class MailService {
         }
     }
 
-    @Async
     @Transactional
     public void compliance(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
-        for (UserDetails u : findOne.getLegalCategory().getLegalGroup().getCoordinates()) {
+        List<Accord> accords = findOne.getLegalCategory().getAccords();
+        List<UserDetails> coordinates = findOne.getLegalCategory().getLegalGroup().getCoordinates();
+        asyncCompliance(coordinates, user, accords);
+    }
+
+    @Async
+    private void asyncCompliance(List<UserDetails> coordinates, UserDetails user, List<Accord> accords) throws MailException {
+        for (UserDetails u : coordinates) {
             MimeMessage mail = javaMailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("Compliance System Notification");
-                StringBuilder sb = new StringBuilder();
-                sb.append("คุณ ");
-                sb.append(user.getNameTh());
-                sb.append(" ได้บันทึกผลการดำเนินงานตามกฎหมายในระบบ Compliance System แล้ว ");
-                sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
+                helper.setSubject("[Compliance System] มีรายการกฎหมายซึ่งประเมินความสอดคล้องแล้ว รอการพิจารณา");
+
+                Context context = new Context();
+                context.setVariable("name", user.getNameTh());
+                
+                Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
+                context.setVariable("total", accords.size());
+                context.setVariable("accord", collect.get(Accorded.ACCORDED));
+                context.setVariable("not_accord", collect.get(Accorded.NOT_ACCORDED));
+                context.setVariable("not_concern", collect.get(Accorded.NOT_CONCERN));
+
+                helper.setText(templateEngine.process("compliance", context), true);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } finally {
+                javaMailSender.send(mail);
+            }
+        }
+    }
+
+    @Transactional
+    public void acceptNotification(Accord accord, String username) {
+        Accord findOne = accordRepository.findOne(accord.getId());
+        UserDetails user = userDetailsRepository.findOne(username);
+        Set<UserDetails> approvers = findOne.getLegalCategory().getApprovers();
+        List<Accord> accords = findOne.getLegalCategory().getAccords();
+        asyncAccept(approvers, user, accords);
+    }
+
+    @Async
+    private void asyncAccept(Set<UserDetails> approvers, UserDetails user, List<Accord> accords) throws MailException {
+        for (UserDetails u : approvers) {
+            MimeMessage mail = javaMailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+                helper.setTo(u.getEmail());
+                helper.setFrom("mpcompliance@mitrphol.com");
+                helper.setSubject("[Compliance System] มีรายการกฎหมายผ่านการพิจารณาจาก Compliance Coordinator รอการพิจารณา");
+
+                Context context = new Context();
+                context.setVariable("name", user.getNameTh());
+                context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
+                Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
+                context.setVariable("total", accords.size());
+                context.setVariable("accord", collect.get(Accorded.ACCORDED));
+                context.setVariable("not_accord", collect.get(Accorded.NOT_ACCORDED));
+                context.setVariable("nothing", accords.size() - (collect.get(Accorded.ACCORDED) + collect.get(Accorded.NOT_ACCORDED) + collect.get(Accorded.NOT_CONCERN)));
+
+                helper.setText(templateEngine.process("accept", context), true);
             } catch (MessagingException e) {
                 e.printStackTrace();
             } finally {
@@ -126,24 +183,37 @@ public class MailService {
         }
     }
     
-    @Async
     @Transactional
-    public void acceptNotification(Accord accord, String username) {
+    public void approveNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
-        for (UserDetails u : findOne.getLegalCategory().getApprovers()) {
+        Set<UserDetails> owners = findOne.getLegalCategory().getOwners();
+        List<UserDetails> coordinates = findOne.getLegalCategory().getLegalGroup().getCoordinates();
+        List<Accord> accords = findOne.getLegalCategory().getAccords();
+        
+        asyncApprove(owners, user, accords);
+        asyncApprove(coordinates, user, accords);
+    }
+
+    @Async
+    private void asyncApprove(Collection<? extends UserDetails> approvers, UserDetails user, List<Accord> accords) throws MailException {
+        for (UserDetails u : approvers) {
             MimeMessage mail = javaMailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("Compliance System Notification");
-                StringBuilder sb = new StringBuilder();
-                sb.append("คุณ ");
-                sb.append(user.getNameTh());
-                sb.append(" ได้บันทึกผลเห็นชอบการดำเนินงานตามกฎหมายในระบบ Compliance System แล้ว ");
-                sb.append(" สามารถตรวจสอบได้ที่ https://compliance.mitrphol.com");
-                helper.setText(build("แจ้งเตือนจากระบบ Compliance System", sb.toString()), true);
+                helper.setSubject("[Compliance System] มีรายการกฎหมายที่ได้รับการพิจารณาจาก Approver");
+
+                Context context = new Context();
+                context.setVariable("name", user.getNameTh());
+                Map<Boolean, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getApprove, Collectors.counting()));
+                context.setVariable("total", accords.size());
+                context.setVariable("approve", collect.get(Boolean.TRUE));
+                context.setVariable("not_approve", collect.get(Boolean.FALSE));
+                context.setVariable("nothing", accords.size() - (collect.get(Boolean.TRUE) + collect.get(Boolean.FALSE)));
+
+                helper.setText(templateEngine.process("approve", context), true);
             } catch (MessagingException e) {
                 e.printStackTrace();
             } finally {

@@ -103,6 +103,7 @@ public class AccordController {
         } else {
             findOne.setApprove(Boolean.TRUE);
         }
+        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
@@ -114,6 +115,7 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setAccept(null);
         findOne.setApprove(Boolean.FALSE);
+        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 

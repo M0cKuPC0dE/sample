@@ -181,6 +181,7 @@ public class LegalcategoryController {
                         ud.setNameTh(findUserInfo.getSuccess().getData().getUserInfo().getFullname().getTh());
                         ud.setEmail(findUserInfo.getSuccess().getData().getUserInfo().getEmail());
                         ud.setPhoto(findUserInfo.getSuccess().getData().getUserInfo().getPhoto());
+                        ud.setUuid(UUID.randomUUID().toString());
                         Authority authority = new Authority();
                         authority.setAuthority("Approver");
                         ud.addAuthority(authority);
