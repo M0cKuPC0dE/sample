@@ -16,6 +16,7 @@ import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepositor
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
@@ -75,10 +76,9 @@ public class MailService {
                 context.setVariable("amount", legalGroup.getLegalDuties().size());
 
                 helper.setText(templateEngine.process("coordinator", context), true);
+                javaMailSender.send(mail);
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } finally {
-                javaMailSender.send(mail);
             }
         }
 
@@ -101,10 +101,9 @@ public class MailService {
                 context.setVariable("amount", legalCategory.getLegalDuties().size());
 
                 helper.setText(templateEngine.process("owner", context), true);
+                javaMailSender.send(mail);
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } finally {
-                javaMailSender.send(mail);
             }
         }
     }
@@ -130,7 +129,7 @@ public class MailService {
 
                 Context context = new Context();
                 context.setVariable("name", user.getNameTh());
-                
+
                 Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
                 context.setVariable("total", accords.size());
                 context.setVariable("accord", collect.get(Accorded.ACCORDED));
@@ -138,15 +137,14 @@ public class MailService {
                 context.setVariable("not_concern", collect.get(Accorded.NOT_CONCERN));
 
                 helper.setText(templateEngine.process("compliance", context), true);
+                javaMailSender.send(mail);
+
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } finally {
-                javaMailSender.send(mail);
             }
         }
     }
 
-    @Transactional
     public void acceptNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
@@ -169,20 +167,23 @@ public class MailService {
                 context.setVariable("name", user.getNameTh());
                 context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
                 Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
+                int size = accords.size();
+                Long acc = collect.get(Accorded.ACCORDED) == null ? 0 : collect.get(Accorded.ACCORDED);
+                Long nacc = collect.get(Accorded.NOT_ACCORDED) == null ? 0 : collect.get(Accorded.NOT_ACCORDED);
+                Long ncc = collect.get(Accorded.NOT_CONCERN) == null ? 0 : collect.get(Accorded.NOT_CONCERN);
                 context.setVariable("total", accords.size());
-                context.setVariable("accord", collect.get(Accorded.ACCORDED));
-                context.setVariable("not_accord", collect.get(Accorded.NOT_ACCORDED));
-                context.setVariable("nothing", accords.size() - (collect.get(Accorded.ACCORDED) + collect.get(Accorded.NOT_ACCORDED) + collect.get(Accorded.NOT_CONCERN)));
+                context.setVariable("accord", acc);
+                context.setVariable("not_accord", nacc);
+                context.setVariable("nothing", size - (acc + nacc + ncc));
 
                 helper.setText(templateEngine.process("accept", context), true);
+                javaMailSender.send(mail);
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } finally {
-                javaMailSender.send(mail);
             }
         }
     }
-    
+
     @Transactional
     public void approveNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
@@ -190,7 +191,7 @@ public class MailService {
         Set<UserDetails> owners = findOne.getLegalCategory().getOwners();
         List<UserDetails> coordinates = findOne.getLegalCategory().getLegalGroup().getCoordinates();
         List<Accord> accords = findOne.getLegalCategory().getAccords();
-        
+
         asyncApprove(owners, user, accords);
         asyncApprove(coordinates, user, accords);
     }
@@ -207,17 +208,26 @@ public class MailService {
 
                 Context context = new Context();
                 context.setVariable("name", user.getNameTh());
-                Map<Boolean, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getApprove, Collectors.counting()));
-                context.setVariable("total", accords.size());
-                context.setVariable("approve", collect.get(Boolean.TRUE));
-                context.setVariable("not_approve", collect.get(Boolean.FALSE));
-                context.setVariable("nothing", accords.size() - (collect.get(Boolean.TRUE) + collect.get(Boolean.FALSE)));
+//                Map<Boolean, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getApprove, Collectors.counting()));
+                int size = accords.size();
+                int app = 0;
+                int napp = 0;
+                for (Accord a : accords) {
+                    if (Objects.equals(a.getApprove(), Boolean.TRUE)) {
+                        app++;
+                    } else if (Objects.equals(a.getApprove(), Boolean.FALSE)) {
+                        napp++;
+                    }
+                }
+                context.setVariable("total", size);
+                context.setVariable("approve", app);
+                context.setVariable("not_approve", napp);
+                context.setVariable("nothing", size - (app + napp));
 
                 helper.setText(templateEngine.process("approve", context), true);
+                javaMailSender.send(mail);
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } finally {
-                javaMailSender.send(mail);
             }
         }
     }
