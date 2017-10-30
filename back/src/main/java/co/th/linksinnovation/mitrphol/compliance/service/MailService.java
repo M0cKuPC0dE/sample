@@ -168,9 +168,9 @@ public class MailService {
                 context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
                 Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
                 int size = accords.size();
-                Long acc = collect.get(Accorded.ACCORDED) == null ? 0 : collect.get(Accorded.ACCORDED);
-                Long nacc = collect.get(Accorded.NOT_ACCORDED) == null ? 0 : collect.get(Accorded.NOT_ACCORDED);
-                Long ncc = collect.get(Accorded.NOT_CONCERN) == null ? 0 : collect.get(Accorded.NOT_CONCERN);
+                Long acc = collect.get(Accorded.ACCORDED) == null ? 0L : collect.get(Accorded.ACCORDED);
+                Long nacc = collect.get(Accorded.NOT_ACCORDED) == null ? 0L : collect.get(Accorded.NOT_ACCORDED);
+                Long ncc = collect.get(Accorded.NOT_CONCERN) == null ? 0L : collect.get(Accorded.NOT_CONCERN);
                 context.setVariable("total", accords.size());
                 context.setVariable("accord", acc);
                 context.setVariable("not_accord", nacc);
