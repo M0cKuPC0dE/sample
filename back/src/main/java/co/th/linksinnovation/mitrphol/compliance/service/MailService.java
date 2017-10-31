@@ -135,11 +135,11 @@ public class MailService {
                 int nacc = 0;
                 int ncc = 0;
                 for(Accord a : accords){
-                    if(a.getAccorded().equals(Accorded.ACCORDED)){
+                    if(Accorded.ACCORDED.equals(a.getAccorded())){
                         acc++;
-                    }else if(a.getAccorded().equals(Accorded.NOT_ACCORDED)){
+                    }else if(Accorded.NOT_ACCORDED.equals(a.getAccorded())){
                         nacc++;
-                    }else if(a.getAccorded().equals(Accorded.NOT_CONCERN)){
+                    }else if(Accorded.NOT_CONCERN.equals(a.getAccorded())){
                         ncc++;
                     }
                 }
@@ -183,11 +183,11 @@ public class MailService {
                 int nacc = 0;
                 int ncc = 0;
                 for(Accord a : accords){
-                    if(a.getAccorded().equals(Accorded.ACCORDED)){
+                    if(Accorded.ACCORDED.equals(a.getAccorded())){
                         acc++;
-                    }else if(a.getAccorded().equals(Accorded.NOT_ACCORDED)){
+                    }else if(Accorded.NOT_ACCORDED.equals(a.getAccorded())){
                         nacc++;
-                    }else if(a.getAccorded().equals(Accorded.NOT_CONCERN)){
+                    }else if(Accorded.NOT_CONCERN.equals(a.getAccorded())){
                         ncc++;
                     }
                 }
