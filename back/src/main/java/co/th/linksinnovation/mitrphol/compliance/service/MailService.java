@@ -6,6 +6,7 @@
 package co.th.linksinnovation.mitrphol.compliance.service;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
+import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
@@ -14,8 +15,10 @@ import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
@@ -132,18 +135,12 @@ public class MailService {
                 int nacc = 0;
                 int ncc = 0;
                 for(Accord a : accords){
-                    switch (a.getAccorded()) {
-                        case ACCORDED:
-                            acc++;
-                            break;
-                        case NOT_ACCORDED:
-                            nacc++;
-                            break;
-                        case NOT_CONCERN:
-                            ncc++;
-                            break;
-                        default:
-                            break;
+                    if(a.getAccorded().equals(Accorded.ACCORDED)){
+                        acc++;
+                    }else if(a.getAccorded().equals(Accorded.NOT_ACCORDED)){
+                        nacc++;
+                    }else if(a.getAccorded().equals(Accorded.NOT_CONCERN)){
+                        ncc++;
                     }
                 }
                 context.setVariable("total",size);
@@ -186,18 +183,12 @@ public class MailService {
                 int nacc = 0;
                 int ncc = 0;
                 for(Accord a : accords){
-                    switch (a.getAccorded()) {
-                        case ACCORDED:
-                            acc++;
-                            break;
-                        case NOT_ACCORDED:
-                            nacc++;
-                            break;
-                        case NOT_CONCERN:
-                            ncc++;
-                            break;
-                        default:
-                            break;
+                    if(a.getAccorded().equals(Accorded.ACCORDED)){
+                        acc++;
+                    }else if(a.getAccorded().equals(Accorded.NOT_ACCORDED)){
+                        nacc++;
+                    }else if(a.getAccorded().equals(Accorded.NOT_CONCERN)){
+                        ncc++;
                     }
                 }
                 context.setVariable("total", accords.size());
