@@ -6,7 +6,6 @@
 package co.th.linksinnovation.mitrphol.compliance.service;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
-import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
@@ -15,10 +14,8 @@ import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
@@ -130,11 +127,29 @@ public class MailService {
                 Context context = new Context();
                 context.setVariable("name", user.getNameTh());
 
-                Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
-                context.setVariable("total", accords.size());
-                context.setVariable("accord", collect.get(Accorded.ACCORDED));
-                context.setVariable("not_accord", collect.get(Accorded.NOT_ACCORDED));
-                context.setVariable("not_concern", collect.get(Accorded.NOT_CONCERN));
+                int size = accords.size();
+                int acc = 0;
+                int nacc = 0;
+                int ncc = 0;
+                for(Accord a : accords){
+                    switch (a.getAccorded()) {
+                        case ACCORDED:
+                            acc++;
+                            break;
+                        case NOT_ACCORDED:
+                            nacc++;
+                            break;
+                        case NOT_CONCERN:
+                            ncc++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                context.setVariable("total",size);
+                context.setVariable("accord", acc);
+                context.setVariable("not_accord", nacc);
+                context.setVariable("not_concern", ncc);
 
                 helper.setText(templateEngine.process("compliance", context), true);
                 javaMailSender.send(mail);
@@ -166,11 +181,25 @@ public class MailService {
                 Context context = new Context();
                 context.setVariable("name", user.getNameTh());
                 context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
-                Map<Accorded, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getAccorded, Collectors.counting()));
                 int size = accords.size();
-                Long acc = collect.get(Accorded.ACCORDED) == null ? 0L : collect.get(Accorded.ACCORDED);
-                Long nacc = collect.get(Accorded.NOT_ACCORDED) == null ? 0L : collect.get(Accorded.NOT_ACCORDED);
-                Long ncc = collect.get(Accorded.NOT_CONCERN) == null ? 0L : collect.get(Accorded.NOT_CONCERN);
+                int acc = 0;
+                int nacc = 0;
+                int ncc = 0;
+                for(Accord a : accords){
+                    switch (a.getAccorded()) {
+                        case ACCORDED:
+                            acc++;
+                            break;
+                        case NOT_ACCORDED:
+                            nacc++;
+                            break;
+                        case NOT_CONCERN:
+                            ncc++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 context.setVariable("total", accords.size());
                 context.setVariable("accord", acc);
                 context.setVariable("not_accord", nacc);
