@@ -35,9 +35,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -46,6 +47,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +105,7 @@ public class ProgressUploadController {
                         break;
                     }
 
-                    final Category category = saveCategory(nextRow, CATEGORY_LAST_COLUMN, null);
+                    final Category category = saveCategory(nextRow, 0, null).get("last");
 
                     // get compliance
                     final String legalname = getCellValue(nextRow.getCell(8));
@@ -112,7 +115,7 @@ public class ProgressUploadController {
                     publicCalendar.setTime(FD.parse(getCellValue(nextRow.getCell(10))));
                     publicCalendar.add(Calendar.YEAR, -543);
                     final Date publicDate = publicCalendar.getTime();
-                    
+
                     Calendar effectiveCalendar = Calendar.getInstance();
                     effectiveCalendar.setTime(FD.parse(getCellValue(nextRow.getCell(11))));
                     effectiveCalendar.add(Calendar.YEAR, -543);
@@ -171,28 +174,44 @@ public class ProgressUploadController {
     }
 
     @Transactional
-    private Category saveCategory(Row nextRow, int col, Category child) {
-        if (col == -1) {
-            return null;
+    private Map<String, Category> saveCategory(Row nextRow, int col, Category parent) {
+        System.out.println("col ----> " + col);
+        if (parent != null) {
+            System.out.println("--------- parent ---->" + parent.getId());
+        } else {
+            System.out.println("---NULL");
+        }
+        if (col > CATEGORY_LAST_COLUMN) {
+            Map<String, Category> map = new HashMap<>();
+            map.put("child", null);
+            map.put("last", parent);
+            System.out.println("---- inner last -" + parent.getId());
+            return map;
         }
 
         String categoryName = nextRow.getCell(col).getStringCellValue();
         if (categoryName == null || "".equals(categoryName)) {
-            return saveCategory(nextRow, col - 1, child);
+            return saveCategory(nextRow, col + 1, parent);
         }
-        Category category = categoryRepository.findByNameAndDeletedIsFalse(categoryName);
+        Category category = categoryRepository.findByNameAndParentAndDeletedIsFalse(categoryName, parent);
 
         if (category == null) {
             category = new Category();
             category.setName(categoryName);
-            if (child != null) {
-                category.addChild(child);
-            }
-            category.setParent(saveCategory(nextRow, col - 1, category));
-            return categoryRepository.saveAndFlush(category);
+            category.setParent(parent);
+            Map<String, Category> map = new HashMap<>();
+            map.put("child", categoryRepository.saveAndFlush(category));
+            Map<String, Category> saveCategory = saveCategory(nextRow, col + 1, map.get("child"));
+            map.put("last", saveCategory.get("last"));
+            category.addChild(saveCategory.get("child"));
+            return map;
         } else {
-            category.setParent(saveCategory(nextRow, col - 1, category));
-            return categoryRepository.saveAndFlush(category);
+            Map<String, Category> map = new HashMap<>();
+            map.put("child", categoryRepository.saveAndFlush(category));
+            Map<String, Category> saveCategory = saveCategory(nextRow, col + 1, map.get("child"));
+            map.put("last", saveCategory.get("last"));
+            category.addChild(saveCategory.get("child"));
+            return map;
         }
     }
 

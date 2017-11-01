@@ -46,6 +46,9 @@ public class Category {
     private List<Compliance> compliances;
     
     public void addChild(Category category){
+        if(category == null){
+            return;
+        }
         if(this.childs == null){
             this.childs = new ArrayList<>();
         }
