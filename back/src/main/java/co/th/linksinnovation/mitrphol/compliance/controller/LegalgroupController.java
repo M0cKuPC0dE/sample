@@ -5,6 +5,7 @@
  */
 package co.th.linksinnovation.mitrphol.compliance.controller;
 
+import co.th.linksinnovation.mitrphol.compliance.model.Accord;
 import co.th.linksinnovation.mitrphol.compliance.model.Authority;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
@@ -12,6 +13,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.model.authen.Authenticate;
+import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
@@ -44,6 +46,8 @@ public class LegalgroupController {
     private LegalcategoryRepository legalcategoryRepository;
     @Autowired
     private UserDetailsRepository userDetailsRepository;
+    @Autowired
+    private AccordRepository accordRepository;
     @Autowired
     private RestService restService;
     @Autowired
@@ -122,6 +126,15 @@ public class LegalgroupController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
+        LegalGroup findOne = legalgroupRepository.findOne(id);
+        List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(findOne);
+        for(LegalCategory le : findByLegalGroup){
+            List<Accord> acs = accordRepository.findByLegalCategory(le);
+            for(Accord ac : acs){
+                accordRepository.delete(ac);
+            }
+            legalcategoryRepository.delete(le);
+        }
         legalgroupRepository.delete(id);
     }
 }

@@ -50,15 +50,16 @@ public class CategoryController {
     }
 
     @PostMapping("/api/category")
+    @JsonView(JsonViewer.CategoryWithCompliance.class)
     public List<Category> post(@RequestBody Category category) {
         if (category.getParent().getId() != null) {
-            Category child = categoryRepository.save(category);
-            Category parent = categoryRepository.findOne(child.getParent().getId());
-            parent.addChild(child);
+//            Category child = categoryRepository.save(category);
+            Category parent = categoryRepository.findOne(category.getParent().getId());
+            parent.addChild(category);
             categoryRepository.save(parent);
         } else {
             category.setParent(null);
-            Category child = categoryRepository.save(category);
+            categoryRepository.save(category);
         }
         return categoryRepository.findByParentIsNullAndDeletedIsFalse();
     }
