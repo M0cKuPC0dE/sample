@@ -130,7 +130,7 @@
                     <tbody>
                       <tr :key="index" v-for="(legalgroup,index) in groups">
                         <td>
-                          <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}</nuxt-link>
+                          <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}({{legalgroup.legalDuties.length}})</nuxt-link>
                         </td>
                         <td class="text-center">{{calculatePosition(legalgroup).owner === 0?'-':calculatePosition(legalgroup).owner}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).coordinator === 0?'-':calculatePosition(legalgroup).coordinator}}</td>
@@ -181,21 +181,23 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalgroup', {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { groups: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
   },
-  data: function () {
+  data: function() {
     return {
       deleteGroup: {},
       progress: {},
@@ -203,34 +205,38 @@ export default {
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalgroup', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'groups', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#group-remove-modal').modal('hide')
       return http
-        .delete('/api/legalgroup/' + this.deleteGroup.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .delete('/api/legalgroup/' + this.deleteGroup.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.onLoad(self.selected)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (legalgroup) {
+    onConfirmDelete: function(legalgroup) {
       $('#group-remove-modal').modal('show')
       this.$set(this, 'deleteGroup', legalgroup)
     },
-    calculateProgress: function () {
+    calculateProgress: function() {
       var data = {
         accord: 0,
         notAccord: 0,
@@ -238,9 +244,9 @@ export default {
         inprogress: 0,
         total: 0
       }
-      this.groups.forEach(function (group) {
-        group.legalCategories.forEach(function (category) {
-          category.accords.forEach(function (accord) {
+      this.groups.forEach(function(group) {
+        group.legalCategories.forEach(function(category) {
+          category.accords.forEach(function(accord) {
             if (accord.accorded === 'ACCORDED') {
               data.accord = data.accord + 1
             } else if (accord.accorded === 'NOT_ACCORDED') {
@@ -256,20 +262,33 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    calculatePosition: function (group) {
+    calculatePosition: function(group) {
       var data = {
         owner: 0,
         coordinator: 0,
         approver: 0,
         total: 0
       }
-      group.legalCategories.forEach(function (category) {
-        category.accords.forEach(function (accord) {
-          if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+      group.legalCategories.forEach(function(category) {
+        category.accords.forEach(function(accord) {
+          if (
+            accord.accept === null &&
+            accord.accorded === null &&
+            accord.approve === null
+          ) {
             data.owner = data.owner + 1
-          } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
+          } else if (
+            accord.accept === null &&
+            accord.accorded !== null &&
+            accord.approve === null
+          ) {
             data.coordinator = data.coordinator + 1
-          } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+          } else if (
+            accord.accept !== null &&
+            accord.accept !== false &&
+            accord.accorded !== null &&
+            accord.approve === null
+          ) {
             data.approver = data.approver + 1
           } else if (accord.accept === false || accord.approve === false) {
             data.owner = data.owner + 1

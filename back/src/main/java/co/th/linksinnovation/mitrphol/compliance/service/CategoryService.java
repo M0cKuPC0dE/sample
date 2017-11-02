@@ -9,9 +9,11 @@ import co.th.linksinnovation.mitrphol.compliance.model.Category;
 import co.th.linksinnovation.mitrphol.compliance.model.Compliance;
 import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
+import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,8 +30,10 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         Category findOne = categoryRepository.findOne(id);
         if (!findOne.getChilds().isEmpty()) {
-            for (Category category : findOne.getChilds()) {
-                deleteCategory(category.getId());
+            Iterator<Category> iterator = findOne.getChilds().iterator();
+            while(iterator.hasNext()){
+                Category category = iterator.next();
+//                deleteCategory(category.getId());
             }
         }
 
