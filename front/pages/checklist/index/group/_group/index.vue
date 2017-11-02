@@ -91,6 +91,24 @@
       </div>
     </div>
 
+    <div id="category-remove-warn-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">สถานะ</h4>
+          </div>
+          <div class="modal-body" v-if="deleteCategory.department">
+            หมวดหมู่กฎหมาย
+            <strong>{{deleteCategory.department.name}}</strong> มีหน้าที่ตามกฎหมายรอปฏิบัติ
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -150,7 +168,7 @@ export default {
           self.onLoad(self.selected)
         })
         .catch(e => {
-          self.$router.replace('/checklist/login')
+          $('#category-remove-warn-modal').modal('show')
         })
     },
     onConfirmDelete: function(category) {
@@ -185,7 +203,7 @@ export default {
         incomplete: 0
       }
       category.accords.forEach(function(accord) {
-        if (accord.accorded) {
+        if (accord.approve) {
           data.complete = data.complete + 1
         }
         data.incomplete = data.incomplete + 1
