@@ -109,7 +109,7 @@ public class LegalcategoryController {
         } else if (au.equals("Approver")) {
             return legalcategoryRepository.findByApproversIn(findOne);
         } else {
-            return null;
+            return legalcategoryRepository.findByOwnersIn(findOne);
         }
     }
 
