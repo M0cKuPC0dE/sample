@@ -58,6 +58,9 @@ public class Accord {
     private Boolean approve;
     
     public void addRemark(AccordRemark accordRemark){
+        if(accordRemark.getRemark() == null || accordRemark.getRemark().equals("")){
+            return;
+        }
         if(this.accordRemark == null){
             this.accordRemark = new ArrayList<>();
         }
