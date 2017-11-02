@@ -130,7 +130,7 @@
                     <tbody>
                       <tr :key="index" v-for="(legalgroup,index) in groups">
                         <td>
-                          <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}}({{legalgroup.legalDuties.length}})</nuxt-link>
+                          <nuxt-link :to="'/checklist/category/'+legalgroup.id">{{legalgroup.buName}} ({{legalgroup.legalDuties.length}})</nuxt-link>
                         </td>
                         <td class="text-center">{{calculatePosition(legalgroup).owner === 0?'-':calculatePosition(legalgroup).owner}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).coordinator === 0?'-':calculatePosition(legalgroup).coordinator}}</td>
