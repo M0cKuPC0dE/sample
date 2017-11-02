@@ -91,8 +91,11 @@ public class LegalcategoryController {
 
     @GetMapping("/list")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public List<LegalCategory> getList(@AuthenticationPrincipal String username,@CookieValue("AU") String au) {
+    public List<LegalCategory> getList(@AuthenticationPrincipal String username,@CookieValue(value = "AU",required = false) String au) {
         UserDetails findOne = userDetailsRepository.findOne(username);
+        if(null == au){
+            au = "";
+        }
         if (au.equals("Administrator")) {
             return legalcategoryRepository.findAll();
         } else if (au.equals("Coordinator")) {
@@ -109,7 +112,7 @@ public class LegalcategoryController {
         } else if (au.equals("Approver")) {
             return legalcategoryRepository.findByApproversIn(findOne);
         } else {
-            return null;
+            return legalcategoryRepository.findAll();
         }
     }
 

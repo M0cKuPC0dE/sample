@@ -73,15 +73,15 @@
               </div>
 
               <!-- <div class="form-group">
-                      <label class="col-md-12">
-                        <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
-                        <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
-                        <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
-                      </label>
-                      <div class="col-md-12">
-                        {{accord.accordRemark}}
-                      </div>
-                    </div> -->
+                          <label class="col-md-12">
+                            <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                            <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                            <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
+                          </label>
+                          <div class="col-md-12">
+                            {{accord.accordRemark}}
+                          </div>
+                        </div> -->
 
               <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
                 <label class="col-md-12">
@@ -110,13 +110,13 @@
               </div>
 
               <!-- <div class="form-group">
-                      <label class="col-md-12">
-                        <strong>หมายเหตุ Approver</strong>
-                      </label>
-                      <div class="col-md-12">
-                        <span>{{accord.remark}}</span>
-                      </div>
-                    </div> -->
+                          <label class="col-md-12">
+                            <strong>หมายเหตุ Approver</strong>
+                          </label>
+                          <div class="col-md-12">
+                            <span>{{accord.remark}}</span>
+                          </div>
+                        </div> -->
 
               <div class="form-group" v-if="accord.accorded && !accord.accept && accord.accorded !== 'NOT_CONCERN'">
                 <label class="col-md-12">
@@ -208,8 +208,8 @@
                   ถัดไป
                   <i class="fa fa-chevron-right"></i>
                 </button>
-                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && !accord.accept && accord.accorded !== 'NOT_CONCERN'">เห็นชอบ</button>
-                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && !accord.accept">ไม่เห็นชอบ</button>
+                <button v-on:click="approve" type="button" class="btn btn-success m-l-10" v-if="accord.accorded && accord.accept == null && accord.accorded !== 'NOT_CONCERN'">เห็นชอบ</button>
+                <button v-on:click="notApprove" type="button" class="btn btn-danger m-l-10" v-if="accord.accorded && accord.accept == null">ไม่เห็นชอบ</button>
               </div>
 
             </form>

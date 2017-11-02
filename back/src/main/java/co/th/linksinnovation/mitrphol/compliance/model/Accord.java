@@ -21,6 +21,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class Accord {
     @Lob
     private String remark;
     @OneToMany(cascade = CascadeType.ALL)
+    @OrderBy("id")
     private List<AccordRemark> accordRemark;
     @Enumerated(EnumType.STRING)
     private Accorded accorded;
