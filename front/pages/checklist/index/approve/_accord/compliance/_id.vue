@@ -71,15 +71,15 @@
               </div>
 
               <!-- <div class="form-group">
-                          <label class="col-md-12">
-                            <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
-                            <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
-                            <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
-                          </label>
-                          <div class="col-md-12">
-                            {{accord.remark}}
-                          </div>
-                        </div> -->
+                            <label class="col-md-12">
+                              <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                              <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                              <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
+                            </label>
+                            <div class="col-md-12">
+                              {{accord.remark}}
+                            </div>
+                          </div> -->
 
               <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
                 <label class="col-md-12">
@@ -91,13 +91,13 @@
               </div>
 
               <!-- <div class="form-group" v-if="accord.remarkCoordinator">
-                          <label class="col-md-12">
-                            <strong>หมายเหตุ Coordinator</strong>
-                          </label>
-                          <div class="col-md-12">
-                            <span>{{accord.remarkCoordinator}}</span>
-                          </div>
-                        </div> -->
+                            <label class="col-md-12">
+                              <strong>หมายเหตุ Coordinator</strong>
+                            </label>
+                            <div class="col-md-12">
+                              <span>{{accord.remarkCoordinator}}</span>
+                            </div>
+                          </div> -->
 
               <div class="panel-group" id="accordion">
 
@@ -123,7 +123,7 @@
                   <strong>หมายเหตุ</strong>
                 </label>
                 <div class="col-md-12">
-                  <textarea class="form-control" rows="5" v-model="accord.remarkApprover" required></textarea>
+                  <textarea class="form-control" rows="5" v-model="accord.remark" required></textarea>
                 </div>
               </div>
 
