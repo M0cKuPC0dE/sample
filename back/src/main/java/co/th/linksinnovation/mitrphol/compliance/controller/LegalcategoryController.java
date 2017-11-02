@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,11 +91,11 @@ public class LegalcategoryController {
 
     @GetMapping("/list")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public List<LegalCategory> getList(@AuthenticationPrincipal String username) {
+    public List<LegalCategory> getList(@AuthenticationPrincipal String username,@CookieValue("AU") String au) {
         UserDetails findOne = userDetailsRepository.findOne(username);
-        if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
+        if (au.equals("Administrator")) {
             return legalcategoryRepository.findAll();
-        } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
+        } else if (au.equals("Coordinator")) {
             List<LegalGroup> findByCoordinatesIn = legalgroupRepository.findByCoordinatesIn(findOne);
             List<LegalCategory> legalCategories = new ArrayList<>();
             for (LegalGroup g : findByCoordinatesIn) {
@@ -103,9 +104,9 @@ public class LegalcategoryController {
             }
             return legalCategories;
 
-        } else if (findOne.getAuthorities().contains(new Authority("Owner"))) {
+        } else if (au.equals("Owner")) {
             return legalcategoryRepository.findByOwnersIn(findOne);
-        } else if (findOne.getAuthorities().contains(new Authority("Approver"))) {
+        } else if (au.equals("Approver")) {
             return legalcategoryRepository.findByApproversIn(findOne);
         } else {
             return null;
