@@ -114,6 +114,7 @@ public class AccordController {
         findOne.addRemark(new AccordRemark(accord.getRemark(), ud));
         findOne.setRemark(null);
         findOne.setAccept(null);
+        findOne.setAccorded(null);
         findOne.setApprove(Boolean.FALSE);
         mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
