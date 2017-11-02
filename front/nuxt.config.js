@@ -2,7 +2,7 @@ const webpack = require('webpack')
 
 module.exports = {
   env: {
-    baseUrl: process.env.NODE_ENV === 'dev' ? 'https://compliance.mitrphol.com' : 'https://compliance.mitrphol.com'
+    baseUrl: process.env.NODE_ENV === 'dev' ? 'http://localhost:8080' : 'https://compliance.mitrphol.com'
   },
   /*
   ** Headers of the page

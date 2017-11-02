@@ -253,11 +253,11 @@ export default {
     },
     onApprove: function(category) {
       var self = this
-      $('#approve-modal').modal('hide')
+      console.log(self.filter)
       for (var index in category.accords) {
         var accord = category.accords[index]
         if (
-          accord.accorded === self.filter &&
+          (accord.accorded === self.filter || self.filter === '') &&
           (accord.accept === true && accord.approve === null)
         ) {
           http
@@ -275,11 +275,10 @@ export default {
     },
     onReject: function(category) {
       var self = this
-      $('#approve-modal').modal('hide')
       for (var index in category.accords) {
         var accord = category.accords[index]
         if (
-          accord.accorded === self.filter &&
+          (accord.accorded === self.filter || self.filter === '') &&
           (accord.accept === true && accord.approve === null)
         ) {
           http
