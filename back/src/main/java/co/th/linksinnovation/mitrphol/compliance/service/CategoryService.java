@@ -11,6 +11,7 @@ import co.th.linksinnovation.mitrphol.compliance.repository.CategoryRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.ComplianceRepository;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +28,21 @@ public class CategoryService {
     @Autowired
     private ComplianceRepository complianceRepository;
 
-    public void deleteCategory(Long id) {
-        Category findOne = categoryRepository.findOne(id);
-        if (!findOne.getChilds().isEmpty()) {
-            Iterator<Category> iterator = findOne.getChilds().iterator();
-            while(iterator.hasNext()){
-                Category category = iterator.next();
-//                deleteCategory(category.getId());
+    public void deleteCategory(Category category) {
+        if (!category.getChilds().isEmpty()) {
+            CopyOnWriteArrayList<Category> copyOnWriteArrayList = new CopyOnWriteArrayList<>(category.getChilds());
+            for(Category cat : copyOnWriteArrayList){
+                Category findOne = categoryRepository.findOne(cat.getId());
+                deleteCategory(findOne);
             }
         }
 
-        List<Compliance> compliances = complianceRepository.findByDeletedIsFalseAndCategory(findOne);
+        List<Compliance> compliances = complianceRepository.findByDeletedIsFalseAndCategory(category);
         for (Compliance compliance : compliances) {
             compliance.setDeleted(Boolean.TRUE);
         }
-        findOne.setDeleted(Boolean.TRUE);
+        category.setDeleted(Boolean.TRUE);
         complianceRepository.save(compliances);
-        categoryRepository.save(findOne);
+        categoryRepository.save(category);
     }
 }

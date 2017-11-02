@@ -75,11 +75,13 @@ public class CategoryController {
 
     @DeleteMapping("/api/category/{id}")
     public void delete(@PathVariable("id") Long id) {
-        categoryService.deleteCategory(id);
+        Category findOne = categoryRepository.findOne(id);
+        categoryService.deleteCategory(findOne);
     }
 
     @GetMapping("/api/category/{id}")
     public void getByLegalgroup(@PathVariable("id") Long id) {
-        categoryService.deleteCategory(id);
+        Category findOne = categoryRepository.findOne(id);
+        categoryService.deleteCategory(findOne);
     }
 }
