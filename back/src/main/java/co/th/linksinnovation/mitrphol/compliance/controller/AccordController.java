@@ -58,7 +58,7 @@ public class AccordController {
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
     public Accord post(@RequestBody Accord accord, @AuthenticationPrincipal String username) {
         UserDetails findOne = userDetailsRepository.findOne(username);
-        accord.addRemark(new AccordRemark(accord.getRemark(), findOne));
+        accord.addRemark(new AccordRemark(accord.getRemark(), findOne, accord.getAccorded().toString()));
         accord.setRemark(null);
         accord.setApprove(null);
         Accord ac = accordRepository.save(accord);
@@ -72,7 +72,7 @@ public class AccordController {
     public void accept(@PathVariable("id") Long id, @RequestBody Accord accord, @AuthenticationPrincipal String username) {
         Accord findOne = accordRepository.findOne(id);
         UserDetails ud = userDetailsRepository.findOne(username);
-        findOne.addRemark(new AccordRemark(accord.getRemark(), ud));
+        findOne.addRemark(new AccordRemark(accord.getRemark(), ud, "ACCEPT"));
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
@@ -84,7 +84,7 @@ public class AccordController {
     public void notAccept(@PathVariable("id") Long id, @RequestBody Accord accord, @AuthenticationPrincipal String username) {
         Accord findOne = accordRepository.findOne(id);
         UserDetails ud = userDetailsRepository.findOne(username);
-        findOne.addRemark(new AccordRemark(accord.getRemark(), ud));
+        findOne.addRemark(new AccordRemark(accord.getRemark(), ud, "NOT_ACCEPT"));
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.FALSE);
@@ -95,7 +95,7 @@ public class AccordController {
     public void approve(@PathVariable("id") Long id, @RequestBody Accord accord, @AuthenticationPrincipal String username) {
         Accord findOne = accordRepository.findOne(id);
         UserDetails ud = userDetailsRepository.findOne(username);
-        findOne.addRemark(new AccordRemark(accord.getRemark(), ud));
+        findOne.addRemark(new AccordRemark(accord.getRemark(), ud, "APPROVE"));
         findOne.setRemark(null);
         if (findOne.getAccorded().equals(Accorded.NOT_ACCORDED)) {
             findOne.setAccept(Boolean.FALSE);
@@ -111,7 +111,7 @@ public class AccordController {
     public void reject(@PathVariable("id") Long id, @RequestBody Accord accord, @AuthenticationPrincipal String username) {
         Accord findOne = accordRepository.findOne(id);
         UserDetails ud = userDetailsRepository.findOne(username);
-        findOne.addRemark(new AccordRemark(accord.getRemark(), ud));
+        findOne.addRemark(new AccordRemark(accord.getRemark(), ud, "NOT_APPROVE"));
         findOne.setRemark(null);
         findOne.setAccept(null);
         findOne.setAccorded(null);

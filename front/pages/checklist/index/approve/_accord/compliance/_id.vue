@@ -71,15 +71,15 @@
               </div>
 
               <!-- <div class="form-group">
-                              <label class="col-md-12">
-                                <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
-                                <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
-                                <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
-                              </label>
-                              <div class="col-md-12">
-                                {{accord.remark}}
-                              </div>
-                            </div> -->
+                                <label class="col-md-12">
+                                  <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                                  <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                                  <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
+                                </label>
+                                <div class="col-md-12">
+                                  {{accord.remark}}
+                                </div>
+                              </div> -->
 
               <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
                 <label class="col-md-12">
@@ -91,13 +91,13 @@
               </div>
 
               <!-- <div class="form-group" v-if="accord.remarkCoordinator">
-                              <label class="col-md-12">
-                                <strong>หมายเหตุ Coordinator</strong>
-                              </label>
-                              <div class="col-md-12">
-                                <span>{{accord.remarkCoordinator}}</span>
-                              </div>
-                            </div> -->
+                                <label class="col-md-12">
+                                  <strong>หมายเหตุ Coordinator</strong>
+                                </label>
+                                <div class="col-md-12">
+                                  <span>{{accord.remarkCoordinator}}</span>
+                                </div>
+                              </div> -->
 
               <div id="accordion" class="panel-group">
                 <div class="panel panel-info">
@@ -113,6 +113,7 @@
                         <div class="media-body">
                           <h4 class="media-heading">{{remark.user.nameTh}}
                             <span class="label label-info pull-right ">{{remark.createDate}}</span>
+                            <span class="label label-warning pull-right ">{{remarkTranslate(remark.status)}}</span>
                           </h4>
                           {{remark.remark}}
                         </div>
@@ -416,6 +417,23 @@ export default {
     }
   },
   methods: {
+    remarkTranslate: function(val) {
+      if (val === 'ACCORDED') {
+        return 'สอดคล้อง'
+      } else if (val === 'NOT_ACCORDED') {
+        return 'ไม่สอดคล้อง'
+      } else if (val === 'NOT_CONCERN') {
+        return 'ไม่เกี่ยวข้อง'
+      } else if (val === 'ACCEPT') {
+        return 'เห็นชอบ'
+      } else if (val === 'NOT_ACCEPT') {
+        return 'ไม่เห็นชอบ'
+      } else if (val === 'APPROVE') {
+        return 'อนุมัติ'
+      } else if (val === 'NOT_APPROVE') {
+        return 'ไม่อนุมัติ'
+      }
+    },
     onSave: function() {
       var self = this
       self.accord.accept = null

@@ -31,11 +31,12 @@ public class AccordRemark {
     private UserDetails user;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate = new Date();
+    private String status;
 
     public AccordRemark() {
     }
 
-    public AccordRemark(String remark, UserDetails user) {
+    public AccordRemark(String remark, UserDetails user,String status) {
         this.remark = remark;
         this.user = user;
     }

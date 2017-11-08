@@ -73,21 +73,21 @@
               </div>
 
               <!-- <div class="panel-group" id="accordion">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                          -
-                        </a>
-                      </h4>
-                    </div>
-                    <div :id="'collapse'+index" class="panel-collapse collapse">
-                      <div class="panel-body">
-                        {{remark.remark}}
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
+                                            <div class="panel panel-default">
+                                              <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                  <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                                                    -
+                                                  </a>
+                                                </h4>
+                                              </div>
+                                              <div :id="'collapse'+index" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                  {{remark.remark}}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div> -->
 
               <div id="accordion" class="panel-group">
                 <div class="panel panel-info">
@@ -103,6 +103,7 @@
                         <div class="media-body">
                           <h4 class="media-heading">{{remark.user.nameTh}}
                             <span class="label label-info pull-right ">{{remark.createDate}}</span>
+                            <span class="label label-warning pull-right ">{{remarkTranslate(remark.status)}}</span>
                           </h4>
                           {{remark.remark}}
                         </div>
@@ -220,7 +221,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'LICENSE' && position === 'Owner'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'LICENSE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
@@ -281,7 +282,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'EVIDENCE' && position === 'Owner'">
+              <div class="form-group" v-if="!files.file && accord.legalDuty.legalType === 'EVIDENCE'">
                 <div class="col-md-12 text-center is-fileinput">
                   <span class="btn btn-info btn-file">
                     <i class="zmdi zmdi-swap-vertical"></i>
@@ -301,7 +302,7 @@
                 <nuxt-link to="/checklist/accord" class="btn btn-info m-r-10">
                   <i class="fa fa-chevron-left"></i> ย้อนกลับ
                 </nuxt-link>
-                <button type="submit" class="btn btn-success m-r-10" v-if="position === 'Owner'">
+                <button type="submit" class="btn btn-success m-r-10">
                   <i class="fa fa-check"></i> บันทึก</button>
                 <button type="button" class="btn btn-info" v-on:click="nextPage" v-if="isNext()">
                   ถัดไป
@@ -533,6 +534,23 @@ export default {
     }
   },
   methods: {
+    remarkTranslate: function(val) {
+      if (val === 'ACCORDED') {
+        return 'สอดคล้อง'
+      } else if (val === 'NOT_ACCORDED') {
+        return 'ไม่สอดคล้อง'
+      } else if (val === 'NOT_CONCERN') {
+        return 'ไม่เกี่ยวข้อง'
+      } else if (val === 'ACCEPT') {
+        return 'เห็นชอบ'
+      } else if (val === 'NOT_ACCEPT') {
+        return 'ไม่เห็นชอบ'
+      } else if (val === 'APPROVE') {
+        return 'อนุมัติ'
+      } else if (val === 'NOT_APPROVE') {
+        return 'ไม่อนุมัติ'
+      }
+    },
     checkValid: function() {
       var files =
         this.accord.legalDuty.legalType === 'LICENSE'
