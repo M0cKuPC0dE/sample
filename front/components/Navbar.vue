@@ -128,6 +128,11 @@
             </a>
           </form>
         </li>
+        <li>
+          <a href="https://compliance.mitrphol.com/library" target="_blank">
+            <i class="fa fa-book"></i> ห้องสมุดกฎหมาย
+          </a>
+        </li>
         <li class="dropdown">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
             <img src="~assets/images/default_user.png" alt="user-img" width="36" class="img-circle">
@@ -154,6 +159,11 @@
           </ul>
           <!-- /.dropdown-user -->
         </li>
+        <li>
+          <a href="https://compliance.mitrphol.com" target="_blank" alt="Help">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </li>
         <!-- /.dropdown -->
       </ul>
     </div>
@@ -169,18 +179,20 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'navbar',
-  mounted: function () {
-    $('.open-close').on('click', function () {
-      $('body').toggleClass('show-sidebar').toggleClass('hide-sidebar')
+  mounted: function() {
+    $('.open-close').on('click', function() {
+      $('body')
+        .toggleClass('show-sidebar')
+        .toggleClass('hide-sidebar')
       $('.sidebar-head .open-close i').toggleClass('ti-menu')
     })
   },
   methods: {
-    setLanguage: function (val) {
+    setLanguage: function(val) {
       this.$i18n.locale = val
       this.$store.dispatch('locale/changeLanguage', val)
     },
-    logout: function () {
+    logout: function() {
       this.$store.dispatch('auth/logout', this)
     }
   },
@@ -192,5 +204,4 @@ export default {
     locales: 'locale/locales'
   })
 }
-
 </script>
