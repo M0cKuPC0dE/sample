@@ -119,7 +119,7 @@ public class LegalgroupController {
         }
         legalGroup.setCoordinates(fillDetails);
         if (!legalGroup.getLegalDuties().isEmpty()) {
-            mailService.send2Coordinator(legalGroup,username);
+//            mailService.send2Coordinator(legalGroup,username);
         }
         return legalgroupRepository.save(legalGroup);
     }

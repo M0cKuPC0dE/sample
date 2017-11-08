@@ -242,7 +242,7 @@ public class LegalcategoryController {
             legalCategory.setAccords(accords);
         }
 
-        mailService.send2Owner(legalCategory, username);
+//        mailService.send2Owner(legalCategory, username);
 
         return legalcategoryRepository.save(legalCategory);
     }

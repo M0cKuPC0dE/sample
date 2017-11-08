@@ -49,11 +49,11 @@ public class MailService {
     private final TemplateEngine templateEngine;
 
     @Autowired
-    public MailService(TemplateEngine templateEngine) {
+    private MailService(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
-    public String build(String title, String message) {
+    private String build(String title, String message) {
         Context context = new Context();
         context.setVariable("title", title);
         context.setVariable("message", message);
@@ -61,7 +61,7 @@ public class MailService {
     }
 
     @Async
-    public void send2Coordinator(LegalGroup legalGroup, String username) {
+    private void send2Coordinator(LegalGroup legalGroup, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalGroup.getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -85,7 +85,7 @@ public class MailService {
     }
 
     @Async
-    public void send2Owner(LegalCategory legalCategory, String username) {
+    private void send2Owner(LegalCategory legalCategory, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalCategory.getOwners()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -109,7 +109,7 @@ public class MailService {
     }
 
     @Transactional
-    public void compliance(Accord accord, String username) {
+    private void compliance(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         List<Accord> accords = findOne.getLegalCategory().getAccords();
@@ -134,16 +134,16 @@ public class MailService {
                 int acc = 0;
                 int nacc = 0;
                 int ncc = 0;
-                for(Accord a : accords){
-                    if(Accorded.ACCORDED.equals(a.getAccorded())){
+                for (Accord a : accords) {
+                    if (Accorded.ACCORDED.equals(a.getAccorded())) {
                         acc++;
-                    }else if(Accorded.NOT_ACCORDED.equals(a.getAccorded())){
+                    } else if (Accorded.NOT_ACCORDED.equals(a.getAccorded())) {
                         nacc++;
-                    }else if(Accorded.NOT_CONCERN.equals(a.getAccorded())){
+                    } else if (Accorded.NOT_CONCERN.equals(a.getAccorded())) {
                         ncc++;
                     }
                 }
-                context.setVariable("total",size);
+                context.setVariable("total", size);
                 context.setVariable("accord", acc);
                 context.setVariable("not_accord", nacc);
                 context.setVariable("not_concern", ncc);
@@ -157,7 +157,7 @@ public class MailService {
         }
     }
 
-    public void acceptNotification(Accord accord, String username) {
+    private void acceptNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> approvers = findOne.getLegalCategory().getApprovers();
@@ -182,12 +182,12 @@ public class MailService {
                 int acc = 0;
                 int nacc = 0;
                 int ncc = 0;
-                for(Accord a : accords){
-                    if(Accorded.ACCORDED.equals(a.getAccorded())){
+                for (Accord a : accords) {
+                    if (Accorded.ACCORDED.equals(a.getAccorded())) {
                         acc++;
-                    }else if(Accorded.NOT_ACCORDED.equals(a.getAccorded())){
+                    } else if (Accorded.NOT_ACCORDED.equals(a.getAccorded())) {
                         nacc++;
-                    }else if(Accorded.NOT_CONCERN.equals(a.getAccorded())){
+                    } else if (Accorded.NOT_CONCERN.equals(a.getAccorded())) {
                         ncc++;
                     }
                 }
@@ -205,7 +205,7 @@ public class MailService {
     }
 
     @Transactional
-    public void approveNotification(Accord accord, String username) {
+    private void approveNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> owners = findOne.getLegalCategory().getOwners();

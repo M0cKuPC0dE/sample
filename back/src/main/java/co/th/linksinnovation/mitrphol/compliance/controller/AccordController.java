@@ -64,7 +64,7 @@ public class AccordController {
         Accord ac = accordRepository.save(accord);
         LegalCategory legalCategory = ac.getLegalCategory();
         legalcategoryRepository.save(legalCategory);
-        mailService.compliance(accord, username);
+//        mailService.compliance(accord, username);
         return ac;
     }
 
@@ -76,7 +76,7 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
-        mailService.acceptNotification(findOne, username);
+//        mailService.acceptNotification(findOne, username);
         accordRepository.save(findOne);
     }
 
@@ -103,7 +103,7 @@ public class AccordController {
         } else {
             findOne.setApprove(Boolean.TRUE);
         }
-        mailService.approveNotification(accord, username);
+//        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
@@ -116,7 +116,7 @@ public class AccordController {
         findOne.setAccept(null);
         findOne.setAccorded(null);
         findOne.setApprove(Boolean.FALSE);
-        mailService.approveNotification(accord, username);
+//        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
