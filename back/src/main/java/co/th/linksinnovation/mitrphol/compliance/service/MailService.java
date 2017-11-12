@@ -49,7 +49,7 @@ public class MailService {
     private final TemplateEngine templateEngine;
 
     @Autowired
-    private MailService(TemplateEngine templateEngine) {
+    public MailService(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
