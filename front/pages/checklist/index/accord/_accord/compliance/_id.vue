@@ -73,21 +73,21 @@
               </div>
 
               <!-- <div class="panel-group" id="accordion">
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                                                    -
-                                                  </a>
-                                                </h4>
-                                              </div>
-                                              <div :id="'collapse'+index" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  {{remark.remark}}
+                                              <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                  <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                                                      -
+                                                    </a>
+                                                  </h4>
+                                                </div>
+                                                <div :id="'collapse'+index" class="panel-collapse collapse">
+                                                  <div class="panel-body">
+                                                    {{remark.remark}}
+                                                  </div>
                                                 </div>
                                               </div>
-                                            </div>
-                                          </div> -->
+                                            </div> -->
 
               <div id="accordion" class="panel-group">
                 <div class="panel panel-info">
@@ -399,7 +399,8 @@
                         <strong>{{ $t('compliance.important') }}</strong>
                       </label>
                       <div class="col-md-12">
-                        <span style="white-space: pre-wrap;">{{accord.legalDuty.compliance.important}}</span>
+                        <!-- <span style="white-space: pre-wrap;">{{accord.legalDuty.compliance.important}}</span> -->
+                        <div v-html="accord.legalDuty.compliance.important"></div>
                       </div>
                     </div>
 

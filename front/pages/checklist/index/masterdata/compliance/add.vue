@@ -74,7 +74,8 @@
     <div class="form-group">
       <label class="col-md-12">{{ $t('compliance.important') }}</label>
       <div class="col-md-12">
-        <textarea class="form-control" rows="5" v-model="compliance.important" required></textarea>
+        <div id="summernote"></div>
+        <!-- <textarea class="form-control" rows="5" v-model="compliance.important" required></textarea> -->
       </div>
     </div>
     <div class="form-group">
@@ -239,6 +240,17 @@ export default {
     $('.readonly').on('keydown paste', function(e) {
       e.preventDefault()
     })
+
+    $('#summernote').summernote({
+      height: 200,
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']]
+      ]
+    })
   },
   methods: {
     onSave: function() {
@@ -257,6 +269,7 @@ export default {
         self.date.effectiveYear
       self.compliance.category = this.category
       self.compliance.tags = $('#tags').val()
+      self.compliance.important = $('#summernote').summernote('code')
       http
         .post('/api/compliance', self.compliance, {
           headers: { Authorization: 'bearer ' + cookie(this).AT }

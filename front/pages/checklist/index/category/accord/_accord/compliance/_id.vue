@@ -73,15 +73,15 @@
               </div>
 
               <!-- <div class="form-group">
-                                <label class="col-md-12">
-                                  <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
-                                  <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
-                                  <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
-                                </label>
-                                <div class="col-md-12">
-                                  {{accord.accordRemark}}
-                                </div>
-                              </div> -->
+                                  <label class="col-md-12">
+                                    <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ Owner</strong>
+                                    <strong v-if="accord.accorded === 'NOT_ACCORDED'">แผนงาน Owner</strong>
+                                    <strong v-if="accord.accorded === 'NOT_CONCERN'">เหตุผล Owner</strong>
+                                  </label>
+                                  <div class="col-md-12">
+                                    {{accord.accordRemark}}
+                                  </div>
+                                </div> -->
 
               <div class="form-group" v-if="accord.accorded === 'NOT_ACCORDED'">
                 <label class="col-md-12">
@@ -118,13 +118,13 @@
               </div>
 
               <!-- <div class="form-group">
-                                <label class="col-md-12">
-                                  <strong>หมายเหตุ Approver</strong>
-                                </label>
-                                <div class="col-md-12">
-                                  <span>{{accord.remark}}</span>
-                                </div>
-                              </div> -->
+                                  <label class="col-md-12">
+                                    <strong>หมายเหตุ Approver</strong>
+                                  </label>
+                                  <div class="col-md-12">
+                                    <span>{{accord.remark}}</span>
+                                  </div>
+                                </div> -->
 
               <div class="form-group" v-if="accord.accorded && !accord.accept && accord.accorded !== 'NOT_CONCERN'">
                 <label class="col-md-12">
@@ -309,7 +309,8 @@
                         <strong>{{ $t('compliance.important') }}</strong>
                       </label>
                       <div class="col-md-12">
-                        <span style="white-space: pre-wrap;">{{accord.legalDuty.compliance.important}}</span>
+                        <!-- <span style="white-space: pre-wrap;">{{accord.legalDuty.compliance.important}}</span> -->
+                        <div v-html="accord.legalDuty.compliance.important"></div>
                       </div>
                     </div>
 

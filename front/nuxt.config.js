@@ -35,6 +35,8 @@ module.exports = {
     { src: 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' },
     { src: 'jquery-ui-dist/jquery-ui.css' },
     { src: 'select2/dist/css/select2.css' },
+    { src: 'vue-wysiwyg/dist/vueWysiwyg.css' },
+    { src: 'summernote/dist/summernote.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
     { src: '~assets/less/colors/megna.less', lang: 'less' }
@@ -67,6 +69,7 @@ module.exports = {
       'bootstrap-datepicker/dist/locales/bootstrap-datepicker.th.min.js',
       'bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
       'select2/dist/js/select2.full.js',
+      'summernote/dist/summernote.js',
       'vue-i18n'
     ],
     plugins: [

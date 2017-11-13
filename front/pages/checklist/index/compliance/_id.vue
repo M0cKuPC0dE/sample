@@ -130,7 +130,8 @@
                   <strong>{{ $t('compliance.important') }}</strong>
                 </label>
                 <div class="col-md-12">
-                  <span style="white-space: pre-wrap;">{{compliance.important}}</span>
+                  <!-- <span style="white-space: pre-wrap;">{{compliance.important}}</span> -->
+                  <div v-html="compliance.important"></div>
                 </div>
               </div>
 
