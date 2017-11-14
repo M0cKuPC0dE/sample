@@ -35,7 +35,6 @@ module.exports = {
     { src: 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' },
     { src: 'jquery-ui-dist/jquery-ui.css' },
     { src: 'select2/dist/css/select2.css' },
-    { src: 'vue-wysiwyg/dist/vueWysiwyg.css' },
     { src: 'summernote/dist/summernote.css' },
     { src: '~assets/less/icons/themify-icons/themify-icons.css' },
     { src: '~assets/less/style.less', lang: 'less' },
