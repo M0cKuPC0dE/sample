@@ -145,10 +145,10 @@
               <div class="col-md-12">
                 <div>
                   <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.department.name}},
-                  <strong>ผู้ประสานงาน:</strong>
-                  <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
+                  <strong>ผู้ประสานงาน:</strong> {{onShow(category.legalGroup.coordinates)}}
+                  <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                     {{coordinator.nameTh + ' '}}
-                  </span>
+                  </span> -->
                   <table class="table table-hover">
                     <thead>
                       <tr>
@@ -164,9 +164,13 @@
                     <tbody>
                       <tr :key="accord.id" v-for="(accord,acIndex) in category.accords" v-if="filter === '' || filter === accord.accorded">
                         <td>{{acIndex+1}}</td>
-                        <td>{{accord.legalDuty.compliance.legalName}}</td>
+                        <td>{{accord.legalDuty.compliance.legalName}}
+                          <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
+                        </td>
                         <td>
-                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">{{accord.legalDuty.name}}</nuxt-link>
+                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
+                            <div v-html="accord.legalDuty.name"></div>
+                          </nuxt-link>
                         </td>
                         <td>
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
@@ -227,7 +231,8 @@ export default {
     return {
       progress: {},
       position: '',
-      filter: ''
+      filter: '',
+      temp: ''
     }
   },
   methods: {
@@ -308,6 +313,12 @@ export default {
         }
       }
       return num !== 0
+    },
+    onShow: function(val) {
+      if (val) {
+        this.temp = val[0].nameTh
+      }
+      return this.temp
     }
   }
 }

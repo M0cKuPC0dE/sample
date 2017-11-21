@@ -158,9 +158,11 @@
                     </thead>
                     <tbody>
                       <tr :key="accord.id" v-for="accord in category.accords" v-if="filter === '' || filter === accord.accorded">
-                        <td>{{accord.legalDuty.compliance.legalName}}</td>
+                        <td>{{accord.legalDuty.compliance.legalName}}
+                          <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
+                        </td>
                         <td>
-                          <nuxt-link :to="'/checklist/category/accord/'+category.id+'/compliance/'+accord.legalDuty.id">{{accord.legalDuty.name}}</nuxt-link>
+                          <nuxt-link :to="'/checklist/category/accord/'+category.id+'/compliance/'+accord.legalDuty.id"><div v-html="accord.legalDuty.name"></div></nuxt-link>
                         </td>
                         <td>
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
@@ -205,46 +207,50 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalcategory/view/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalcategory/view/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { category: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
     this.calculateProgress()
   },
-  data: function () {
+  data: function() {
     return {
       progress: {},
       filter: ''
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalcategory', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalcategory', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'categories', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    calculateProgress: function () {
+    calculateProgress: function() {
       var data = {
         accord: 0,
         notAccord: 0,
         notConcern: 0,
         inprogress: 0
       }
-      this.category.accords.forEach(function (accord) {
+      this.category.accords.forEach(function(accord) {
         if (accord.accorded === 'ACCORDED') {
           data.accord = data.accord + 1
         } else if (accord.accorded === 'NOT_ACCORDED') {
@@ -257,20 +263,33 @@ export default {
       })
       this.$set(this, 'progress', data)
     },
-    calculatePosition: function (accord) {
+    calculatePosition: function(accord) {
       var data = 'Completed'
-      if (accord.accept === null && accord.accorded === null && accord.approve === null) {
+      if (
+        accord.accept === null &&
+        accord.accorded === null &&
+        accord.approve === null
+      ) {
         data = 'Owner'
-      } else if (accord.accept === null && accord.accorded !== null && (accord.approve === null)) {
+      } else if (
+        accord.accept === null &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
         data = 'Coordinator'
-      } else if (accord.accept !== null && accord.accept !== false && accord.accorded !== null && accord.approve === null) {
+      } else if (
+        accord.accept !== null &&
+        accord.accept !== false &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
         data = 'Approver'
       } else if (accord.accept === false || accord.approve === false) {
         data = 'Owner'
       }
       return data
     },
-    onFilter: function (accorded) {
+    onFilter: function(accorded) {
       if (accorded === this.filter) {
         this.$set(this, 'filter', '')
       } else {

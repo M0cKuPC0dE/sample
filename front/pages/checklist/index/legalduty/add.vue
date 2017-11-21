@@ -11,7 +11,8 @@
     <div class="form-group">
       <label class="col-sm-12">หน้าที่ตามกฎหมาย</label>
       <div class="col-sm-12">
-        <textarea class="form-control" rows="5" v-model="legalDuty.name" required></textarea>
+        <div id="summernote"></div>
+        <!-- <textarea class="form-control" rows="5" v-model="legalDuty.name" required></textarea> -->
       </div>
     </div>
     <div class="form-group">
@@ -65,11 +66,23 @@ export default {
     $('.readonly').on('keydown paste', function (e) {
       e.preventDefault()
     })
+
+    $('#summernote').summernote({
+      height: 200,
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']]
+      ]
+    })
   },
   methods: {
     onSave: function () {
       var self = this
       this.legalDuty.compliance = { id: this.compliance.id }
+      this.legalDuty.name = $('#summernote').summernote('code')
       return http
         .post('/api/legalduty', this.legalDuty, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
         .then((response) => {

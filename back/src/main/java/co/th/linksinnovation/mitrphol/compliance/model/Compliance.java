@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
@@ -62,6 +63,9 @@ public class Compliance {
     @JsonView(JsonViewer.ComplianceWithCategory.class)
     private Category category;
     private Boolean deleted = false;
+    private Boolean updated = false;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateDate;
     
     public List<LegalDuty> addLegalDuties(LegalDuty legalDuty){
         if(this.legalDuties == null){
@@ -69,5 +73,10 @@ public class Compliance {
         }
         this.legalDuties.add(legalDuty);
         return this.legalDuties;
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        this.updateDate = new Date();
     }
 }

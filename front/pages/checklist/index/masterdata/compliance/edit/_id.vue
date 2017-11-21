@@ -80,11 +80,18 @@
     </div>
 
     <div class="form-group">
-      <label class="col-md-12">แท็ก {{compliance.tags}}</label>
+      <label class="col-md-12">แท็ก</label>
       <div class="col-md-12">
         <input type="text" :value="compliance.tags" class="form-control" id="tags" placeholder="เพิ่มแท็ก"></input>
       </div>
     </div>
+
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" v-model="compliance.updated"> อับเดทข้อกฎหมาย</input>
+      </label>
+    </div>
+
     <div class="form-group">
       <div class="col-md-12">
         <div>

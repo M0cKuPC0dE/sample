@@ -147,10 +147,10 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน:
-                      <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
+                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                      <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                         {{coordinator.nameTh + ' '}}
-                      </span>
+                      </span> -->
                     </a>
                   </h4>
                 </div>
@@ -167,10 +167,12 @@
                       </thead>
                       <tbody>
                         <tr :key="accord.id" v-for="accord in category.accords" v-if="(filter === '' || filter === accord.accorded)">
-                          <td>{{accord.legalDuty.compliance.legalName}}</td>
+                          <td>{{accord.legalDuty.compliance.legalName}}
+                            <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
+                          </td>
                           <td>
                             <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
-                              {{accord.legalDuty.name}}
+                              <div v-html="accord.legalDuty.name"></div>
                             </nuxt-link>
                           </td>
                           <td>
@@ -331,6 +333,12 @@ export default {
         }
       }
       return num !== 0
+    },
+    onShow: function(val) {
+      if (val) {
+        this.temp = val[0].nameTh
+      }
+      return this.temp
     }
   }
 }
