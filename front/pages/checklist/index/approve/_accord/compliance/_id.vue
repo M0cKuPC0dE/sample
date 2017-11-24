@@ -33,7 +33,7 @@
                   <strong>หน้าที่ตามกฎหมาย</strong>
                 </label>
                 <div class="col-md-12">
-                  {{accord.legalDuty.name}}
+                  <div v-html="accord.legalDuty.name"></div>
                 </div>
               </div>
 

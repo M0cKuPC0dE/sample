@@ -141,14 +141,78 @@
               </div>
             </div>
 
-            <div class="row" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
+            <div class="panel-group" id="accordion">
+
+              <div class="panel panel-default" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                    </a>
+                  </h4>
+                </div>
+                <div :id="'collapse'+index" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th class="col-md-1">#</th>
+                          <th class="col-md-2">ชื่อกฎหมาย</th>
+                          <th class="col-md-4">หน้าที่ตามกฎหมาย</th>
+                          <th class="col-md-1">ประเภท</th>
+                          <th class="col-md-1 text-center">Process</th>
+                          <th class="col-md-2 text-center">สถานะ</th>
+                          <th class="col-md-1 text-center">ประเมิน</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr :key="accord.id" v-for="(accord,acIndex) in category.accords" v-if="filter === '' || filter === accord.accorded">
+                        <td>{{acIndex+1}}</td>
+                        <td>{{accord.legalDuty.compliance.legalName}}
+                          <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
+                        </td>
+                        <td>
+                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
+                            <div v-html="accord.legalDuty.name"></div>
+                          </nuxt-link>
+                        </td>
+                        <td>
+                          <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
+                          <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
+                        </td>
+                        <td class="text-center">{{calculatePosition(accord)}}</td>
+                        <td class="text-center">
+                          <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
+                          <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
+                          <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
+                          <span class="label label-primary" v-if="!accord.accorded">ยังไม่ดำเนินการ</span>
+                        </td>
+                        <td class="text-center">
+                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">
+                            <i class="ti-marker-alt"></i>
+                          </nuxt-link>
+                        </td>
+                      </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="col-md-12 text-right">
+                      <button class="btn btn-success" v-on:click="onApprove(category)">อนุมัติทั้งหมด</button>
+                      <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อนุมัติทั้งหมด</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- begin -->
+            <!-- <div class="row" :key="index" v-for="(category,index) in categories" v-if="filter === '' || isInFilter(filter,category)">
               <div class="col-md-12">
                 <div>
                   <strong>ผู้ดูแล(ฝ่าย/แผนก):</strong> {{category.department.name}},
                   <strong>ผู้ประสานงาน:</strong> {{onShow(category.legalGroup.coordinates)}}
-                  <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
-                    {{coordinator.nameTh + ' '}}
-                  </span> -->
                   <table class="table table-hover">
                     <thead>
                       <tr>
@@ -193,7 +257,8 @@
                   </table>
                 </div>
               </div>
-            </div>
+            </div> -->
+            <!-- end -->
 
           </div>
         </div>

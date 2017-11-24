@@ -161,6 +161,7 @@
                         <tr>
                           <th>ชื่อกฎหมาย</th>
                           <th>หน้าที่ตามกฎหมาย</th>
+                          <th class="col-md-1 text-center">Process</th>                          
                           <th>การประเมินจากผู้ดูแล</th>
                           <th class="text-center">การพิจารณา</th>
                         </tr>
@@ -175,6 +176,7 @@
                               <div v-html="accord.legalDuty.name"></div>
                             </nuxt-link>
                           </td>
+                          <td class="text-center">{{calculatePosition(accord)}}</td>                          
                           <td>
                             <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                             <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
@@ -317,6 +319,33 @@ export default {
         })
       })
       this.$set(this, 'progress', data)
+    },
+    calculatePosition: function(accord) {
+      if (!accord) return
+      var data = 'Completed'
+      if (
+        accord.accept === null &&
+        accord.accorded === null &&
+        accord.approve === null
+      ) {
+        data = 'Owner'
+      } else if (
+        accord.accept === null &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
+        data = 'Coordinator'
+      } else if (
+        accord.accept !== null &&
+        accord.accept !== false &&
+        accord.accorded !== null &&
+        accord.approve === null
+      ) {
+        data = 'Approver'
+      } else if (accord.accept === false || accord.approve === false) {
+        data = 'Owner'
+      }
+      return data
     },
     onFilter: function(accorded) {
       if (accorded === this.filter) {
