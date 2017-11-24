@@ -33,7 +33,7 @@
                   <strong>หน้าที่ตามกฎหมาย</strong>
                 </label>
                 <div class="col-md-12">
-                  {{accord.legalDuty.name}}
+                  <div v-html="accord.legalDuty.name"></div>
                 </div>
               </div>
 
@@ -244,6 +244,8 @@
                 </nuxt-link>
                 <button type="submit" class="btn btn-success m-r-10">
                   <i class="fa fa-check"></i> บันทึก</button>
+                <button type="submit" class="btn btn-warning m-r-10" v-on:click="onReset()">
+                  <i class="fa fa-circle-o-notch"></i> รีเซ็ต</button>
                 <button type="button" class="btn btn-info" v-on:click="nextPage" v-if="isNext()">
                   ถัดไป
                   <i class="fa fa-chevron-right"></i>
@@ -481,6 +483,19 @@ export default {
         })
         .then(response => {
           self.$router.push({ path: '/checklist/group' })
+        })
+        .catch(e => {
+          self.$router.replace('/checklist/login')
+        })
+    },
+    onReset: function() {
+      var self = this
+      http
+        .get('/api/accord/reset/' + self.accord.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
+          self.$router.push({ path: '/checklist/group/accord/' + self.accord.id })
         })
         .catch(e => {
           self.$router.replace('/checklist/login')

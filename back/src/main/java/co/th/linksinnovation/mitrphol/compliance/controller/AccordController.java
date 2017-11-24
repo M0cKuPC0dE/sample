@@ -142,4 +142,13 @@ public class AccordController {
             }
         }
     }
+    
+    @GetMapping("/reset/{id}")
+    public void reset(@PathVariable("id") Long id){
+        Accord findOne = accordRepository.findOne(id);
+        findOne.setAccorded(null);
+        findOne.setAccept(null);
+        findOne.setApprove(null);
+        accordRepository.save(findOne);
+    }
 }

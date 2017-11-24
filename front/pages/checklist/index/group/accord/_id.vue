@@ -159,7 +159,11 @@
                     <tbody>
                       <tr :key="accord.id" v-for="accord in category.accords" v-if="filter === '' || filter === accord.accorded">
                         <td>{{accord.legalDuty.compliance.legalName}}</td>
-                        <td>{{accord.legalDuty.name}}</td>
+                        <td>
+                          <nuxt-link :to="'/checklist/group/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
+                            <div v-html="accord.legalDuty.name"></div>
+                          </nuxt-link>
+                        </td>
                         <td>
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
                           <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
