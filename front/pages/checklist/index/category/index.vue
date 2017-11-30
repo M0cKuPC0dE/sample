@@ -119,7 +119,7 @@
                   <table class="table table-striped table-hover">
                     <thead>
                       <tr>
-                        <th class="col-xs-4">หน่วยงาน</th>
+                        <th class="col-xs-4">หน่วยงานของ Coordinator</th>
                         <th class="text-center">Owner</th>
                         <th class="text-center">Coordinator</th>
                         <th class="text-center">Approver</th>

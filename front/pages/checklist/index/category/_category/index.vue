@@ -119,8 +119,8 @@
                   <table class="table table-striped table-hover">
                     <thead>
                       <tr>
-                        <th class="col-xs-5">ฝ่าย/แผนก</th>
-                        <th>ผู้ดูแล</th>
+                        <th class="col-xs-5">หน่วยงานของ Owner</th>
+                        <th>Owner</th>
                         <th class="text-center">สถานะการดำนเนินการ</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
