@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      หน่วยงานของ Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                      หน่วยงานของ Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}} ({{countInFilter(filter,category)}})
                       <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                         {{coordinator.nameTh + ' '}}
                       </span> -->
@@ -161,7 +161,7 @@
                         <tr>
                           <th>ชื่อกฎหมาย</th>
                           <th>หน้าที่ตามกฎหมาย</th>
-                          <th class="col-md-1 text-center">Process</th>                          
+                          <th class="col-md-1 text-center">Process</th>
                           <th>การประเมินจากผู้ดูแล</th>
                           <th class="text-center">การพิจารณา</th>
                         </tr>
@@ -173,10 +173,10 @@
                           </td>
                           <td>
                             <nuxt-link :to="'/checklist/approve/'+category.id+'/compliance/'+accord.legalDuty.id">
-                              <div v-html="accord.legalDuty.name"></div>
+                              <div v-html="eclipsis(accord.legalDuty.name,0,200)"></div>
                             </nuxt-link>
                           </td>
-                          <td class="text-center">{{calculatePosition(accord)}}</td>                          
+                          <td class="text-center">{{calculatePosition(accord)}}</td>
                           <td>
                             <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
                             <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
@@ -207,6 +207,24 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="mySmallModalLabel">การบันทึกข้อมูล</h4>
+          </div>
+          <div class="modal-body">ดำเนินการบันทึกข้อมูลเรียบร้อย</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
     </div>
 
   </div>
@@ -276,6 +294,7 @@ export default {
             })
         }
       }
+      $('.bs-example-modal-sm').modal()
     },
     onReject: function(category) {
       var self = this
@@ -297,6 +316,7 @@ export default {
             })
         }
       }
+      $('.bs-example-modal-sm').modal()
     },
     calculateProgress: function() {
       var data = {
@@ -363,11 +383,42 @@ export default {
       }
       return num !== 0
     },
+    countInFilter: function(filter, category) {
+      if (filter === '') {
+        return category.accords.length
+      }
+      var num = 0
+      for (var accord in category.accords) {
+        if (category.accords[accord].accorded === filter) {
+          num++
+        }
+      }
+      return num
+    },
     onShow: function(val) {
       if (val) {
         this.temp = val[0].nameTh
       }
       return this.temp
+    },
+    eclipsis: function(str, start, length) {
+      var countTags = 0
+      var returnString = ''
+      var writeLetters = 0
+      while (!(writeLetters >= length && countTags === 0)) {
+        var letter = str.charAt(start + writeLetters)
+        if (letter === '<') {
+          countTags++
+        }
+        if (letter === '>') {
+          countTags--
+        }
+        returnString += letter
+        writeLetters++
+      }
+      return returnString.length < str.length
+        ? returnString + '&hellip;'
+        : returnString
     }
   }
 }

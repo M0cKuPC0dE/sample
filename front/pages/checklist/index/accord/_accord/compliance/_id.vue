@@ -114,15 +114,15 @@
                 </div>
               </div>
 
-              <div class="form-group" v-if="position === 'Owner'">
+              <div class="form-group">
                 <label class="col-md-12">
                   <strong v-if="accord.accorded === 'ACCORDED'">หมายเหตุ</strong>
                   <strong v-if="accord.accorded === 'NOT_ACCORDED'">ระบุแผนงาน</strong>
                   <strong v-if="accord.accorded === 'NOT_CONCERN'">ระบุเหตุผล</strong>
                 </label>
                 <div class="col-md-12">
-                  <textarea v-if="accord.accorded === 'NOT_ACCORDED' || accord.accorded === 'NOT_CONCERN'" class="form-control" rows="5" v-model="accord.remark" required></textarea>
-                  <textarea class="form-control" rows="5" v-model="accord.remark" v-else></textarea>
+                  <!-- <textarea v-if="accord.accorded === 'NOT_ACCORDED' || accord.accorded === 'NOT_CONCERN'" class="form-control" rows="5" v-model="accord.remark" required></textarea> -->
+                  <textarea class="form-control" rows="5" v-model="accord.remark" required></textarea>
                 </div>
               </div>
 
@@ -203,7 +203,7 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td style="vertical-align: middle;"><a :href="baseUrl+'/public/download/license/'+file.id">{{file.name}}</a></td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
@@ -264,7 +264,7 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td style="vertical-align: middle;"><a :href="baseUrl+'/public/download/evidence/'+file.id">{{file.name}}</a></td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">

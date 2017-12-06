@@ -123,6 +123,7 @@
                         <th class="text-center">Owner</th>
                         <th class="text-center">Coordinator</th>
                         <th class="text-center">Approver</th>
+                        <th class="text-center">Completed</th>
                         <th class="text-center">จำนวนหน้าที่ตามกฎหมาย</th>
                         <th class="text-center">จัดการ</th>
                       </tr>
@@ -135,6 +136,7 @@
                         <td class="text-center">{{calculatePosition(legalgroup).owner === 0?'-':calculatePosition(legalgroup).owner}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).coordinator === 0?'-':calculatePosition(legalgroup).coordinator}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).approver === 0?'-':calculatePosition(legalgroup).approver}}</td>
+                        <td class="text-center">{{calculatePosition(legalgroup).completed === 0?'-':calculatePosition(legalgroup).completed}}</td>
                         <td class="text-center">{{calculatePosition(legalgroup).total}}</td>
                         <td class=" text-center ">
                           <nuxt-link :to=" '/checklist/category/manage/'+legalgroup.id " class="btn btn-sm btn-info m-r-5 " data-toggle="tooltip " title="จัดหมวดหมู่ ">
@@ -267,6 +269,7 @@ export default {
         owner: 0,
         coordinator: 0,
         approver: 0,
+        completed: 0,
         total: 0
       }
       group.legalCategories.forEach(function(category) {
@@ -296,6 +299,8 @@ export default {
           data.total = data.total + 1
         })
       })
+      data.completed =
+        data.total - (data.owner + data.coordinator + data.approver)
       return data
     }
   }

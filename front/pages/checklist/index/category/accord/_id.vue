@@ -162,7 +162,9 @@
                           <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
                         </td>
                         <td>
-                          <nuxt-link :to="'/checklist/category/accord/'+category.id+'/compliance/'+accord.legalDuty.id"><div v-html="accord.legalDuty.name"></div></nuxt-link>
+                          <nuxt-link :to="'/checklist/category/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
+                            <div v-html="eclipsis(accord.legalDuty.name,0,200)"></div>
+                          </nuxt-link>
                         </td>
                         <td>
                           <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
@@ -295,6 +297,25 @@ export default {
       } else {
         this.$set(this, 'filter', accorded)
       }
+    },
+    eclipsis: function(str, start, length) {
+      var countTags = 0
+      var returnString = ''
+      var writeLetters = 0
+      while (!(writeLetters >= length && countTags === 0)) {
+        var letter = str.charAt(start + writeLetters)
+        if (letter === '<') {
+          countTags++
+        }
+        if (letter === '>') {
+          countTags--
+        }
+        returnString += letter
+        writeLetters++
+      }
+      return returnString.length < str.length
+        ? returnString + '&hellip;'
+        : returnString
     }
   }
 }

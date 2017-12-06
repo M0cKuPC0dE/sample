@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      หน่วยงาน Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                      หน่วยงาน Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}} ({{countInFilter(filter,category)}})
                     </a>
                   </h4>
                 </div>
@@ -166,40 +166,42 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <tr :key="accord.id" v-for="(accord,acIndex) in category.accords" v-if="filter === '' || filter === accord.accorded">
-                        <td>{{acIndex+1}}</td>
-                        <td>{{accord.legalDuty.compliance.legalName}}
-                          <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
-                        </td>
-                        <td>
-                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
-                            <div v-html="accord.legalDuty.name"></div>
-                          </nuxt-link>
-                        </td>
-                        <td>
-                          <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
-                          <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
-                        </td>
-                        <td class="text-center">{{calculatePosition(accord)}}</td>
-                        <td class="text-center">
-                          <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
-                          <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
-                          <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
-                          <span class="label label-primary" v-if="!accord.accorded">ยังไม่ดำเนินการ</span>
-                        </td>
-                        <td class="text-center">
-                          <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">
-                            <i class="ti-marker-alt"></i>
-                          </nuxt-link>
-                        </td>
-                      </tr>
-                    </tbody>
+                        <tr :key="accord.id" v-for="(accord,acIndex) in category.accords" v-if="filter === '' || filter === accord.accorded">
+                          <td>{{acIndex+1}}</td>
+                          <td>{{accord.legalDuty.compliance.legalName}}
+                            <span class="label label-info" data-toggle="tooltip" v-if="accord.legalDuty.compliance.updated" :title="'อับเดทเมื่อ '+accord.legalDuty.compliance.updateDate">อับเดท</span>
+                          </td>
+                          <td>
+                            <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id">
+                              <div v-html="eclipsis(accord.legalDuty.name,0,200)"></div>
+                            </nuxt-link>
+                          </td>
+                          <td>
+                            <span class="" v-if="accord.legalDuty.legalType === 'LICENSE'">ใบอนุญาต</span>
+                            <span class="" v-if="accord.legalDuty.legalType === 'EVIDENCE'">กฎหมายทั่วไป</span>
+                          </td>
+                          <td class="text-center">
+                            <span :class="calculatePosition(accord) === 'Owner'?'heartbit':''">{{calculatePosition(accord)}}</span>
+                          </td>
+                          <td class="text-center">
+                            <span class="label label-success" v-if="accord.accorded === 'ACCORDED'">สอดคล้อง</span>
+                            <span class="label label-danger" v-if="accord.accorded === 'NOT_ACCORDED'">ไม่สอดคล้อง</span>
+                            <span class="label label-info" v-if="accord.accorded === 'NOT_CONCERN'">ไม่เกี่ยวข้อง</span>
+                            <span class="label label-primary" v-if="!accord.accorded">ยังไม่ดำเนินการ</span>
+                          </td>
+                          <td class="text-center">
+                            <nuxt-link :to="'/checklist/accord/'+category.id+'/compliance/'+accord.legalDuty.id" class="btn btn-sm btn-info" data-toggle="tooltip" title="" title="ประเมิน">
+                              <i class="ti-marker-alt"></i>
+                            </nuxt-link>
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
 
-                    <div class="col-md-12 text-right">
+                    <!-- <div class="col-md-12 text-right">
                       <button class="btn btn-success" v-on:click="onApprove(category)">อนุมัติทั้งหมด</button>
                       <button class="btn btn-danger m-l-20" v-on:click="onReject(category)">ไม่อนุมัติทั้งหมด</button>
-                    </div>
+                    </div> -->
 
                   </div>
                 </div>
@@ -379,11 +381,42 @@ export default {
       }
       return num !== 0
     },
+    countInFilter: function(filter, category) {
+      if (filter === '') {
+        return category.accords.length
+      }
+      var num = 0
+      for (var accord in category.accords) {
+        if (category.accords[accord].accorded === filter) {
+          num++
+        }
+      }
+      return num
+    },
     onShow: function(val) {
       if (val) {
         this.temp = val[0].nameTh
       }
       return this.temp
+    },
+    eclipsis: function(str, start, length) {
+      var countTags = 0
+      var returnString = ''
+      var writeLetters = 0
+      while (!(writeLetters >= length && countTags === 0)) {
+        var letter = str.charAt(start + writeLetters)
+        if (letter === '<') {
+          countTags++
+        }
+        if (letter === '>') {
+          countTags--
+        }
+        returnString += letter
+        writeLetters++
+      }
+      return returnString.length < str.length
+        ? returnString + '&hellip;'
+        : returnString
     }
   }
 }
@@ -392,5 +425,18 @@ export default {
 <style lang="scss">
 .filter-info {
   cursor: pointer;
+}
+.heartbit {
+  color: #fff;
+  border: 5px solid #FE7376;
+  background-color: #FE7376;
+  border-radius: 90px;
+  -moz-animation: heartbit 1s ease-out;
+  -moz-animation-iteration-count: infinite;
+  -o-animation: heartbit 1s ease-out;
+  -o-animation-iteration-count: infinite;
+  -webkit-animation: heartbit 1s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
 }
 </style>
