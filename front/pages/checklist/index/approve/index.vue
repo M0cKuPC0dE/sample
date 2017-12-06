@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                      หน่วยงานของ Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
                       <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                         {{coordinator.nameTh + ' '}}
                       </span> -->

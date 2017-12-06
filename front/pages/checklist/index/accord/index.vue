@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      ผู้ดูแล(ฝ่าย/แผนก): {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
+                      หน่วยงาน Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}}
                     </a>
                   </h4>
                 </div>
