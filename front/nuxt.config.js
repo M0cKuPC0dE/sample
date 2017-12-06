@@ -69,6 +69,7 @@ module.exports = {
       'bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
       'select2/dist/js/select2.full.js',
       'summernote/dist/summernote.js',
+      'chart.js/dist/Chart.js',
       'vue-i18n'
     ],
     plugins: [
