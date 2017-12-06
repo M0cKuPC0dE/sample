@@ -68,8 +68,10 @@ export default {
     authority: 'auth/authority'
   }),
   mounted: function() {
-    this.renderPie()
-    this.renderBar()
+    if (this.authority !== 'Administrator') {
+      this.renderPie()
+      this.renderBar()
+    }
   },
   methods: {
     renderPie: function() {
