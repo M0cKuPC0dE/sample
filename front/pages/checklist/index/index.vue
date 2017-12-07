@@ -1,6 +1,6 @@
 <template>
   <div id="page-wrapper">
-    <div class="container-fluid">
+    <div class="container">
 
       <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -15,7 +15,7 @@
 
       <div class="row" v-if="authority != 'Administrator'">
         <div class="col-md-12">
-          <div class="white-box" style="text-align:center">
+          <div id="box-wrapper">
             <canvas id="pie"></canvas>
             <canvas id="bar"></canvas>
           </div>
@@ -43,25 +43,16 @@ export default {
       })
 
     var category = await http
-      .get('/api/legalcategory', {
+      .get('/api/legalcategory/list', {
         headers: { Authorization: 'bearer ' + cookie(context).AT }
       })
       .catch(e => {
         self.$router.replace('/checklist/login')
       })
 
-    var list = await http
-      .get('/api/legalcategory/list', {
-        headers: { Authorization: 'bearer ' + cookie(context).AT }
-      })
-      .catch(e => {
-        context.redirect('/checklist/login')
-      })
-
     return {
       groups: groups.data,
-      category: category.data,
-      list: list.data
+      categories: category.data
     }
   },
   computed: mapGetters({
@@ -99,6 +90,9 @@ export default {
     renderBar: function() {
       var self = this
       var ctx = document.getElementById('bar')
+
+      document.getElementById('box-wrapper').style.height = (self.getBar().labels.length * 20 + 500) + 'px'
+
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
@@ -128,6 +122,8 @@ export default {
           ]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             xAxes: [
               {
@@ -239,7 +235,7 @@ export default {
         incomplete: 0,
         total: 0
       }
-      this.category.forEach(function(category) {
+      this.categories.forEach(function(category) {
         category.accords.forEach(function(accord) {
           if (
             accord.accept === null &&
@@ -284,7 +280,7 @@ export default {
         labels: [],
         values: []
       }
-      this.category.forEach(function(category) {
+      this.categories.forEach(function(category) {
         resp.labels.push(category.department.name)
         category.accords.forEach(function(accord) {
           if (accord.accorded === 'ACCORDED') {
@@ -318,7 +314,7 @@ export default {
         incomplete: 0,
         total: 0
       }
-      this.category.forEach(function(category) {
+      this.categories.forEach(function(category) {
         category.accords.forEach(function(accord) {
           if (
             accord.accept === null &&
@@ -363,7 +359,7 @@ export default {
         labels: [],
         values: []
       }
-      this.category.forEach(function(category) {
+      this.categories.forEach(function(category) {
         resp.labels.push(category.department.name)
         category.accords.forEach(function(accord) {
           if (accord.accorded === 'ACCORDED') {
@@ -389,7 +385,7 @@ export default {
       return resp
     },
     getPie: function() {
-      var data
+      var data = {}
       if (this.authority === 'Coordinator') {
         data = this.coordinatorPosition()
       } else if (this.authority === 'Owner') {
@@ -400,7 +396,7 @@ export default {
       return [data.incomplete, data.completed]
     },
     getBar: function() {
-      var data
+      var data = {}
       if (this.authority === 'Coordinator') {
         data = this.coordinatorProgress()
       } else if (this.authority === 'Owner') {
