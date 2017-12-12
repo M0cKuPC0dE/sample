@@ -394,10 +394,10 @@ export default {
       return num
     },
     onShow: function(val) {
-      if (val) {
-        this.temp = val[0].nameTh
-      }
-      return this.temp
+      // if (val) {
+      //   this.temp = val[0].nameTh
+      // }
+      return val[0].nameTh
     },
     eclipsis: function(str, start, length) {
       var countTags = 0
