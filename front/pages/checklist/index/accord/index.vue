@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      หน่วยงาน Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}} ({{countInFilter(filter,category)}})
+                      หน่วยงาน Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(index)}} ({{countInFilter(filter,category)}})
                     </a>
                   </h4>
                 </div>
@@ -393,11 +393,15 @@ export default {
       }
       return num
     },
-    onShow: function(val) {
-      // if (val) {
-      //   this.temp = val[0].nameTh
-      // }
-      return val[0].nameTh
+    onShow: function(index) {
+      if (!this.categories[index].legalGroup.coordinates) {
+        var outdex = index
+        while (!this.categories[outdex].legalGroup.coordinates) {
+          outdex = outdex - 1
+        }
+        return this.categories[outdex].legalGroup.coordinates[0].nameTh
+      }
+      return this.categories[index].legalGroup.coordinates[0].nameTh
     },
     eclipsis: function(str, start, length) {
       var countTags = 0
@@ -428,8 +432,8 @@ export default {
 }
 .heartbit {
   color: #fff;
-  border: 5px solid #FE7376;
-  background-color: #FE7376;
+  border: 5px solid #fe7376;
+  background-color: #fe7376;
   border-radius: 90px;
   -moz-animation: heartbit 1s ease-out;
   -moz-animation-iteration-count: infinite;

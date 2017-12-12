@@ -147,7 +147,7 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
-                      หน่วยงานของ Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(category.legalGroup.coordinates)}} ({{countInFilter(filter,category)}})
+                      หน่วยงานของ Owner: {{category.department.name}}, ผู้ประสานงาน: {{onShow(index)}} ({{countInFilter(filter,category)}})
                       <!-- <span :key="coordinator.id" v-for="(coordinator,coIndex) in category.legalGroup.coordinates">
                         {{coordinator.nameTh + ' '}}
                       </span> -->
@@ -395,11 +395,15 @@ export default {
       }
       return num
     },
-    onShow: function(val) {
-      // if (val) {
-      //   this.temp = val[0].nameTh
-      // }
-      return val[0].nameTh
+    onShow: function(index) {
+      if (!this.categories[index].legalGroup.coordinates) {
+        var outdex = index
+        while (!this.categories[outdex].legalGroup.coordinates) {
+          outdex = outdex - 1
+        }
+        return this.categories[outdex].legalGroup.coordinates[0].nameTh
+      }
+      return this.categories[index].legalGroup.coordinates[0].nameTh
     },
     eclipsis: function(str, start, length) {
       var countTags = 0
