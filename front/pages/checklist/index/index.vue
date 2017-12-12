@@ -16,6 +16,7 @@
       <div class="row" v-if="authority != 'Administrator'">
         <div class="col-md-12">
           <div id="box-wrapper">
+            <img v-if="loading" src="~/assets/images/ajax-loader.gif" style="display:block;margin:auto"></img>
             <canvas id="pie"></canvas>
             <canvas id="bar"></canvas>
           </div>
@@ -34,35 +35,72 @@ import { mapGetters } from 'vuex'
 
 export default {
   async asyncData(context) {
-    var groups = await http
-      .get('/api/legalgroup', {
-        headers: { Authorization: 'bearer ' + cookie(context).AT }
-      })
-      .catch(e => {
-        context.redirect('/checklist/login')
-      })
-
-    var category = await http
-      .get('/api/legalcategory/list', {
-        headers: { Authorization: 'bearer ' + cookie(context).AT }
-      })
-      .catch(e => {
-        self.$router.replace('/checklist/login')
-      })
-
-    return {
-      groups: groups.data,
-      categories: category.data
-    }
+    // var groups = {}
+    // if (groups === {}) {
+    //   groups = await http
+    //     .get('/api/legalgroup', {
+    //       headers: { Authorization: 'bearer ' + cookie(context).AT }
+    //     })
+    //     .catch(e => {
+    //       context.redirect('/checklist/login')
+    //     })
+    // }
+    // var category = await http
+    //   .get('/api/legalcategory/list', {
+    //     headers: { Authorization: 'bearer ' + cookie(context).AT }
+    //   })
+    //   .catch(e => {
+    //     self.$router.replace('/checklist/login')
+    //   })
+    // return {
+    //   groups: groups.data,
+    //   categories: category.data
+    // }
   },
   computed: mapGetters({
     authority: 'auth/authority'
   }),
-  mounted: function() {
-    if (this.authority !== 'Administrator') {
-      this.renderPie()
-      this.renderBar()
+  data: function() {
+    return {
+      categories: [],
+      groups: [],
+      loading: true
     }
+  },
+  mounted: function() {
+    var self = this
+
+    if (this.authority === 'Owner' || this.authority === 'Approver') {
+      http
+        .get('/api/legalcategory/list', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(function(resp) {
+          console.log(resp)
+          self.$set(self, 'categories', resp.data)
+          self.$set(self, 'loading', false)
+          self.renderPie()
+          self.renderBar()
+        })
+    }
+
+    if (this.authority === 'Coordinator') {
+      http
+        .get('/api/legalgroup', {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(function(resp) {
+          console.log(resp)
+          self.$set(self, 'groups', resp.data)
+          self.$set(self, 'loading', false)
+          self.renderPie()
+          self.renderBar()
+        })
+    }
+    // if (this.authority !== 'Administrator') {
+    //   this.renderPie()
+    //   this.renderBar()
+    // }
   },
   methods: {
     renderPie: function() {
@@ -91,7 +129,8 @@ export default {
       var self = this
       var ctx = document.getElementById('bar')
 
-      document.getElementById('box-wrapper').style.height = (self.getBar().labels.length * 20 + 500) + 'px'
+      document.getElementById('box-wrapper').style.height =
+        self.getBar().labels.length * 20 + 500 + 'px'
 
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
