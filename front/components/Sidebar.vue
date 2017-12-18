@@ -70,6 +70,12 @@
             <span class="hide-menu">upload document</span>
           </nuxt-link>
         </li>
+        <li v-if="authority === 'Coordinator' || authority === 'Owner'">
+          <nuxt-link to="/checklist/reports" class="waves-effect">
+            <i class="zmdi zmdi-receipt fa-fw"></i>
+            <span class="hide-menu">รายงาน</span>
+          </nuxt-link>
+        </li>
       </ul>
     </div>
   </div>
