@@ -8,16 +8,22 @@ package co.th.linksinnovation.mitrphol.compliance.controller;
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
 import co.th.linksinnovation.mitrphol.compliance.model.AccordRemark;
 import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
+import co.th.linksinnovation.mitrphol.compliance.model.EvidenceFile;
 import co.th.linksinnovation.mitrphol.compliance.model.JsonViewer;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
+import co.th.linksinnovation.mitrphol.compliance.model.LicenseFile;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.EvidenceFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalDutyRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LicenseFileRepository;
 import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import co.th.linksinnovation.mitrphol.compliance.service.MailService;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +49,10 @@ public class AccordController {
     private LegalDutyRepository legalDutyRepository;
     @Autowired
     private UserDetailsRepository userDetailsRepository;
+    @Autowired
+    private LicenseFileRepository licenseFileRepository;
+    @Autowired
+    private EvidenceFileRepository evidenceFileRepository;
     @Autowired
     private MailService mailService;
 
@@ -76,7 +86,7 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
-//        mailService.acceptNotification(findOne, username);
+        mailService.acceptNotification(findOne, username);
         accordRepository.save(findOne);
     }
 
@@ -103,7 +113,7 @@ public class AccordController {
         } else {
             findOne.setApprove(Boolean.TRUE);
         }
-//        mailService.approveNotification(accord, username);
+        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
@@ -116,7 +126,7 @@ public class AccordController {
         findOne.setAccept(null);
         findOne.setAccorded(null);
         findOne.setApprove(Boolean.FALSE);
-//        mailService.approveNotification(accord, username);
+        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
@@ -142,13 +152,39 @@ public class AccordController {
             }
         }
     }
-    
+
     @GetMapping("/reset/{id}")
-    public void reset(@PathVariable("id") Long id){
+    public void reset(@PathVariable("id") Long id) {
         Accord findOne = accordRepository.findOne(id);
         findOne.setAccorded(null);
         findOne.setAccept(null);
         findOne.setApprove(null);
         accordRepository.save(findOne);
+    }
+
+    @GetMapping("/resetall")
+    public void resetAllLast() {
+        List<Accord> findAll = accordRepository.findAll();
+        for (Accord accord : findAll) {
+            boolean flag = false;
+            for (LicenseFile lf : accord.getLicenseFiles()) {
+                if (lf != null && (lf.getExpireDate().before(new Date()) || lf.getExpireDate().equals(new Date()))) {
+                    flag = true;
+                    break;
+                }
+            }
+            for (EvidenceFile ef : accord.getEvidenceFiles()) {
+                if (ef != null && (ef.getExpireDate().before(new Date()) || ef.getExpireDate().equals(new Date()))) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                accord.setAccorded(null);
+                accord.setAccept(null);
+                accord.setApprove(null);
+                accordRepository.save(accord);
+            }
+        }
     }
 }

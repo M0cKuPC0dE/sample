@@ -61,7 +61,7 @@ public class MailService {
     }
 
     @Async
-    private void send2Coordinator(LegalGroup legalGroup, String username) {
+    public void send2Coordinator(LegalGroup legalGroup, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalGroup.getCoordinates()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -85,7 +85,7 @@ public class MailService {
     }
 
     @Async
-    private void send2Owner(LegalCategory legalCategory, String username) {
+    public void send2Owner(LegalCategory legalCategory, String username) {
         UserDetails user = userDetailsRepository.findOne(username);
         for (UserDetails u : legalCategory.getOwners()) {
             MimeMessage mail = javaMailSender.createMimeMessage();
@@ -157,7 +157,7 @@ public class MailService {
         }
     }
 
-    private void acceptNotification(Accord accord, String username) {
+    public void acceptNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> approvers = findOne.getLegalCategory().getApprovers();
@@ -205,7 +205,7 @@ public class MailService {
     }
 
     @Transactional
-    private void approveNotification(Accord accord, String username) {
+    public void approveNotification(Accord accord, String username) {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> owners = findOne.getLegalCategory().getOwners();
