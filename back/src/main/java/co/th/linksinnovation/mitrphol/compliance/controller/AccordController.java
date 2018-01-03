@@ -155,11 +155,7 @@ public class AccordController {
 
     @GetMapping("/reset/{id}")
     public void reset(@PathVariable("id") Long id) {
-        Accord findOne = accordRepository.findOne(id);
-        findOne.setAccorded(null);
-        findOne.setAccept(null);
-        findOne.setApprove(null);
-        accordRepository.save(findOne);
+        accordRepository.reset(id);
     }
 
     @GetMapping("/resetall")
@@ -168,13 +164,13 @@ public class AccordController {
         for (Accord accord : findAll) {
             boolean flag = false;
             for (LicenseFile lf : accord.getLicenseFiles()) {
-                if (lf != null && (lf.getExpireDate().before(new Date()) || lf.getExpireDate().equals(new Date()))) {
+                if (lf != null && lf.getExpireDate() != null && (lf.getExpireDate().before(new Date()) || lf.getExpireDate().equals(new Date()))) {
                     flag = true;
                     break;
                 }
             }
             for (EvidenceFile ef : accord.getEvidenceFiles()) {
-                if (ef != null && (ef.getExpireDate().before(new Date()) || ef.getExpireDate().equals(new Date()))) {
+                if (ef != null && ef.getExpireDate() != null &&  (ef.getExpireDate().before(new Date()) || ef.getExpireDate().equals(new Date()))) {
                     flag = true;
                     break;
                 }
