@@ -86,7 +86,9 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
-        mailService.acceptNotification(findOne, username);
+        if(!accord.getAccept()){
+            mailService.acceptNotification(findOne, username);
+        }
         accordRepository.save(findOne);
     }
 
@@ -158,29 +160,5 @@ public class AccordController {
         accordRepository.reset(id);
     }
 
-    @GetMapping("/resetall")
-    public void resetAllLast() {
-        List<Accord> findAll = accordRepository.findAll();
-        for (Accord accord : findAll) {
-            boolean flag = false;
-            for (LicenseFile lf : accord.getLicenseFiles()) {
-                if (lf != null && lf.getExpireDate() != null && (lf.getExpireDate().before(new Date()) || lf.getExpireDate().equals(new Date()))) {
-                    flag = true;
-                    break;
-                }
-            }
-            for (EvidenceFile ef : accord.getEvidenceFiles()) {
-                if (ef != null && ef.getExpireDate() != null &&  (ef.getExpireDate().before(new Date()) || ef.getExpireDate().equals(new Date()))) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                accord.setAccorded(null);
-                accord.setAccept(null);
-                accord.setApprove(null);
-                accordRepository.save(accord);
-            }
-        }
-    }
+    
 }

@@ -69,10 +69,10 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("[Compliance System] มีรายการกฎหมายได้รับ Assign จาก Admin");
+                helper.setSubject("ได้รับ Assign รายการหน้าที่ตามกฎหมายเพื่อจัดกลุ่มให้ผู้ดูแล");
 
                 Context context = new Context();
-                context.setVariable("name", user.getNameTh());
+//                context.setVariable("name", user.getNameTh());
                 context.setVariable("amount", legalGroup.getLegalDuties().size());
 
                 helper.setText(templateEngine.process("coordinator", context), true);
@@ -93,12 +93,13 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("[Compliance System] มีรายการกฎหมายรอการประเมินความสอดคล้องการปฏิบัติตามกฎหมาย จาก Compliance Coordinator");
+                helper.setSubject("ได้รับ Assign รายการหน้าที่ตามกฎหมายเพื่อประเมินความสอดคล้อง");
 
                 Context context = new Context();
-                context.setVariable("name", user.getNameTh());
+//                context.setVariable("name", user.getNameTh());
                 context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
                 context.setVariable("amount", legalCategory.getLegalDuties().size());
+                context.setVariable("department", legalCategory.getDepartment().getName());
 
                 helper.setText(templateEngine.process("owner", context), true);
                 javaMailSender.send(mail);
@@ -161,40 +162,43 @@ public class MailService {
         Accord findOne = accordRepository.findOne(accord.getId());
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> approvers = findOne.getLegalCategory().getApprovers();
-        List<Accord> accords = findOne.getLegalCategory().getAccords();
-        asyncAccept(approvers, user, accords);
+//        List<Accord> accords = findOne.getLegalCategory().getAccords();
+        asyncAccept(approvers, user, findOne);
     }
 
     @Async
-    private void asyncAccept(Set<UserDetails> approvers, UserDetails user, List<Accord> accords) throws MailException {
+    private void asyncAccept(Set<UserDetails> approvers, UserDetails user, Accord accord) throws MailException {
         for (UserDetails u : approvers) {
             MimeMessage mail = javaMailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("[Compliance System] มีรายการกฎหมายผ่านการพิจารณาจาก Compliance Coordinator รอการพิจารณา");
+                helper.setSubject("มีรายการหน้าที่ตามกฎหมายที่ไม่ได้รับความเห็นชอบจาก Compliance coordinator");
 
                 Context context = new Context();
-                context.setVariable("name", user.getNameTh());
+//                context.setVariable("name", user.getNameTh());
                 context.setVariable("url", "https://compliance.mitrphol.com/checklist/login?key=" + u.getUuid());
-                int size = accords.size();
-                int acc = 0;
-                int nacc = 0;
-                int ncc = 0;
-                for (Accord a : accords) {
-                    if (Accorded.ACCORDED.equals(a.getAccorded())) {
-                        acc++;
-                    } else if (Accorded.NOT_ACCORDED.equals(a.getAccorded())) {
-                        nacc++;
-                    } else if (Accorded.NOT_CONCERN.equals(a.getAccorded())) {
-                        ncc++;
-                    }
-                }
-                context.setVariable("total", accords.size());
-                context.setVariable("accord", acc);
-                context.setVariable("not_accord", nacc);
-                context.setVariable("nothing", size - (acc + nacc + ncc));
+                context.setVariable("legal_name", accord.getLegalDuty().getCompliance().getLegalName());
+                context.setVariable("legal_duty", accord.getLegalDuty().getName());
+                context.setVariable("department", accord.getLegalCategory().getDepartment().getName());
+//                int size = accords.size();
+//                int acc = 0;
+//                int nacc = 0;
+//                int ncc = 0;
+//                for (Accord a : accords) {
+//                    if (Accorded.ACCORDED.equals(a.getAccorded())) {
+//                        acc++;
+//                    } else if (Accorded.NOT_ACCORDED.equals(a.getAccorded())) {
+//                        nacc++;
+//                    } else if (Accorded.NOT_CONCERN.equals(a.getAccorded())) {
+//                        ncc++;
+//                    }
+//                }
+//                context.setVariable("total", accords.size());
+//                context.setVariable("accord", acc);
+//                context.setVariable("not_accord", nacc);
+//                context.setVariable("nothing", size - (acc + nacc + ncc));
 
                 helper.setText(templateEngine.process("accept", context), true);
                 javaMailSender.send(mail);
@@ -210,39 +214,42 @@ public class MailService {
         UserDetails user = userDetailsRepository.findOne(username);
         Set<UserDetails> owners = findOne.getLegalCategory().getOwners();
         List<UserDetails> coordinates = findOne.getLegalCategory().getLegalGroup().getCoordinates();
-        List<Accord> accords = findOne.getLegalCategory().getAccords();
+//        List<Accord> accords = findOne.getLegalCategory().getAccords();
 
-        asyncApprove(owners, user, accords);
-        asyncApprove(coordinates, user, accords);
+        asyncApprove(owners, user, findOne);
+        asyncApprove(coordinates, user, findOne);
     }
 
     @Async
-    private void asyncApprove(Collection<? extends UserDetails> approvers, UserDetails user, List<Accord> accords) throws MailException {
+    private void asyncApprove(Collection<? extends UserDetails> approvers, UserDetails user, Accord accord) throws MailException {
         for (UserDetails u : approvers) {
             MimeMessage mail = javaMailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(u.getEmail());
                 helper.setFrom("mpcompliance@mitrphol.com");
-                helper.setSubject("[Compliance System] มีรายการกฎหมายที่ได้รับการพิจารณาจาก Approver");
+                helper.setSubject("มีรายการหน้าที่ตามกฎหมายที่ไม่ได้รับความเห็นชอบจาก Approver");
 
                 Context context = new Context();
-                context.setVariable("name", user.getNameTh());
+                context.setVariable("legal_name", accord.getLegalDuty().getCompliance().getLegalName());
+                context.setVariable("legal_duty", accord.getLegalDuty().getName());
+                context.setVariable("department", accord.getLegalCategory().getDepartment().getName());
+//                context.setVariable("name", user.getNameTh());
 //                Map<Boolean, Long> collect = accords.stream().collect(Collectors.groupingBy(Accord::getApprove, Collectors.counting()));
-                int size = accords.size();
-                int app = 0;
-                int napp = 0;
-                for (Accord a : accords) {
-                    if (Objects.equals(a.getApprove(), Boolean.TRUE)) {
-                        app++;
-                    } else if (Objects.equals(a.getApprove(), Boolean.FALSE)) {
-                        napp++;
-                    }
-                }
-                context.setVariable("total", size);
-                context.setVariable("approve", app);
-                context.setVariable("not_approve", napp);
-                context.setVariable("nothing", size - (app + napp));
+//                int size = accords.size();
+//                int app = 0;
+//                int napp = 0;
+//                for (Accord a : accords) {
+//                    if (Objects.equals(a.getApprove(), Boolean.TRUE)) {
+//                        app++;
+//                    } else if (Objects.equals(a.getApprove(), Boolean.FALSE)) {
+//                        napp++;
+//                    }
+//                }
+//                context.setVariable("total", size);
+//                context.setVariable("approve", app);
+//                context.setVariable("not_approve", napp);
+//                context.setVariable("nothing", size - (app + napp));
 
                 helper.setText(templateEngine.process("approve", context), true);
                 javaMailSender.send(mail);
