@@ -54,7 +54,7 @@ public class JobService {
         for (Accord accord : findAll) {
             boolean flag = false;
             for (LicenseFile lf : accord.getLicenseFiles()) {
-                System.out.println("----> " + DateUtils.addYears(lf.getExpireDate(), -543) +" <-> "+new Date());
+                System.out.println("----> " + DateUtils.addYears(lf.getExpireDate(), -543) + " <-> " + new Date());
                 if (lf != null && lf.getExpireDate() != null && DateUtils.isSameDay(DateUtils.addYears(lf.getExpireDate(), -543), new Date())) {
                     flag = true;
                     resetMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, lf.getName(), lf.getExpireDate());
@@ -77,24 +77,28 @@ public class JobService {
             }
         }
     }
-    
+
     @Transactional
     public void resetAccordAllExpire() {
         List<Accord> findAll = accordRepository.findAll();
         for (Accord accord : findAll) {
             boolean flag = false;
             for (LicenseFile lf : accord.getLicenseFiles()) {
-                if (lf != null && lf.getExpireDate() != null && (DateUtils.isSameDay(DateUtils.addYears(lf.getExpireDate(), -543), new Date())) || DateUtils.addYears(lf.getExpireDate(), -543).before(new Date())) {
-                    flag = true;
-                    resetMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, lf.getName(), lf.getExpireDate());
-                    break;
+                if (lf != null && lf.getExpireDate() != null) {
+                    if ((DateUtils.isSameDay(DateUtils.addYears(lf.getExpireDate(), -543), new Date())) || DateUtils.addYears(lf.getExpireDate(), -543).before(new Date())) {
+                        flag = true;
+                        resetMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, lf.getName(), lf.getExpireDate());
+                        break;
+                    }
                 }
             }
             for (EvidenceFile ef : accord.getEvidenceFiles()) {
-                if (ef != null && ef.getExpireDate() != null && (DateUtils.isSameDay(DateUtils.addYears(ef.getExpireDate(), -543), new Date())) || DateUtils.addYears(ef.getExpireDate(), -543).before(new Date())) {
-                    flag = true;
-                    resetMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, ef.getName(), ef.getExpireDate());
-                    break;
+                if (ef != null && ef.getExpireDate() != null) {
+                    if ((DateUtils.isSameDay(DateUtils.addYears(ef.getExpireDate(), -543), new Date())) || DateUtils.addYears(ef.getExpireDate(), -543).before(new Date())) {
+                        flag = true;
+                        resetMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, ef.getName(), ef.getExpireDate());
+                        break;
+                    }
                 }
             }
             if (flag) {
