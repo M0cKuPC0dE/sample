@@ -203,7 +203,9 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;"><a :href="baseUrl+'/public/download/license/'+file.id">{{file.name}}</a></td>
+                          <td style="vertical-align: middle;">
+                            <a :href="baseUrl+'/public/download/license/'+file.id">{{file.name}}</a>
+                          </td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
@@ -264,7 +266,9 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;"><a :href="baseUrl+'/public/download/evidence/'+file.id">{{file.name}}</a></td>
+                          <td style="vertical-align: middle;">
+                            <a :href="baseUrl+'/public/download/evidence/'+file.id">{{file.name}}</a>
+                          </td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
@@ -533,6 +537,7 @@ export default {
     for (var i = 0; i < files.length; i++) {
       this.showCalendar(i, files[i])
     }
+    this.calculatePosition(this.accord)
   },
   methods: {
     remarkTranslate: function(val) {
@@ -597,6 +602,7 @@ export default {
       var _self = this
       $('#warningDate-' + index)
         .datepicker({
+          startDate: '+1d',
           clearBtn: true,
           language: 'th',
           thaiyear: true,

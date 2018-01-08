@@ -18,7 +18,7 @@
           </thead>
           <tbody>
             <tr :key="index" v-for="(legalDuty,index) in compliance.legalDuties">
-              <td>{{legalDuty.name}}</td>
+              <td v-html="legalDuty.name"></td>
               <td class="text-center">
                 <nuxt-link :to="'/checklist/legalduty/edit/'+legalDuty.id" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="แก้ไข">
                   <i class="ti-marker-alt"></i>
@@ -62,7 +62,7 @@ import cookie from '~/utils/cookie'
 
 export default {
   props: ['selected'],
-  data: function () {
+  data: function() {
     return {
       compliance: {},
       deleteLegalDuty: ''
@@ -72,38 +72,42 @@ export default {
     initCompliance: 'category/compliance'
   }),
   watch: {
-    selected: function (val) {
+    selected: function(val) {
       this.onLoad(val)
     }
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
   },
   methods: {
-    onLoad: function (selected) {
+    onLoad: function(selected) {
       var self = this
       return http
-        .get('/api/compliance/' + selected.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/compliance/' + selected.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           this.$set(this, 'compliance', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#masterdata-remove-modal').modal('hide')
       return http
-        .delete('/api/legalduty/' + this.deleteLegalDuty.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .delete('/api/legalduty/' + this.deleteLegalDuty.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.onLoad(self.selected)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (legalDuty) {
+    onConfirmDelete: function(legalDuty) {
       $('#masterdata-remove-modal').modal('show')
       this.$set(this, 'deleteLegalDuty', legalDuty)
     }

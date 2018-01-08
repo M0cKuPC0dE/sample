@@ -435,12 +435,12 @@ export default {
   border: 5px solid #fe7376;
   background-color: #fe7376;
   border-radius: 90px;
-  -moz-animation: heartbit 1s ease-out;
-  -moz-animation-iteration-count: infinite;
-  -o-animation: heartbit 1s ease-out;
-  -o-animation-iteration-count: infinite;
-  -webkit-animation: heartbit 1s ease-out;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+  // -moz-animation: heartbit 1s ease-out;
+  // -moz-animation-iteration-count: infinite;
+  // -o-animation: heartbit 1s ease-out;
+  // -o-animation-iteration-count: infinite;
+  // -webkit-animation: heartbit 1s ease-out;
+  // -webkit-animation-iteration-count: infinite;
+  // animation-iteration-count: infinite;
 }
 </style>

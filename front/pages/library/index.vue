@@ -46,7 +46,7 @@
                         <strong>{{ $t('compliance.legalname') }}</strong>
                       </label>
                       <div class="col-md-12">
-                        {{compliance.legalName}}
+                        <span class="label label-info" data-toggle="tooltip" v-if="compliance.updated" :title="'อับเดทเมื่อ '+compliance.updateDate">อับเดท</span> {{compliance.legalName}}
                       </div>
                     </div>
 
@@ -219,7 +219,11 @@ export default {
 
       compliances.forEach(function(compliance) {
         var node = {
-          text: compliance.legalName,
+          text:
+            compliance.legalName +
+            '<span style="display:none">' +
+            compliance.tags +
+            '</span>',
           icon: 'fa fa-file-text-o',
           selectable: true,
           value: compliance
