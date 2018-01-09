@@ -86,9 +86,6 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.TRUE);
-        if(!accord.getAccept()){
-            mailService.acceptNotification(findOne, username);
-        }
         accordRepository.save(findOne);
     }
 
@@ -100,6 +97,7 @@ public class AccordController {
         findOne.setRemark(null);
         findOne.setApprove(null);
         findOne.setAccept(Boolean.FALSE);
+        mailService.acceptNotification(findOne, username);
         accordRepository.save(findOne);
     }
 
@@ -115,7 +113,6 @@ public class AccordController {
         } else {
             findOne.setApprove(Boolean.TRUE);
         }
-        mailService.approveNotification(accord, username);
         accordRepository.save(findOne);
     }
 
