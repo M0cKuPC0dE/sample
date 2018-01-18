@@ -538,7 +538,7 @@ export default {
         })
         .then(response => {
           self.$router.push({
-            path: '/checklist/group/accord/' + self.accord.id
+            path: '/checklist/group/accord/' + self.legalCategory.id
           })
         })
         .catch(e => {

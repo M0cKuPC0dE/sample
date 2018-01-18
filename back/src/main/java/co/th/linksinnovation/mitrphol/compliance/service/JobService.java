@@ -113,7 +113,7 @@ public class JobService {
 
     @Async
     private void resetMail(UserDetails u, Accord accord, String filename, Date expireDate) {
-        System.out.println("------> send mail");
+        System.out.println("------> send mail to "+u.getEmail());
         MimeMessage mail = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);

@@ -10,6 +10,7 @@ import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
 import co.th.linksinnovation.mitrphol.compliance.model.LegalDuty;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -21,6 +22,7 @@ public interface AccordRepository extends JpaRepository<Accord, Long>{
 
     public List<Accord> findByLegalCategory(LegalCategory le);
     
+    @Modifying
     @Query(value = "UPDATE accord SET accept=NULL, accorded=NULL, approve=NULL WHERE id=?1",nativeQuery = true)
     public void reset(Long id);
 }
