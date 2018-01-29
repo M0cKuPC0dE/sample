@@ -112,64 +112,71 @@ import cookie from '~/utils/cookie'
 import StateBoard from '~/components/StateBoard'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalgroup/authority/' + cookie(context).AU, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { groups: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
   components: {
     StateBoard
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
   },
-  data: function () {
+  data: function() {
     return {
       deleteGroup: {},
       progress: {}
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalgroup/authority/' + cookie(this).AU, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'groups', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#group-remove-modal').modal('hide')
 
       this.deleteGroup.legalDuties = []
-      return http.post('/api/legalgroup', self.deleteGroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+      return http
+        .post('/api/legalgroup', self.deleteGroup, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
         .then(response => {
           self.onLoad()
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (legalgroup) {
+    onConfirmDelete: function(legalgroup) {
       $('#group-remove-modal').modal('show')
       this.$set(this, 'deleteGroup', legalgroup)
     },
-    countDuty: function (group) {
+    countDuty: function(group) {
       var data = {
         total: 0,
         process: 0
       }
-      group.legalCategories.forEach(function (category) {
-        category.accords.forEach(function (accord) {
+      group.legalCategories.forEach(function(category) {
+        category.accords.forEach(function(accord) {
           if (accord.accorded) {
             data.process = data.process + 1
           }

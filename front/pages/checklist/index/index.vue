@@ -86,7 +86,7 @@ export default {
 
     if (this.authority === 'Coordinator') {
       http
-        .get('/api/legalgroup', {
+        .get('/api/legalgroup/authority/' + cookie(this).AU, {
           headers: { Authorization: 'bearer ' + cookie(this).AT }
         })
         .then(function(resp) {

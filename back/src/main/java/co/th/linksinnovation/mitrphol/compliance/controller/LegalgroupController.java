@@ -53,18 +53,18 @@ public class LegalgroupController {
     @Autowired
     private MailService mailService;
 
-    @GetMapping
+    @GetMapping("/authority/{Authority}")
     @JsonView(JsonViewer.ComplianceWithCategory.class)
-    public List<LegalGroup> get(@AuthenticationPrincipal String username) {
+    public List<LegalGroup> get(@PathVariable("Authority") String Authority,@AuthenticationPrincipal String username) {
         UserDetails findOne = userDetailsRepository.findOne(username);
-        if (findOne.getAuthorities().contains(new Authority("Administrator"))) {
+        if (findOne.getAuthorities().contains(new Authority("Administrator")) && Authority.equals("Administrator")) {
             List<LegalGroup> findAll = legalgroupRepository.findAll();
             for (LegalGroup legalGroup : findAll) {
                 List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(legalGroup);
                 legalGroup.getLegalCategories().addAll(findByLegalGroup);
             }
             return findAll;
-        } else if (findOne.getAuthorities().contains(new Authority("Coordinator"))) {
+        } else if (findOne.getAuthorities().contains(new Authority("Coordinator")) && Authority.equals("Coordinator")) {
             List<LegalGroup> findAll = legalgroupRepository.findByCoordinatesIn(findOne);
             for (LegalGroup legalGroup : findAll) {
                 List<LegalCategory> findByLegalGroup = legalcategoryRepository.findByLegalGroup(legalGroup);

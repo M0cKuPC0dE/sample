@@ -94,49 +94,55 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  asyncData: function (context) {
+  asyncData: function(context) {
     return http
-      .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .then((response) => {
+      .get('/api/legalgroup/authority/' + cookie(context).AU, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .then(response => {
         return { groups: response.data }
       })
-      .catch((e) => {
+      .catch(e => {
         context.redirect('/checklist/login')
       })
   },
-  mounted: function () {
+  mounted: function() {
     $('[data-toggle="tooltip"]').tooltip()
   },
-  data: function () {
+  data: function() {
     return {
       deleteGroup: {}
     }
   },
   methods: {
-    onLoad: function () {
+    onLoad: function() {
       var self = this
       http
-        .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .get('/api/legalgroup/authority/' + cookie(this).AU, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.$set(self, 'groups', response.data)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onDelete: function () {
+    onDelete: function() {
       var self = this
       $('#group-remove-modal').modal('hide')
       return http
-        .delete('/api/legalgroup/' + this.deleteGroup.id, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .then((response) => {
+        .delete('/api/legalgroup/' + this.deleteGroup.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
           self.onLoad(self.selected)
         })
-        .catch((e) => {
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
     },
-    onConfirmDelete: function (legalgroup) {
+    onConfirmDelete: function(legalgroup) {
       $('#group-remove-modal').modal('show')
       this.$set(this, 'deleteGroup', legalgroup)
     }

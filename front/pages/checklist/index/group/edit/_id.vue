@@ -62,20 +62,26 @@ import http from '~/utils/http'
 import cookie from '~/utils/cookie'
 
 export default {
-  async asyncData (context) {
+  async asyncData(context) {
     let categories = await http
-      .get('/api/category/compliance', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/category/compliance', {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
     let legalgroup = await http
-      .get('/api/legalgroup/' + context.params.id, { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/legalgroup/' + context.params.id, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
     let legalgroups = await http
-      .get('/api/legalgroup', { headers: { Authorization: 'bearer ' + cookie(context).AT } })
-      .catch((e) => {
+      .get('/api/legalgroup/authority/' + cookie(context).AU, {
+        headers: { Authorization: 'bearer ' + cookie(context).AT }
+      })
+      .catch(e => {
         context.redirect('/checklist/login')
       })
     return {
@@ -85,37 +91,43 @@ export default {
       legalgroups: legalgroups.data
     }
   },
-  data: function () {
+  data: function() {
     return {
       category: { id: 'null' }
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.allview(this.categories)
   },
   methods: {
-    onSave: function () {
+    onSave: function() {
       var self = this
       this.selLegalGroup.legalDuties = this.legalgroup.legalDuties
-      http.post('/api/legalgroup', self.selLegalGroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
-        .catch((e) => {
+      http
+        .post('/api/legalgroup', self.selLegalGroup, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .catch(e => {
           self.$router.replace('/checklist/login')
         })
 
       if (this.legalgroup.id !== this.selLegalGroup.id) {
         this.legalgroup.legalDuties = []
-        http.post('/api/legalgroup', self.legalgroup, { headers: { Authorization: 'bearer ' + cookie(this).AT } })
+        http
+          .post('/api/legalgroup', self.legalgroup, {
+            headers: { Authorization: 'bearer ' + cookie(this).AT }
+          })
           .then(response => {
             self.$router.push({ path: '/checklist/group' })
           })
-          .catch((e) => {
+          .catch(e => {
             self.$router.replace('/checklist/login')
           })
       } else {
         self.$router.push({ path: '/checklist/group' })
       }
     },
-    allview: function (categories) {
+    allview: function(categories) {
       var self = this
       $('#allview').treeview({
         expandIcon: 'glyphicon glyphicon-chevron-right',
@@ -123,52 +135,77 @@ export default {
         showTags: false,
         showCheckbox: true,
         data: self.cat2node(categories),
-        onNodeChecked: function (event, data) {
+        onNodeChecked: function(event, data) {
           if (data.nodes) {
-            data.nodes.forEach(function (node) {
-              $('#allview').treeview('checkNode', [node.nodeId, { silent: true }])
-              if (node.value) { self.addLegalDuty(node.value) }
+            data.nodes.forEach(function(node) {
+              $('#allview').treeview('checkNode', [
+                node.nodeId,
+                { silent: true }
+              ])
+              if (node.value) {
+                self.addLegalDuty(node.value)
+              }
               if (node.nodes) {
-                node.nodes.forEach(function (subNode) {
-                  $('#allview').treeview('checkNode', [subNode.nodeId, { silent: true }])
-                  if (subNode.value) { self.addLegalDuty(subNode.value) }
+                node.nodes.forEach(function(subNode) {
+                  $('#allview').treeview('checkNode', [
+                    subNode.nodeId,
+                    { silent: true }
+                  ])
+                  if (subNode.value) {
+                    self.addLegalDuty(subNode.value)
+                  }
                 })
               }
             })
           } else {
-            if (data.value) { self.addLegalDuty(data.value) }
+            if (data.value) {
+              self.addLegalDuty(data.value)
+            }
           }
         },
-        onNodeUnchecked: function (event, data) {
+        onNodeUnchecked: function(event, data) {
           if (data.nodes) {
-            data.nodes.forEach(function (node) {
-              $('#allview').treeview('uncheckNode', [node.nodeId, { silent: true }])
-              if (node.value) { self.removeLegalDuty(node.value) }
+            data.nodes.forEach(function(node) {
+              $('#allview').treeview('uncheckNode', [
+                node.nodeId,
+                { silent: true }
+              ])
+              if (node.value) {
+                self.removeLegalDuty(node.value)
+              }
               if (node.nodes) {
-                node.nodes.forEach(function (subNode) {
-                  $('#allview').treeview('uncheckNode', [subNode.nodeId, { silent: true }])
-                  if (subNode.value) { self.removeLegalDuty(subNode.value) }
+                node.nodes.forEach(function(subNode) {
+                  $('#allview').treeview('uncheckNode', [
+                    subNode.nodeId,
+                    { silent: true }
+                  ])
+                  if (subNode.value) {
+                    self.removeLegalDuty(subNode.value)
+                  }
                 })
               }
             })
           } else {
-            if (data.value) { self.removeLegalDuty(data.value) }
+            if (data.value) {
+              self.removeLegalDuty(data.value)
+            }
           }
         }
       })
       $('#allview').treeview('collapseAll', { silent: true })
     },
-    cat2node: function (categories) {
+    cat2node: function(categories) {
       var self = this
       var nodes = []
       if (!categories) return
 
-      categories.forEach(function (category) {
+      categories.forEach(function(category) {
         var node = {
           text: category.name,
           icon: 'fa fa-folder',
           selectable: false,
-          nodes: category.childs.length === 0 ? [] : self.cat2node(category.childs)
+          nodes:
+            category.childs.length === 0 ? [] : self.cat2node(category.childs)
         }
         var compNode = self.compliance2node(category.compliances)
         node.nodes = compNode.concat(node.nodes)
@@ -177,28 +214,31 @@ export default {
       })
       return nodes
     },
-    compliance2node: function (compliances) {
+    compliance2node: function(compliances) {
       var self = this
       var nodes = []
       if (!compliances) return
 
-      compliances.forEach(function (compliance) {
+      compliances.forEach(function(compliance) {
         var node = {
           text: compliance.legalName,
           icon: 'fa fa-file-text-o',
           selectable: false,
-          nodes: compliance.legalDuties.length === 0 ? [] : self.legalduty2node(compliance.legalDuties)
+          nodes:
+            compliance.legalDuties.length === 0
+              ? []
+              : self.legalduty2node(compliance.legalDuties)
         }
         nodes.push(node)
       })
       return nodes
     },
-    legalduty2node: function (legalDuties) {
+    legalduty2node: function(legalDuties) {
       var self = this
       var nodes = []
       if (!legalDuties) return
 
-      legalDuties.forEach(function (legalDuty) {
+      legalDuties.forEach(function(legalDuty) {
         var node = {
           text: legalDuty.name,
           icon: 'fa fa-tag',
@@ -212,17 +252,17 @@ export default {
       })
       return nodes
     },
-    addLegalDuty: function (legalDuty) {
+    addLegalDuty: function(legalDuty) {
       this.legalgroup.legalDuties.push(legalDuty)
       this.$set(this.legalgroup, 'legalDuties', this.legalgroup.legalDuties)
     },
-    removeLegalDuty: function (legalDuty) {
-      var legalDuties = $.grep(this.legalgroup.legalDuties, function (elm) {
+    removeLegalDuty: function(legalDuty) {
+      var legalDuties = $.grep(this.legalgroup.legalDuties, function(elm) {
         return elm.id !== legalDuty.id
       })
       this.$set(this.legalgroup, 'legalDuties', legalDuties)
     },
-    isChecked: function (val) {
+    isChecked: function(val) {
       if (this.legalgroup.legalDuties.filter(e => e.id === val.id).length > 0) {
         return true
       } else {

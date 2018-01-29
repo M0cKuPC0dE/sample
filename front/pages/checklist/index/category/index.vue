@@ -185,7 +185,7 @@ import cookie from '~/utils/cookie'
 export default {
   asyncData: function(context) {
     return http
-      .get('/api/legalgroup', {
+      .get('/api/legalgroup/authority/' + cookie(context).AU, {
         headers: { Authorization: 'bearer ' + cookie(context).AT }
       })
       .then(response => {
@@ -210,7 +210,7 @@ export default {
     onLoad: function() {
       var self = this
       http
-        .get('/api/legalgroup', {
+        .get('/api/legalgroup/authority/' + cookie(this).AU, {
           headers: { Authorization: 'bearer ' + cookie(this).AT }
         })
         .then(response => {
