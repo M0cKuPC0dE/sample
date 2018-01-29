@@ -29,4 +29,10 @@ public class PublicController {
     public void resetAllLast() {
         jobService.resetAccordAllExpire();
     }
+    
+     @GetMapping("/public/coordinatorsummary")
+    public void coordinatorSummary() {
+        jobService.coordinatorSummary();
+        jobService.approverSummary();
+    }
 }

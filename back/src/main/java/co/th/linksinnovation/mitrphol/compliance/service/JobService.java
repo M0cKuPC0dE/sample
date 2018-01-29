@@ -6,13 +6,23 @@
 package co.th.linksinnovation.mitrphol.compliance.service;
 
 import co.th.linksinnovation.mitrphol.compliance.model.Accord;
+import co.th.linksinnovation.mitrphol.compliance.model.Accorded;
 import co.th.linksinnovation.mitrphol.compliance.model.EvidenceFile;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalCategory;
+import co.th.linksinnovation.mitrphol.compliance.model.LegalGroup;
 import co.th.linksinnovation.mitrphol.compliance.model.LicenseFile;
 import co.th.linksinnovation.mitrphol.compliance.model.UserDetails;
+import co.th.linksinnovation.mitrphol.compliance.model.dataset.MailSummary;
 import co.th.linksinnovation.mitrphol.compliance.repository.AccordRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalcategoryRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.LegalgroupRepository;
+import co.th.linksinnovation.mitrphol.compliance.repository.UserDetailsRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -37,6 +47,12 @@ public class JobService {
 
     @Autowired
     private AccordRepository accordRepository;
+    @Autowired
+    private LegalgroupRepository legalgroupRepository;
+    @Autowired
+    private LegalcategoryRepository legalcategoryRepository;
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -134,4 +150,168 @@ public class JobService {
             Logger.getLogger(JobService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Transactional
+    @Scheduled(cron = "0 0 9 * * *")
+    public void coordinatorSummary() {
+        List<String> asList = Arrays.asList("Coordinator");
+        Map<String, List<MailSummary>> map;
+        List<UserDetails> findUserByRole = userDetailsRepository.findUserByRole(asList);
+        for (UserDetails ud : findUserByRole) {
+            map = new HashMap<>();
+            List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
+            for (LegalGroup lg : legalGroups) {
+                List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
+                for (LegalCategory lc : legalCategories) {
+                    String owner = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
+
+                    MailSummary mailSummary = new MailSummary(
+                            lc.getDepartment().getName(),
+                            countProcessCoordinator(lc.getAccords()),
+                            countAccorded(lc.getAccords(), Accorded.ACCORDED),
+                            countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
+                            countAccorded(lc.getAccords(), null),
+                            lc.getAccords().size()
+                    );
+                    if (map.containsKey(owner)) {
+                        List<MailSummary> get = map.get(owner);
+                        get.add(mailSummary);
+                        map.put(owner, get);
+                    } else {
+                        List<MailSummary> mailSummaries = new ArrayList<>();
+                        mailSummaries.add(mailSummary);
+                        map.put(owner, mailSummaries);
+                    }
+                }
+            }
+            System.out.println("--------> map " + map);
+            if (!map.isEmpty()) {
+                List<MailSummary> summaryAccorded = summaryAccorded(map.get(ud.getNameEn()));
+                map.put(ud.getNameEn(), summaryAccorded);
+                coordinatorSummaryMail(ud, map);
+            }
+        }
+    }
+
+    private Integer countProcessCoordinator(List<Accord> accords) {
+        Integer total = 0;
+        for (Accord accord : accords) {
+            if (accord.getAccept() == null && accord.getAccorded() != null && accord.getApprove() == null) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    private Integer countAccorded(List<Accord> accords, Accorded accorded) {
+        Integer total = 0;
+        for (Accord accord : accords) {
+            if ((accorded == null && accord.getAccorded() == null) || (accorded != null && accorded.equals(accord.getAccorded()))) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    private List<MailSummary> summaryAccorded(List<MailSummary> mailSummaries) {
+        MailSummary total = new MailSummary();
+        for (MailSummary mailSummary : mailSummaries) {
+            total.setProcess(total.getProcess() + mailSummary.getProcess());
+            total.setAccord(total.getAccord() + mailSummary.getAccord());
+            total.setNoAccord(total.getNoAccord() + mailSummary.getNoAccord());
+            total.setNoProcess(total.getNoProcess() + mailSummary.getNoProcess());
+            total.setSummary(total.getSummary() + mailSummary.getSummary());
+        }
+        mailSummaries.add(total);
+        return mailSummaries;
+    }
+
+    private void coordinatorSummaryMail(UserDetails u, Map<String, List<MailSummary>> map) {
+        System.out.println("------> send summary mail to coordinator " + u.getEmail());
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(u.getEmail());
+            helper.setFrom("mpcompliance@mitrphol.com");
+            helper.setSubject("สรุปการประเมินความสอดคล้องการปฎิบัติตามกฎหมายของผู้ดูแล");
+
+            Context context = new Context();
+            context.setVariable("map", map);
+            helper.setText(templateEngine.process("coordinatorsummary", context), true);
+            javaMailSender.send(mail);
+        } catch (MessagingException ex) {
+            Logger.getLogger(JobService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 9 * * *")
+    public void approverSummary() {
+        List<String> asList = Arrays.asList("Approver");
+        Map<String, List<MailSummary>> map;
+        List<UserDetails> findUserByRole = userDetailsRepository.findUserByRole(asList);
+        for (UserDetails ud : findUserByRole) {
+            map = new HashMap<>();
+            List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
+            for (LegalGroup lg : legalGroups) {
+                List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
+                for (LegalCategory lc : legalCategories) {
+                    String owner = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
+
+                    MailSummary mailSummary = new MailSummary(
+                            lc.getDepartment().getName(),
+                            countProcessApprover(lc.getAccords()),
+                            countAccorded(lc.getAccords(), Accorded.ACCORDED),
+                            countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
+                            countAccorded(lc.getAccords(), null),
+                            lc.getAccords().size()
+                    );
+                    if (map.containsKey(owner)) {
+                        List<MailSummary> get = map.get(owner);
+                        get.add(mailSummary);
+                        map.put(owner, get);
+                    } else {
+                        List<MailSummary> mailSummaries = new ArrayList<>();
+                        mailSummaries.add(mailSummary);
+                        map.put(owner, mailSummaries);
+                    }
+                }
+            }
+            System.out.println("--------> map " + map);
+            if (!map.isEmpty()) {
+                List<MailSummary> summaryAccorded = summaryAccorded(map.get(ud.getNameEn()));
+                map.put(ud.getNameEn(), summaryAccorded);
+                approverSummaryMail(ud, map);
+            }
+        }
+    }
+
+    private Integer countProcessApprover(List<Accord> accords) {
+        Integer total = 0;
+        for (Accord accord : accords) {
+            if (accord.getAccept() != null && accord.getAccept() != false && accord.getAccorded() != null && accord.getApprove() == null) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    private void approverSummaryMail(UserDetails u, Map<String, List<MailSummary>> map) {
+        System.out.println("------> send summary mail to approver " + u.getEmail());
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(u.getEmail());
+            helper.setFrom("mpcompliance@mitrphol.com");
+            helper.setSubject("สรุปการพิจารณาเห็นชอบการประเมินความสอดคล้องการปฎิบัติตามกฎหมายของผู้ดูแล (Owner)");
+
+            Context context = new Context();
+            context.setVariable("map", map);
+            helper.setText(templateEngine.process("approversummary", context), true);
+            javaMailSender.send(mail);
+        } catch (MessagingException ex) {
+            Logger.getLogger(JobService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

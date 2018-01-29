@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>[SUBJECT]</title>
+    </head>
+
+    <body>
+        <p style="font-size: 16px; text-align: center;">
+            สรุปรายการประเมินการปฏิบัติตามกฎหมายของผู้ดูแล Owner
+        </p>
+        <p style="font-size: 16px; text-align: center;">
+            สามารถเข้าไปจัดการหน้าที่ตามกฎหมายได้ที่
+            <a href="https://compliance.mitrphol.com" target="_blank">Compliance System</a>
+        </p>
+        <p></p>
+        <br />
+        <table align="center" width="75%" style="border: 1px solid #333; border-collapse: collapse;">
+            <tr>
+                <td bgcolor="#ccc" rowspan="2" style="border: 1px solid #333; text-align: center;">ฝ่าย/แผนก</td>
+                <td bgcolor="#ccc" rowspan="2" style="border: 1px solid #333; text-align: center;">รอพิจารณา</td>
+                <td bgcolor="#ccc" colspan="4" style="border: 1px solid #333; text-align: center;">การประเมิน </td>
+            </tr>
+            <tr>
+                <td bgcolor="#4AAF56" style="border: 1px solid #333; text-align: center;">สอดคล้อง</td>
+                <td bgcolor="#FCC029" style="border: 1px solid #333; text-align: center;">ไม่สอดคล้อง</td>
+                <td bgcolor="#3495F0" style="border: 1px solid #333; text-align: center;">ยังไม่ดำเนินการ</td>
+                <td bgcolor="#ccc" style="border: 1px solid #333; text-align: center;">รวมหน้าที่</td>
+            </tr>
+
+            <th:block th:each="instance : ${map}">
+                <tr>
+                    <td colspan="6" bgcolor="#FCEB4C" style="border: 1px solid #333;">Owner <span th:text="${instance.key}"></span></td>
+                </tr>
+                <th:block th:each="data,inter : ${instance.value}">
+                    <tr th:if="${inter.count} != ${inter.size}">
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.department}"></span></td>
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.process}"></span></td>
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.accord}"></span></td>
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.noAccord}"></span></td>
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.noProcess}"></span></td>
+                        <td style="border: 1px solid #333; text-align: center;"><span th:text="${data.summary}"></span></td>
+                    </tr>
+                    <tr th:if="${inter.count} == ${inter.size}">
+                        <td colspan="2" bgcolor="#ccc" style="border: 1px solid #333;">Total</td>
+                        <td bgcolor="#ccc" style="border: 1px solid #333;text-align: center;"><span th:text="${data.accord}"></span></td>
+                        <td bgcolor="#ccc" style="border: 1px solid #333;text-align: center;"><span th:text="${data.noAccord}"></span></td>
+                        <td bgcolor="#ccc" style="border: 1px solid #333;text-align: center;"><span th:text="${data.noProcess}"></span></td>
+                        <td bgcolor="#ccc" style="border: 1px solid #333;text-align: center;"><span th:text="${data.summary}"></span></td>
+                    </tr>
+                </th:block>
+            </th:block>
+
+        </table>
+    </body>
+</html>
