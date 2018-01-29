@@ -164,6 +164,7 @@ public class JobService {
                 List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
                 String owner = null;
                 for (LegalCategory lc : legalCategories) {
+                    if(lc.getOwners().toArray().length == 0){continue;}
                     String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
 
                     MailSummary mailSummary = new MailSummary(
@@ -259,6 +260,7 @@ public class JobService {
             List<LegalCategory> legalCategories = legalcategoryRepository.findByApproversIn(ud);
             String owner = null;
             for (LegalCategory lc : legalCategories) {
+                if(lc.getOwners().toArray().length == 0){continue;}
                 String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
 
                 MailSummary mailSummary = new MailSummary(
