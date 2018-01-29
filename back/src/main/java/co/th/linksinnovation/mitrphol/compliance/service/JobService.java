@@ -162,8 +162,9 @@ public class JobService {
             List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
             for (LegalGroup lg : legalGroups) {
                 List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
+                String owner = null;
                 for (LegalCategory lc : legalCategories) {
-                    String owner = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
+                    String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
 
                     MailSummary mailSummary = new MailSummary(
                             lc.getDepartment().getName(),
@@ -173,21 +174,24 @@ public class JobService {
                             countAccorded(lc.getAccords(), null),
                             lc.getAccords().size()
                     );
-                    if (map.containsKey(owner)) {
-                        List<MailSummary> get = map.get(owner);
+                    if (map.containsKey(key)) {
+                        List<MailSummary> get = map.get(key);
                         get.add(mailSummary);
-                        map.put(owner, get);
+                        map.put(key, get);
                     } else {
+                        if (owner != null) {
+                            List<MailSummary> summaryAccorded = summaryAccorded(map.get(owner));
+                            map.put(owner, summaryAccorded);
+                        }
                         List<MailSummary> mailSummaries = new ArrayList<>();
                         mailSummaries.add(mailSummary);
-                        map.put(owner, mailSummaries);
+                        map.put(key, mailSummaries);
                     }
+                    owner = key;
                 }
             }
             System.out.println("--------> map " + map);
             if (!map.isEmpty()) {
-                List<MailSummary> summaryAccorded = summaryAccorded(map.get(ud.getNameEn()));
-                map.put(ud.getNameEn(), summaryAccorded);
                 coordinatorSummaryMail(ud, map);
             }
         }
@@ -252,35 +256,36 @@ public class JobService {
         List<UserDetails> findUserByRole = userDetailsRepository.findUserByRole(asList);
         for (UserDetails ud : findUserByRole) {
             map = new HashMap<>();
-            List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
-            for (LegalGroup lg : legalGroups) {
-                List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
-                for (LegalCategory lc : legalCategories) {
-                    String owner = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
+            List<LegalCategory> legalCategories = legalcategoryRepository.findByApproversIn(ud);
+            String owner = null;
+            for (LegalCategory lc : legalCategories) {
+                String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
 
-                    MailSummary mailSummary = new MailSummary(
-                            lc.getDepartment().getName(),
-                            countProcessApprover(lc.getAccords()),
-                            countAccorded(lc.getAccords(), Accorded.ACCORDED),
-                            countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
-                            countAccorded(lc.getAccords(), null),
-                            lc.getAccords().size()
-                    );
-                    if (map.containsKey(owner)) {
-                        List<MailSummary> get = map.get(owner);
-                        get.add(mailSummary);
-                        map.put(owner, get);
-                    } else {
-                        List<MailSummary> mailSummaries = new ArrayList<>();
-                        mailSummaries.add(mailSummary);
-                        map.put(owner, mailSummaries);
+                MailSummary mailSummary = new MailSummary(
+                        lc.getDepartment().getName(),
+                        countProcessApprover(lc.getAccords()),
+                        countAccorded(lc.getAccords(), Accorded.ACCORDED),
+                        countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
+                        countAccorded(lc.getAccords(), null),
+                        lc.getAccords().size()
+                );
+                if (map.containsKey(key)) {
+                    List<MailSummary> get = map.get(key);
+                    get.add(mailSummary);
+                    map.put(key, get);
+                } else {
+                    if (owner != null) {
+                        List<MailSummary> summaryAccorded = summaryAccorded(map.get(owner));
+                        map.put(owner, summaryAccorded);
                     }
+                    List<MailSummary> mailSummaries = new ArrayList<>();
+                    mailSummaries.add(mailSummary);
+                    map.put(key, mailSummaries);
                 }
+                owner = key;
             }
             System.out.println("--------> map " + map);
             if (!map.isEmpty()) {
-                List<MailSummary> summaryAccorded = summaryAccorded(map.get(ud.getNameEn()));
-                map.put(ud.getNameEn(), summaryAccorded);
                 approverSummaryMail(ud, map);
             }
         }
