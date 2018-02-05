@@ -65,6 +65,54 @@ public class JobService {
 
     @Scheduled(cron = "0 0 10 * * *")
     @Transactional
+    public void warningAccordIsExpire() {
+        System.out.println("---> Warning Mail <----");
+        List<Accord> findAll = accordRepository.findAll();
+        for (Accord accord : findAll) {
+            for (LicenseFile lf : accord.getLicenseFiles()) {
+                if (lf != null && lf.getWarningDate()!= null) {
+                    if (DateUtils.isSameDay(DateUtils.addYears(lf.getWarningDate(), -543), new Date())) {
+                        warningMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, lf.getName(), lf.getExpireDate());
+                        break;
+                    }
+                }
+            }
+            for (EvidenceFile ef : accord.getEvidenceFiles()) {
+                if (ef != null && ef.getWarningDate() != null) {
+                    if (DateUtils.isSameDay(DateUtils.addYears(ef.getWarningDate(), -543), new Date())) {
+                        warningMail(new ArrayList<>(accord.getLegalCategory().getOwners()).get(0), accord, ef.getName(), ef.getExpireDate());
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Async
+    private void warningMail(UserDetails u, Accord accord, String filename, Date expireDate) {
+        System.out.println("------> send mail to " + u.getEmail());
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(u.getEmail());
+            helper.setFrom("mpcompliance@mitrphol.com");
+            helper.setSubject("แจ้งเตือน รายการเอกสารถึงกำหนดต่ออายุ");
+
+            Context context = new Context();
+            context.setVariable("department", accord.getLegalCategory().getDepartment().getName());
+            context.setVariable("legal_name", accord.getLegalDuty().getCompliance().getLegalName());
+            context.setVariable("legal_duty", accord.getLegalDuty().getName());
+            context.setVariable("filename", filename);
+            context.setVariable("expireDate", expireDate);
+            helper.setText(templateEngine.process("warningmail", context), true);
+            javaMailSender.send(mail);
+        } catch (MessagingException ex) {
+            Logger.getLogger(JobService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Scheduled(cron = "0 0 10 * * *")
+    @Transactional
     public void resetAccordIsExpire() {
         List<Accord> findAll = accordRepository.findAll();
         for (Accord accord : findAll) {
@@ -138,9 +186,11 @@ public class JobService {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             helper.setTo(u.getEmail());
             helper.setFrom("mpcompliance@mitrphol.com");
-            helper.setSubject("แจ้งเตือน รายการเอกสารถึงกำหนดต่ออายุ / ทบทวนการประเมิน /เอกสารหมดอายุ");
+            helper.setSubject("แจ้งเตือน รายการเอกสารหมดอายุ");
 
             Context context = new Context();
+            context.setVariable("department", accord.getLegalCategory().getDepartment().getName());
+            context.setVariable("legal_name", accord.getLegalDuty().getCompliance().getLegalName());
             context.setVariable("legal_duty", accord.getLegalDuty().getName());
             context.setVariable("filename", filename);
             context.setVariable("expireDate", expireDate);
@@ -161,7 +211,7 @@ public class JobService {
             map = new HashMap<>();
             List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
             for (LegalGroup lg : legalGroups) {
-                System.out.println("--> LG "+lg.getId() +" "+lg.getBuName());
+                System.out.println("--> LG " + lg.getId() + " " + lg.getBuName());
                 List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
                 for (LegalCategory lc : legalCategories) {
                     if (lc.getOwners().toArray().length == 0) {
@@ -176,7 +226,7 @@ public class JobService {
                             countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
                             countAccorded(lc.getAccords(), null),
                             lc.getAccords().size()
-                   );
+                    );
                     if (map.containsKey(key)) {
                         List<MailSummary> get = map.get(key);
                         get.add(mailSummary);

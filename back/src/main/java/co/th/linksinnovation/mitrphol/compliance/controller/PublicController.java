@@ -22,6 +22,7 @@ public class PublicController {
     
     @GetMapping("/public/resetmail")
     public void resetMail(){
+        jobService.warningAccordIsExpire();
         jobService.resetAccordIsExpire();
     }
     
