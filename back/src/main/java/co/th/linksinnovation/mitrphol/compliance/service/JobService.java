@@ -63,7 +63,7 @@ public class JobService {
         this.templateEngine = templateEngine;
     }
 
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     @Transactional
     public void resetAccordIsExpire() {
         List<Accord> findAll = accordRepository.findAll();
@@ -152,44 +152,41 @@ public class JobService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void coordinatorSummary() {
         List<String> asList = Arrays.asList("Coordinator");
         Map<String, List<MailSummary>> map;
         List<UserDetails> findUserByRole = userDetailsRepository.findUserByRole(asList);
         for (UserDetails ud : findUserByRole) {
-            if(!ud.getUsername().equals("natajrakp")){
-                continue;
-            }
             map = new HashMap<>();
             List<LegalGroup> legalGroups = legalgroupRepository.findByCoordinatesIn(ud);
             for (LegalGroup lg : legalGroups) {
                 System.out.println("--> LG "+lg.getId() +" "+lg.getBuName());
-//                List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
-//                for (LegalCategory lc : legalCategories) {
-//                    if (lc.getOwners().toArray().length == 0) {
-//                        continue;
-//                    }
-//                    String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
-//
-//                    MailSummary mailSummary = new MailSummary(
-//                            lc.getDepartment().getName(),
-//                            countProcessCoordinator(lc.getAccords()),
-//                            countAccorded(lc.getAccords(), Accorded.ACCORDED),
-//                            countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
-//                            countAccorded(lc.getAccords(), null),
-//                            lc.getAccords().size()
-//                    );
-//                    if (map.containsKey(key)) {
-//                        List<MailSummary> get = map.get(key);
-//                        get.add(mailSummary);
-//                        map.put(key, get);
-//                    } else {
-//                        List<MailSummary> mailSummaries = new ArrayList<>();
-//                        mailSummaries.add(mailSummary);
-//                        map.put(key, mailSummaries);
-//                    }
-//                }
+                List<LegalCategory> legalCategories = legalcategoryRepository.findByLegalGroup(lg);
+                for (LegalCategory lc : legalCategories) {
+                    if (lc.getOwners().toArray().length == 0) {
+                        continue;
+                    }
+                    String key = ((UserDetails) lc.getOwners().toArray()[0]).getNameEn();
+
+                    MailSummary mailSummary = new MailSummary(
+                            lc.getDepartment().getName(),
+                            countProcessCoordinator(lc.getAccords()),
+                            countAccorded(lc.getAccords(), Accorded.ACCORDED),
+                            countAccorded(lc.getAccords(), Accorded.NOT_ACCORDED),
+                            countAccorded(lc.getAccords(), null),
+                            lc.getAccords().size()
+                   );
+                    if (map.containsKey(key)) {
+                        List<MailSummary> get = map.get(key);
+                        get.add(mailSummary);
+                        map.put(key, get);
+                    } else {
+                        List<MailSummary> mailSummaries = new ArrayList<>();
+                        mailSummaries.add(mailSummary);
+                        map.put(key, mailSummaries);
+                    }
+                }
             }
             map = summaryAccorded(map);
             System.out.println("--------> map " + map);
@@ -255,7 +252,7 @@ public class JobService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void approverSummary() {
         List<String> asList = Arrays.asList("Approver");
         Map<String, List<MailSummary>> map;
