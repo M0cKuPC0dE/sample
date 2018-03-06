@@ -44,7 +44,7 @@
                           <nuxt-link :to="'/checklist/group/accord/'+category.id">{{category.department.name}}</nuxt-link>
                         </td>
                         <td>
-                          {{category.owners[0].nameTh}}
+                          {{category.owners.length != 0 ?category.owners.[0].nameTh:''}}
                         </td>
                         <td class="text-center">
                           {{categoryProgress(category)}}
