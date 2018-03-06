@@ -168,7 +168,9 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td style="vertical-align: middle;">
+                            <a :href="baseUrl+'/public/download/license/'+file.id">{{file.name}}</a>
+                          </td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
@@ -229,7 +231,9 @@
                               </span>
                             </div>
                           </td>
-                          <td style="vertical-align: middle;">{{file.name}}</td>
+                          <td style="vertical-align: middle;">
+                            <a :href="baseUrl+'/public/download/evidence/'+file.id">{{file.name}}</a>
+                          </td>
                           <td>
                             <div class="checkbox checkbox-success">
                               <input :id="'checkbox'+index" type="checkbox" v-model="file.expired">
