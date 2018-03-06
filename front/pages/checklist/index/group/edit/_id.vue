@@ -248,6 +248,9 @@ export default {
           },
           value: legalDuty
         }
+        if (self.isChecked(legalDuty)) {
+          node.backColor = '#f7fafc'
+        }
         nodes.push(node)
       })
       return nodes

@@ -302,7 +302,7 @@ public class JobService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(cron = "0 0 10 * 5 *")
     public void approverSummary() {
         List<String> asList = Arrays.asList("Approver");
         Map<String, List<MailSummary>> map;
