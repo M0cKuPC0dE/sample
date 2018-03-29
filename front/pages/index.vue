@@ -20,9 +20,9 @@
               </div>
             </div>
             <div class="col-lg-6 col-sm-6 col-xs-12">
-              <div class="white-box border-black">
+              <div class="white-box border-black" v-on:click="changePage('/checklist')">
                 <h3 class="box-title">CHECKLIST</h3>
-                <ul class="list-inline card-block" v-on:click="changePage('/checklist')">
+                <ul class="list-inline card-block">
                   <li>
                     <i class="ti-wallet text-success"></i>
                   </li>
@@ -56,7 +56,7 @@
 <script>
 export default {
   methods: {
-    changePage: function (url) {
+    changePage: function(url) {
       this.$router.push(url)
     }
   }
@@ -91,7 +91,7 @@ export default {
 
     &:hover {
       border: 1px solid #999;
-      background-color: #00C0EF;
+      background-color: #00c0ef;
       cursor: pointer;
       color: #fff;
       h3 {
@@ -101,20 +101,20 @@ export default {
   }
 }
 
-@media(max-width:1350px) {
+@media (max-width: 1350px) {
   .module-select {
     margin-left: 500px;
   }
 }
 
-@media (max-width:1023px) {
+@media (max-width: 1023px) {
   .module-select {
     margin: 0px auto;
     margin-top: 10%;
   }
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
   .module-select {
     margin: 0px auto;
     width: 500px;
@@ -122,7 +122,7 @@ export default {
   }
 }
 
-@media(max-width:480px) {
+@media (max-width: 480px) {
   .module-select {
     margin: 0px auto;
     width: 300px;

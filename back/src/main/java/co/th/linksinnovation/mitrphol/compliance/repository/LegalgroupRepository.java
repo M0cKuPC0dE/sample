@@ -18,4 +18,6 @@ public interface LegalgroupRepository extends JpaRepository<LegalGroup, Long>{
 
     public List<LegalGroup> findByCoordinatesIn(UserDetails findOne);
     
+    public List<LegalGroup> findByLegalDuties_Id(Long id);
+    
 }

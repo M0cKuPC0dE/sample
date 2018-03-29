@@ -91,9 +91,9 @@ public class LegalcategoryController {
 
     @GetMapping("/list")
     @JsonView(JsonViewer.LegalDutyWithCompliance.class)
-    public List<LegalCategory> getList(@AuthenticationPrincipal String username,@CookieValue(value = "AU",required = false) String au) {
+    public List<LegalCategory> getList(@AuthenticationPrincipal String username, @CookieValue(value = "AU", required = false) String au) {
         UserDetails findOne = userDetailsRepository.findOne(username);
-        if(null == au){
+        if (null == au) {
             au = "";
         }
         if (au.equals("Administrator")) {
@@ -161,6 +161,9 @@ public class LegalcategoryController {
                     }
                 } else {
                     UserDetails get = userdetails.get(0);
+                    if (get.getUuid() == null) {
+                        get.setUuid(UUID.randomUUID().toString());
+                    }
                     Authority authority = new Authority();
                     authority.setAuthority("Owner");
                     if (!get.getAuthorities().contains(authority)) {
@@ -194,6 +197,9 @@ public class LegalcategoryController {
                     }
                 } else {
                     UserDetails get = userdetails.get(0);
+                    if (get.getUuid() == null) {
+                        get.setUuid(UUID.randomUUID().toString());
+                    }
                     Authority authority = new Authority();
                     authority.setAuthority("Approver");
                     if (!get.getAuthorities().contains(authority)) {

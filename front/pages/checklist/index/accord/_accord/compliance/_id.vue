@@ -41,15 +41,15 @@
                 <div class="col-md-6">
                   <strong>ประเมินความสอดคล้อง</strong>
                   <div class="radio radio-success">
-                    <input type="radio" name="radio" id="radio1" value="ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner'">
+                    <input type="radio" name="radio" id="radio1" value="ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner' && accorded != null">
                     <label for="radio1"> สอดคล้อง </label>
                   </div>
                   <div class="radio radio-danger">
-                    <input type="radio" name="radio" id="radio2" value="NOT_ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner'">
+                    <input type="radio" name="radio" id="radio2" value="NOT_ACCORDED" v-model="accord.accorded" required :disabled="position !== 'Owner' && accorded != null">
                     <label for="radio2"> ไม่สอดคล้อง </label>
                   </div>
                   <div class="radio">
-                    <input type="radio" name="radio" id="radio3" value="NOT_CONCERN" v-model="accord.accorded" required :disabled="position !== 'Owner'">
+                    <input type="radio" name="radio" id="radio3" value="NOT_CONCERN" v-model="accord.accorded" required :disabled="position !== 'Owner' && accorded != null">
                     <label for="radio3"> ไม่เกี่ยวข้อง </label>
                   </div>
                 </div>
@@ -485,6 +485,7 @@ export default {
 
     return {
       accord: accord.data,
+      accorded: accord.data.accorded,
       legalCategory: legalCategory.data,
       date: date
     }

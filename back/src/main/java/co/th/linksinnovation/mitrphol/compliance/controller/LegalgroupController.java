@@ -137,4 +137,10 @@ public class LegalgroupController {
         }
         legalgroupRepository.delete(id);
     }
+    
+    @GetMapping("/legalduty/{id}")
+    @JsonView(JsonViewer.ComplianceWithCategory.class)
+    public List<LegalGroup> findByLegalDuty(@PathVariable("id") Long id){
+        return legalgroupRepository.findByLegalDuties_Id(id);
+    }
 }

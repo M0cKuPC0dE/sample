@@ -13,7 +13,7 @@
           <thead>
             <tr>
               <th>หน้าที่ตามกฎหมาย</th>
-              <th class="text-center col-md-2">จัดการ</th>
+              <th class="text-center col-md-3">จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -25,6 +25,9 @@
                 </nuxt-link>
                 <a href="javascript:void(0)" v-on:click="onConfirmDelete(legalDuty)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
                   <i class="ti-trash"></i>
+                </a>
+                <a href="javascript:void(0)" v-on:click="showCoordinator(legalDuty)" class="btn btn-sm btn-info m-r-5" data-toggle="tooltip" title="" title="ลบ">
+                  <i class="ti-user"></i>
                 </a>
               </td>
             </tr>
@@ -51,6 +54,32 @@
       </div>
     </div>
 
+    <div id="masterdata-coordinator-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Compliance Coordinator</h4>
+          </div>
+          <div class="modal-body">
+            <ul>
+              <li :key="index" v-for="(cogroup,index) in coordinatories">
+                <strong>{{cogroup.buName}}</strong>
+                <ul>
+                  <li :key="index" v-for="(coordinator,index) in cogroup.coordinates">
+                    {{coordinator.nameTh}}
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">ปิด</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -65,7 +94,8 @@ export default {
   data: function() {
     return {
       compliance: {},
-      deleteLegalDuty: ''
+      deleteLegalDuty: '',
+      coordinatories: {}
     }
   },
   computed: mapGetters({
@@ -110,6 +140,21 @@ export default {
     onConfirmDelete: function(legalDuty) {
       $('#masterdata-remove-modal').modal('show')
       this.$set(this, 'deleteLegalDuty', legalDuty)
+    },
+    showCoordinator(legalDuty) {
+      $('#masterdata-coordinator-modal').modal('show')
+
+      var self = this
+      return http
+        .get('/api/legalgroup/legalduty/' + legalDuty.id, {
+          headers: { Authorization: 'bearer ' + cookie(this).AT }
+        })
+        .then(response => {
+          this.$set(this, 'coordinatories', response.data)
+        })
+        .catch(e => {
+          self.$router.replace('/checklist/login')
+        })
     }
   }
 }
