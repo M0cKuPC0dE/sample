@@ -33,6 +33,24 @@
                 </div>
               </div>
 
+              <form v-on:submit.prevent="onSearch">
+                <div class="form-group">
+                  <div class="col-md-9">
+                    <div class="input-group bootstrap-touchspin">
+                      <input id="search-tree" type="text" class="form-control" style="display: block" autocomplete="off" placeholder="ค้นหา">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-outline">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button type="button" id="toggleExpand" class="btn btn-flat btn-info">Expand All</button>
+                  </div>
+                </div>
+              </form>
+
               <div class="row">
                 <div class="col-md-12">
                   <div id="allview" class="treeview"></div>
@@ -98,6 +116,17 @@ export default {
   },
   mounted: function() {
     this.allview(this.categories)
+    $('#search-tree').on('keyup', this.search)
+    $(document).on('click', '#toggleExpand', function (e) {
+      var state = $(this).text()
+      if (state === 'Collapse All') {
+        $('#allview').treeview('collapseAll')
+        $(this).text('Expand All')
+      } else {
+        $('#allview').treeview('expandAll')
+        $(this).text('Collapse All')
+      }
+    })
   },
   methods: {
     onSave: function() {
@@ -142,12 +171,20 @@ export default {
                 node.nodeId,
                 { silent: true }
               ])
+              $('#allview').treeview('revealNode', [
+                node.nodeId,
+                { silent: true }
+              ])
               if (node.value) {
                 self.addLegalDuty(node.value)
               }
               if (node.nodes) {
                 node.nodes.forEach(function(subNode) {
                   $('#allview').treeview('checkNode', [
+                    subNode.nodeId,
+                    { silent: true }
+                  ])
+                  $('#allview').treeview('revealNode', [
                     subNode.nodeId,
                     { silent: true }
                   ])
@@ -232,6 +269,41 @@ export default {
         nodes.push(node)
       })
       return nodes
+    },
+    search: function(e) {
+      var pattern = $('#search-tree').val()
+      if (pattern === this.lastPattern) {
+        return
+      }
+      this.lastPattern = pattern
+      var tree = $('#allview').treeview(true)
+      this.reset(tree)
+      if (pattern.length < 3) {
+        tree.clearSearch()
+      } else {
+        tree.search(pattern)
+        var roots = tree.getSiblings(0)
+        roots.push(tree.getNode(0))
+        var unrelated = this.collectUnrelated(roots)
+        tree.disableNode(unrelated, { silent: true })
+      }
+    },
+    reset: function(tree) {
+      tree.collapseAll()
+      tree.enableAll()
+    },
+    collectUnrelated: function(nodes) {
+      var unrelated = []
+      var self = this
+      $.each(nodes, function(i, n) {
+        if (!n.searchResult && !n.state.expanded) {
+          unrelated.push(n.nodeId)
+        }
+        if (!n.searchResult && n.nodes) {
+          $.merge(unrelated, self.collectUnrelated(n.nodes))
+        }
+      })
+      return unrelated
     },
     legalduty2node: function(legalDuties) {
       var self = this
