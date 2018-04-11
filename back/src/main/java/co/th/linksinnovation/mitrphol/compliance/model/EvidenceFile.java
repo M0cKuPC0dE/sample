@@ -31,6 +31,7 @@ public class EvidenceFile {
     private Date expireDate;
     private Boolean expired = true;
     private String name;
+    public String uuid;
     
     @PrePersist
     @PreUpdate

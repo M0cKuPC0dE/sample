@@ -27,4 +27,5 @@ public class LegalFile {
     @ManyToOne
     @JsonBackReference
     public Compliance compliance;
+    public String uuid;
 }

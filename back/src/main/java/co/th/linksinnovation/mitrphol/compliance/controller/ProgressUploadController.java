@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -238,6 +239,7 @@ public class ProgressUploadController {
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             LegalFile legalFile = new LegalFile();
             legalFile.setName(filename);
+            legalFile.setUuid(UUID.randomUUID().toString());
             return legalFileRepository.save(legalFile);
         } else {
             return null;
@@ -252,6 +254,7 @@ public class ProgressUploadController {
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             LicenseFile licenseFile = new LicenseFile();
             licenseFile.setName(filename);
+            licenseFile.setUuid(UUID.randomUUID().toString());
             return licenseFileRepository.save(licenseFile);
         } else {
             return null;
@@ -266,6 +269,7 @@ public class ProgressUploadController {
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             EvidenceFile evidenceFile = new EvidenceFile();
             evidenceFile.setName(filename);
+            evidenceFile.setUuid(UUID.randomUUID().toString());
             return evidenceFileRepository.save(evidenceFile);
         } else {
             return null;
