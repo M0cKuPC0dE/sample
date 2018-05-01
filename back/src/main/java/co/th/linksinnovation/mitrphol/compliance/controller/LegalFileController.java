@@ -47,10 +47,10 @@ public class LegalFileController {
         InputStream in = null;
         try {
             final LegalFile legalFile = legalFileRepository.findOne(id);
-            final String dataDirectory = "/mnt/data/files/" + legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid();
+            final String dataDirectory = "/mnt/data/files/" + (legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid());
             final File file = new File(dataDirectory);
             in = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(legalFile.getName(), "UTF-8"));
             response.setHeader("Content-Length", String.valueOf(file.length()));
             response.setHeader("language", "th-TH");
             response.setContentType("application/octet-stream");
@@ -75,10 +75,10 @@ public class LegalFileController {
         InputStream in = null;
         try {
             final LicenseFile legalFile = licenseFileRepository.findOne(id);
-            final String dataDirectory = "/mnt/data/files/" + legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid();
+            final String dataDirectory = "/mnt/data/files/" + (legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid());
             final File file = new File(dataDirectory);
             in = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(legalFile.getName(), "UTF-8"));
             response.setHeader("Content-Length", String.valueOf(file.length()));
             response.setHeader("language", "th-TH");
             response.setContentType("application/octet-stream");
@@ -103,10 +103,10 @@ public class LegalFileController {
         InputStream in = null;
         try {
             final EvidenceFile legalFile = evidenceFileRepository.findOne(id);
-            final String dataDirectory = "/mnt/data/files/" + legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid();
+            final String dataDirectory = "/mnt/data/files/" + (legalFile.getUuid() == null ?legalFile.getName() : legalFile.getUuid());
             final File file = new File(dataDirectory);
             in = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(legalFile.getName(), "UTF-8"));
             response.setHeader("Content-Length", String.valueOf(file.length()));
             response.setHeader("language", "th-TH");
             response.setContentType("application/octet-stream");

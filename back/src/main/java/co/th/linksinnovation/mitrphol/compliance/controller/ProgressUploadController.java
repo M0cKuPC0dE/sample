@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -232,14 +234,16 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/legalupload", method = RequestMethod.PUT)
-    public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+    public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            String uuid = UUID.randomUUID().toString();
+            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
             LegalFile legalFile = new LegalFile();
             legalFile.setName(filename);
-            legalFile.setUuid(UUID.randomUUID().toString());
+            legalFile.setUuid(uuid);
             return legalFileRepository.save(legalFile);
         } else {
             return null;
@@ -247,14 +251,16 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/licenseupload", method = RequestMethod.PUT)
-    public LicenseFile licenseFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+    public LicenseFile licenseFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            String uuid = UUID.randomUUID().toString();
+            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
             LicenseFile licenseFile = new LicenseFile();
             licenseFile.setName(filename);
-            licenseFile.setUuid(UUID.randomUUID().toString());
+            licenseFile.setUuid(uuid);
             return licenseFileRepository.save(licenseFile);
         } else {
             return null;
@@ -262,14 +268,16 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/evidenceupload", method = RequestMethod.PUT)
-    public EvidenceFile evidenceFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException {
+    public EvidenceFile evidenceFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
-        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/files/" + filename));
+        appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
+            String uuid = UUID.randomUUID().toString();
+            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
             EvidenceFile evidenceFile = new EvidenceFile();
             evidenceFile.setName(filename);
-            evidenceFile.setUuid(UUID.randomUUID().toString());
+            evidenceFile.setUuid(uuid);
             return evidenceFileRepository.save(evidenceFile);
         } else {
             return null;
