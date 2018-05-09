@@ -52,6 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -234,13 +235,13 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/legalupload", method = RequestMethod.PUT)
-    public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
+    public LegalFile legalFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException, Exception {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
         appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             String uuid = UUID.randomUUID().toString();
-            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
+            move("/mnt/data/tmp/" + filename, "/mnt/data/files/" + uuid);
             LegalFile legalFile = new LegalFile();
             legalFile.setName(filename);
             legalFile.setUuid(uuid);
@@ -251,13 +252,13 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/licenseupload", method = RequestMethod.PUT)
-    public LicenseFile licenseFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
+    public LicenseFile licenseFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException, Exception {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
         appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             String uuid = UUID.randomUUID().toString();
-            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
+            move("/mnt/data/tmp/" + filename, "/mnt/data/files/" + uuid);
             LicenseFile licenseFile = new LicenseFile();
             licenseFile.setName(filename);
             licenseFile.setUuid(uuid);
@@ -268,13 +269,13 @@ public class ProgressUploadController {
     }
 
     @RequestMapping(value = "/evidenceupload", method = RequestMethod.PUT)
-    public EvidenceFile evidenceFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException {
+    public EvidenceFile evidenceFileUpload(@RequestBody byte[] file, HttpServletRequest request) throws UnsupportedEncodingException, IOException, Exception {
         InputStream chunk = new ByteArrayInputStream(file);
         String filename = URLDecoder.decode(request.getHeader("Content-Name"), "UTF-8");
         appendFile(request.getHeader("Content-Start"), chunk, new File("/mnt/data/tmp/" + filename));
         if (request.getHeader("Content-End") != null && request.getHeader("Content-End").equals(request.getHeader("Content-FileSize"))) {
             String uuid = UUID.randomUUID().toString();
-            Files.move(Paths.get("/mnt/data/tmp/" + filename), Paths.get("/mnt/data/files/" + uuid));
+            move("/mnt/data/tmp/" + filename, "/mnt/data/files/" + uuid);
             EvidenceFile evidenceFile = new EvidenceFile();
             evidenceFile.setName(filename);
             evidenceFile.setUuid(uuid);
@@ -342,5 +343,12 @@ public class ProgressUploadController {
                 return cell.getStringCellValue();
         }
 
+    }
+    
+    private void move(String src, String dest) throws Exception{
+        File srcFile = new File(src);
+        File desFile = new File(dest);
+        FileCopyUtils.copy(srcFile, desFile);
+        srcFile.delete();
     }
 }
