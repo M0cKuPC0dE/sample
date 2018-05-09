@@ -111,6 +111,7 @@ export default {
     }
   },
   mounted: function() {
+    console.log(this.categories)
     this.allview(this.categories)
     $('#search-tree').on('keyup', this.search)
     $(document).on('click', '#toggleExpand', function (e) {
